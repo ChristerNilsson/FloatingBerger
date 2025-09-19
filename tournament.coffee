@@ -19,7 +19,7 @@ ALFABET = '12345678901234567890123456789012345678901234567890'
 
 settings = {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:0} # ONE = 1 # 0=dev 1=prod
 
-# Tillståndet ges av dessa fem variabler:
+# Tillståndet ges av dessa variabler:
 players = []
 
 results = [] # ronder x bord. cell: 'x', '0', '1' eller '2'
@@ -69,26 +69,6 @@ convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng
 	b = b.split '|'
 	if input in a then b[i] else input
 
-sorteraKolumn = (index,stigande)->
-	tbody = document.querySelector '#stallning tbody'
-	rader = Array.from tbody.querySelectorAll 'tr'
-
-	rader.sort (a, b) ->
-		cellA = a.children[index].textContent.trim()
-		cellB = b.children[index].textContent.trim()
-
-		# Försök jämföra som tal, annars som text
-		numA = parseFloat cellA
-		numB = parseFloat cellB
-		if !isNaN(numA) and !isNaN(numB)
-			return if stigande then numA - numB else numB - numA
-		else
-			return if stigande then cellA.localeCompare cellB else cellB.localeCompare cellA
-
-	# Lägg tillbaka raderna i sorterad ordning
-	for rad in rader
-		tbody.appendChild rad
-
 createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
 
 	ths = document.querySelectorAll '#stallning th'
@@ -119,6 +99,11 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som kr�
 		unik = _.uniq (item.toFixed(i) for item in lst)
 		if unik.length > best then [best,ibest] = [unik.length,i]
 	ibest
+
+flip = (flag,id) ->
+	flag = 1 - flag
+	document.getElementById(id).style.display = ["none","table"][flag]
+	flag
 
 invert = (lst) ->
 	result = _.clone lst
@@ -328,6 +313,15 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 		color = if index == currTable + 1 then 'yellow' else 'white'
 		_tr.children[3+2].style = "background-color:#{color}"
 
+setFrirondResults = ->
+	if not frirond then return
+	for r in range rounds.length
+		round = rounds[r]
+		for t in range round.length
+			[w,b] = round[t]
+			if w == frirond then results[r][t] = '0'
+			if b == frirond then results[r][t] = '2'
+
 setP = (trs, index, translator) ->
 	scoresP = 0
 	scoresPR = 0
@@ -392,6 +386,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	success = false
 	if key == 'Delete' then success = true
 	else success = tr5.textContent == '-' or tr5.textContent == res
+	echo success
 	if success
 		tr5.textContent = prettyResult res
 		currTable = (currTable + 1) %% tableCount()
@@ -413,8 +408,8 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 showNames = ->
 	persons = []
 	for [w,b],i in rounds[currRound]
-		persons.push [players[w].name, "#{i+1}W", players[w].elo]
-		persons.push [players[b].name, "#{i+1}B", players[b].elo]
+		persons.push [players[w].name, "#{i+1} • W", players[w].elo]
+		persons.push [players[b].name, "#{i+1} • B", players[b].elo]
 
 	persons.sort()
 	rows = []
@@ -515,26 +510,32 @@ showTables = (shorts, selectedRound) -> # Visa bordslistan
 
 	document.getElementById('tables').innerHTML = result
 
+sorteraKolumn = (index,stigande) ->
+	tbody = document.querySelector '#stallning tbody'
+	rader = Array.from tbody.querySelectorAll 'tr'
+
+	rader.sort (a, b) ->
+		cellA = a.children[index].textContent.trim()
+		cellB = b.children[index].textContent.trim()
+
+		# Försök jämföra som tal, annars som text
+		numA = parseFloat cellA
+		numB = parseFloat cellB
+		if !isNaN(numA) and !isNaN(numB)
+			return if stigande then numA - numB else numB - numA
+		else
+			return if stigande then cellA.localeCompare cellB else cellB.localeCompare cellA
+
+	# Lägg tillbaka raderna i sorterad ordning
+	for rad in rader
+		tbody.appendChild rad
+
 tableCount = -> players.length // 2 # Beräkna antal bord
 
 updateLongsAndShorts = -> # Uppdaterar longs och shorts utifrån rounds och results
 	longs = (longForm rounds[r],results[r] for r in range rounds.length)
 	shorts = longs
 	longs = _.zip ...longs # transponerar matrisen
-
-setFrirondResults = ->
-	if not frirond then return
-	for r in range rounds.length
-		round = rounds[r]
-		for t in range round.length
-			[w,b] = round[t]
-			if w == frirond then results[r][t] = '0'
-			if b == frirond then results[r][t] = '2'
-
-flip = (flag,id) ->
-	flag = 1 - flag
-	document.getElementById(id).style.display = ["none","table"][flag]
-	flag
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
