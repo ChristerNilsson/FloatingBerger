@@ -1,13 +1,13 @@
 # Floating Berger
 
-[Try it!](https://christernilsson.github.io/2025/013-FloatingBerger/)
+[Try it!](https://christernilsson.github.io/FloatingBerger/)
 
 Byt ut elos och namn mot de som ska gälla i din turnering
 
 ```
 TITLE = Sommarturnering RIO 2025
 GAMES = 1
-ROUNDS = 11
+ROUNDS = 4
 SORT = 0
 BALANCE = 1
 
@@ -36,8 +36,8 @@ Förklaring
 r1 = rond 1
 
 0 = vit förlust
-r = remi
-1 = vit vinst
+1 = remi
+2 = vit vinst
 x = partiet ej spelat
 ```
 
@@ -69,7 +69,7 @@ x = partiet ej spelat
 * När turneringen börjat får man bara modifiera resultaten. Dvs r1 = osv
 * Man får EJ ändra elo, namn, SORT, ROUND eller GAMES under turneringens gång
 	* Detta pga att lottningen kan påverkas
-* Skriv alltid ut Bordslistorna! 
+* Skriv alltid ut Bordslistorna!
 	* De fungerar som backup
 * Historiken innehåller tidigare ronder
 
