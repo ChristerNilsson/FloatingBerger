@@ -353,18 +353,29 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	trs = document.querySelectorAll '#stallning tr'
 
-	translator = []
-	for i in range 1, trs.length
-		translator.push Math.round(trs[i].children[0].textContent) - 1
-	translator = invert translator
-
+	old = results[currRound][currTable]
 	[w,b] = rounds[currRound][currTable]
 	if frirond and (w==frirond or b==frirond) then return
+
+	cell = old + res # transition, 16 possibilities
+
+	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
+		currTable = (currTable + 1) %% tableCount()
+		return
+
+	if cell in '01 02 10 12 20 21'.split ' ' then return # inmatning stämmer ej, lämna
+
+	# uppdatera och gå till nästa bord
 	results[currRound][currTable] = res
 
 	updateLongsAndShorts()
 
 	one = settings.ONE
+
+	translator = []
+	for i in range 1, trs.length
+		translator.push Math.round(trs[i].children[0].textContent) - 1
+	translator = invert translator
 
 	_td = trs[translator[w] + one].children[3 + currRound].children[1]
 	_td.textContent = "0½1"[res]
@@ -383,13 +394,8 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	_tr = trs[currTable + 1]
 	tr5 = _tr.children[3+2]
 
-	success = false
-	if key == 'Delete' then success = true
-	else success = tr5.textContent == '-' or tr5.textContent == res
-	echo success
-	if success
-		tr5.textContent = prettyResult res
-		currTable = (currTable + 1) %% tableCount()
+	tr5.textContent = prettyResult res
+	currTable = (currTable + 1) %% tableCount()
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 

@@ -43,7 +43,7 @@ export class Floating
 
 	updatePlayers : (magic,r) -> 
 		tables = []
-		#echo 'matrix',@matrix
+		echo 'matrix',@matrix
 		for id in magic
 			i = id
 			j = magic[id]
