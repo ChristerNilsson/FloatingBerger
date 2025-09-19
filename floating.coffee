@@ -55,9 +55,14 @@ export class Floating
 			a.opp.push j
 			b.opp.push i
 			diff = a.balans() - b.balans()
-			if diff > 0 then @save a,b,'b','w',j,i
-			else if diff < 0 then @save a,b,'w','b',i,j
+			if diff > 0
+				@save a,b,'b','w',j,i
+			else if diff < 0
+				@save a,b,'w','b',i,j
 			else 
-				if flip then @save a,b,'b','w',j,i else @save a,b,'w','b',i,j
+				if flip
+					@save a,b,'b','w',j,i 
+				else 
+					@save a,b,'w','b',i,j
 				flip = not flip
 		@tables
