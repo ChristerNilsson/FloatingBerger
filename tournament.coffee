@@ -13,7 +13,7 @@ ALIGN_LEFT   = {style: "text-align:left"}
 ALIGN_CENTER = {style: "text-align:center"}
 ALIGN_RIGHT  = {style: "text-align:right"}
 
-ALFABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+ALFABET = '12345678901234567890123456789012345678901234567890'
 
 ## V A R I A B L E R ##
 
@@ -30,6 +30,10 @@ shorts  = [] # ronder x players. cell: [w,b,col,res]
 currRound = 0
 currTable = 0
 
+flagStällning = 1
+flagTables = 1
+flagNames = 1
+
 frirond = null # ingen frirond. Annars index för frironden
 
 ## F U N K T I O N E R ##
@@ -37,10 +41,14 @@ frirond = null # ingen frirond. Annars index för frironden
 addTable = (bord,res,c0,c1) ->
 	vit = players[c0].name
 	svart = players[c1].name
+	vit_elo = players[c0].elo
+	svart_elo = players[c1].elo
 	hash = {style : "background-color:#{bord == currTable ? 'yellow' : 'white'}" }
 	tr hash,
 		td {}, bord + settings.ONE
 		td ALIGN_LEFT, vit
+		td ALIGN_LEFT, vit_elo
+		td ALIGN_LEFT, svart_elo
 		td ALIGN_LEFT, svart
 		td ALIGN_CENTER, prettyResult res # prettify
 
@@ -318,7 +326,7 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 	for _tr in trs
 		index++
 		color = if index == currTable + 1 then 'yellow' else 'white'
-		_tr.children[3].style = "background-color:#{color}"
+		_tr.children[3+2].style = "background-color:#{color}"
 
 setP = (trs, index, translator) ->
 	scoresP = 0
@@ -379,13 +387,13 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	# Sätt tables
 	trs = document.querySelectorAll '#tables tr'
 	_tr = trs[currTable + 1]
-	tr3 = _tr.children[3]
+	tr5 = _tr.children[3+2]
 
 	success = false
 	if key == 'Delete' then success = true
-	else success = tr3.textContent == '-' or tr3.textContent == res
+	else success = tr5.textContent == '-' or tr5.textContent == res
 	if success
-		tr3.textContent = prettyResult res
+		tr5.textContent = prettyResult res
 		currTable = (currTable + 1) %% tableCount()
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
@@ -402,6 +410,40 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join('   ') + '  ' + players[i].elo
 
+showNames = ->
+	persons = []
+	for [w,b],i in rounds[currRound]
+		persons.push [players[w].name, "#{i+1}W", players[w].elo]
+		persons.push [players[b].name, "#{i+1}B", players[b].elo]
+
+	persons.sort()
+	rows = []
+	cells = []
+	for [name, plats, elo],i in persons
+		cells.push td ALIGN_LEFT, name
+		cells.push td {}, plats
+		cells.push td {}, elo
+		if i % 3 == 2
+			rows.push tr {}, cells.join ""
+			cells = []
+	rows.push tr {}, cells.join ""
+
+	result = div {},
+		h2 {}, settings.TITLE + " Namnlista"
+		table {},
+			thead {},
+				th {}, "Namn"
+				th {}, "Bord"
+				th {}, "Elo"
+				th {}, "Namn"
+				th {}, "Bord"
+				th {}, "Elo"
+				th {}, "Namn"
+				th {}, "Bord"
+				th {}, "Elo"
+			rows.join ""
+	document.getElementById('names').innerHTML = result
+
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
 	rows = []
@@ -417,7 +459,6 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 
 	result = div {},
 		h2 {}, settings.TITLE + " (#{if settings.ROUNDS == players.length - 1 then 'Berger' else 'Floating'})"
-
 		table {},
 			thead {},
 				th {}, "#"
@@ -466,6 +507,8 @@ showTables = (shorts, selectedRound) -> # Visa bordslistan
 			thead {},
 				th {}, "Bord"
 				th {}, "Vit"
+				th {}, "Elo"
+				th {}, "Elo"
 				th {}, "Svart"
 				th {}, "Resultat" 
 			rows.join ""
@@ -487,6 +530,11 @@ setFrirondResults = ->
 			[w,b] = round[t]
 			if w == frirond then results[r][t] = '0'
 			if b == frirond then results[r][t] = '2'
+
+flip = (flag,id) ->
+	flag = 1 - flag
+	document.getElementById(id).style.display = ["none","table"][flag]
+	flag
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
@@ -526,6 +574,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	updateLongsAndShorts()
 	showPlayers longs
 	showTables shorts, 0
+	showNames()
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -534,9 +583,9 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 
-		if event.key in 'abc' 
-			document.getElementById("stallning").style.display = if event.key in "ac" then "table" else "none"
-			document.getElementById("tables").style.display = if event.key in "bc" then "table" else "none"
+		if event.key == 'a' then flagStällning = flip flagStällning, "stallning" 
+		if event.key == 'b' then flagTables = flip flagTables, "tables" 
+		if event.key == 'c' then flagNames = flip flagNames, "names" 
 		
 		if event.key == 'ArrowLeft'  then changeRound -1
 		if event.key == 'ArrowRight' then changeRound +1
