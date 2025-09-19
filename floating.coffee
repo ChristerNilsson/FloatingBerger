@@ -13,10 +13,8 @@ export class Floating
 
 		for r in range @settings.ROUNDS
 			edges = @makeEdges()
-			#echo 'edges',edges
 			edmonds = new Edmonds edges
 			magic = edmonds.maxWeightMatching edges
-			#echo 'magic',magic
 			@rounds.push @updatePlayers magic,r
 
 	makeEdges : ->
@@ -30,41 +28,36 @@ export class Floating
 				if @ok a,b then edges.push [i, j, 10000 - diff ** 1.01]
 		edges
 
-	# sortTables : (tables) -> # Blossom verkar redan ge en bra bordsplacering
-	# 	tables.sort (x,y) -> y[2] - x[2]
-	# 	table.slice 0,2 for table in tables
-
 	ok : (a,b) -> 
 		if a.id == b.id then return false
 		if a.id in b.opp then return false
-		# if not @settings.BALANS and @settings.GAMES % 2 == 0 then return true
 		if @settings.BALANS == 0 then return true
 		Math.abs(a.balans() + b.balans()) < 2
 
+	save : (a, b, ca, cb, ia, ib) ->
+		a.col += ca
+		b.col += cb
+		@tables.push [ia, ib]
+
 	updatePlayers : (magic,r) -> 
-		tables = []
-		echo 'matrix',@matrix
+		@tables = []
+		# echo 'matrix',@matrix
+		flip = false # om två spelare har diff==0, ska varannan bli vit, varannan svart
 		for id in magic
 			i = id
 			j = magic[id]
 			if i == @matrix.length or j == @matrix[0].length then continue
 			@matrix[i][j] = "#{'123456789abcdefgh'[r]}"
 			if i > j then continue
-			#echo i + @settings.ONE, j + @settings.ONE, Math.abs @players[i].elo - @players[j].elo
 			@summa += Math.abs @players[i].elo - @players[j].elo
 			a = @players[i]
 			b = @players[j]
 			a.opp.push j
 			b.opp.push i
-			if a.balans() > b.balans()
-				a.col += 'b'
-				b.col += 'w'
-				tables.push [j, i]
-			else
-				a.col += 'w'
-				b.col += 'b'
-				tables.push [i, j]
-
-		#@sortTables tables
-		#echo 'updatePlayers',tables
-		tables
+			diff = a.balans() - b.balans()
+			if diff > 0 then @save a,b,'b','w',j,i
+			else if diff < 0 then @save a,b,'w','b',i,j
+			else 
+				if flip then @save a,b,'b','w',j,i else @save a,b,'w','b',i,j
+				flip = not flip
+		@tables
