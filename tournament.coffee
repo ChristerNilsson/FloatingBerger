@@ -330,24 +330,27 @@ setP = (trs, index, translator) ->
 		ch = longs[index][r][3]
 		value = '012'.indexOf ch
 		opp = longs[index][r][1]
-		if value != -1 
+		if value != -1
 			elo = players[opp].elo
 			scoresP += value
 			if elo != 0
 				scoresPR += value
-				elos.push Math.round elo 
+				elos.push Math.round elo
 
 	_tdP  = trs[translator[index] + 1].children[3 + settings.GAMES * settings.ROUNDS]
-	_tdP.textContent = (scoresP/2).toFixed 1
+	_tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
 
 	# kalkylera performance rating mha vinstandel och elo-tal
-	andel = scoresPR/2
-	perf = performance andel, elos
-	players[index].PR = perf
+	if elos.length == 0 
+		players[index].PR = 0
+	else
+		andel = scoresPR/2
+		perf = performance andel, elos
+		players[index].PR = perf
 
 setPR = (trs, index, translator) ->
 	_tdPR = trs[translator[index] + 1].children[4 + settings.GAMES * settings.ROUNDS]
-	_tdPR.textContent = players[index].PR.toFixed settings.DECIMALS
+	_tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
 
