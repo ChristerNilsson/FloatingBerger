@@ -15,6 +15,8 @@ ALIGN_RIGHT  = {style: "text-align:right"}
 
 ALFABET = '12345678901234567890123456789012345678901234567890'
 
+NAME_COLUMNS = 5
+
 ## V A R I A B L E R ##
 
 settings = {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:0} # ONE = 1 # 0=dev 1=prod
@@ -164,12 +166,12 @@ makeURL = ->
 
 export other = (input) -> convert input, "012FG","21022"
 
-overview = ->
-	res = ""
-	if flagStällning == 1 then res += 'A'
-	if flagTables == 1 then res += 'B'
-	if flagNames == 1 then res += 'C'
-	document.getElementById('info').innerHTML = div {}, res
+# overview = ->
+# 	res = ""
+# 	if flagStällning == 1 then res += 'A'
+# 	if flagTables == 1 then res += 'B'
+# 	if flagNames == 1 then res += 'C'
+# 	document.getElementById('info').innerHTML = div {}, res
 
 parseTextarea = -> # läs in initiala uppgifter om spelarna
 	raw = document.getElementById "textarea"
@@ -437,28 +439,22 @@ showNames = ->
 			persons.push pw
 			persons.push pb
 
-	persons.sort()
+	persons.sort (a,b) -> a[0].length - b[0].length
 	rows = []
 	cells = []
 	for [name, plats, elo],i in persons
 		cells.push td ALIGN_LEFT, name
 		cells.push td {}, plats
 		cells.push td {}, elo
-		if i % 3 == 2
+		if i % NAME_COLUMNS == NAME_COLUMNS - 1
 			rows.push tr {}, cells.join ""
 			cells = []
 	rows.push tr {}, cells.join ""
 
 	result = div {},
-		h2 {}, settings.TITLE + " Namnlista"
+		h2 {}, "C #{settings.TITLE} Namnlista"
 		table {},
 			thead {},
-				th {}, "Namn"
-				th {}, "Bord"
-				th {}, "Elo"
-				th {}, "Namn"
-				th {}, "Bord"
-				th {}, "Elo"
 				th {}, "Namn"
 				th {}, "Bord"
 				th {}, "Elo"
@@ -479,7 +475,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 			roundsContent long, i
 
 	result = div {},
-		h2 {}, settings.TITLE + " (#{if settings.ROUNDS == players.length - 1 then 'Berger' else 'Floating'})"
+		h2 {}, "A " + settings.TITLE + " (#{if settings.ROUNDS == players.length - 1 then 'Berger' else 'Floating'})"
 		table {},
 			thead {},
 				th {}, "#"
@@ -499,7 +495,7 @@ showTables = (shorts, selectedRound) -> # Visa bordslistan
 		rows.push addTable iTable,results[selectedRound][iTable] ,w, b
 
 	result = div {},
-		h2 {}, "Bordslista för rond #{selectedRound + settings.ONE}"
+		h2 {}, "B Bordslista för rond #{selectedRound + settings.ONE}"
 		table {},
 			thead {},
 				th {}, "Bord"
@@ -578,7 +574,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showPlayers longs
 	showTables shorts, 0
 	showNames()
-	overview()
+	# overview()
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -590,7 +586,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if event.key == 'a' then flagStällning = flip flagStällning, "stallning" 
 		if event.key == 'b' then flagTables = flip flagTables, "tables" 
 		if event.key == 'c' then flagNames = flip flagNames, "names" 
-		overview()
+		# overview()
 		
 		if event.key == 'ArrowLeft'  then changeRound -1
 		if event.key == 'ArrowRight' then changeRound +1
