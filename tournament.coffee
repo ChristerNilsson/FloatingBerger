@@ -164,6 +164,13 @@ makeURL = ->
 
 export other = (input) -> convert input, "012FG","21022"
 
+overview = ->
+	res = ""
+	if flagStällning == 1 then res += 'A'
+	if flagTables == 1 then res += 'B'
+	if flagNames == 1 then res += 'C'
+	document.getElementById('info').innerHTML = div {}, res
+
 parseTextarea = -> # läs in initiala uppgifter om spelarna
 	raw = document.getElementById "textarea"
 
@@ -403,9 +410,9 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
-showInfo = (message="") -> # Visa helpText på skärmen
+showInfo = (message) -> # Visa helpText på skärmen
 	document.getElementById('info').innerHTML = div {},
-		div {class:"help"}, pre {}, message + helpText
+		div {class:"help"}, pre {}, message
 
 showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	n = players.length
@@ -538,7 +545,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	if params.size == 0 
 		document.getElementById("button").addEventListener "click", parseTextarea
-		showInfo()
+		showInfo helpText
 		return
 
 	document.getElementById("textarea").style = 'display: none'
@@ -571,6 +578,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showPlayers longs
 	showTables shorts, 0
 	showNames()
+	overview()
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -582,6 +590,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if event.key == 'a' then flagStällning = flip flagStällning, "stallning" 
 		if event.key == 'b' then flagTables = flip flagTables, "tables" 
 		if event.key == 'c' then flagNames = flip flagNames, "names" 
+		overview()
 		
 		if event.key == 'ArrowLeft'  then changeRound -1
 		if event.key == 'ArrowRight' then changeRound +1
