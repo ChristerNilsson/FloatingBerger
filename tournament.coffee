@@ -84,7 +84,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 					key = parseInt(key) - settings.ONE
 					showTables shorts, key
 					return
-				sorteraKolumn index, key in "# Namn".split ' '
+				sortColumn index, key in "# Namn".split ' '
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
@@ -299,6 +299,15 @@ setAllPR = (delta) ->
 			_tdPR = trs[index + 1].children[4 + settings.GAMES * settings.ROUNDS]
 			_tdPR.textContent = players[index].PR.toFixed settings.DECIMALS
 
+setByeResults = ->
+	if not frirond then return
+	for r in range rounds.length
+		round = rounds[r]
+		for t in range round.length
+			[w,b] = round[t]
+			if w == frirond then results[r][t] = '0'
+			if b == frirond then results[r][t] = '2'
+
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#stallning th'
 	index = -1
@@ -313,15 +322,6 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 		index++
 		color = if index == currTable + 1 then 'yellow' else 'white'
 		_tr.children[3+2].style = "background-color:#{color}"
-
-setFrirondResults = ->
-	if not frirond then return
-	for r in range rounds.length
-		round = rounds[r]
-		for t in range round.length
-			[w,b] = round[t]
-			if w == frirond then results[r][t] = '0'
-			if b == frirond then results[r][t] = '2'
 
 setP = (trs, index, translator) ->
 	scoresP = 0
@@ -505,7 +505,7 @@ showTables = (shorts, selectedRound) -> # Visa bordslistan
 
 	document.getElementById('tables').innerHTML = result
 
-sorteraKolumn = (index,stigande) ->
+sortColumn = (index,stigande) ->
 	tbody = document.querySelector '#stallning tbody'
 	rader = Array.from tbody.querySelectorAll 'tr'
 
@@ -565,7 +565,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	readResults params
 
-	setFrirondResults()
+	setByeResults()
 
 	updateLongsAndShorts()
 	showPlayers longs
@@ -610,11 +610,11 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		gxr = settings.GAMES * settings.ROUNDS
 
-		if key == '#' then sorteraKolumn 0,    true
-		if key == 'n' then sorteraKolumn 1,    true
-		if key == 'e' then sorteraKolumn 2,    false
-		if key == 'p' then sorteraKolumn 3+gxr,false
-		if key == 'r' then sorteraKolumn 4+gxr,false
+		if key == '#' then sortColumn 0,    true
+		if key == 'n' then sortColumn 1,    true
+		if key == 'e' then sortColumn 2,    false
+		if key == 'p' then sortColumn 3+gxr,false
+		if key == 'r' then sortColumn 4+gxr,false
 
 		setCursor currRound,currTable
 
