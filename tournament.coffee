@@ -418,8 +418,21 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 showNames = ->
 	persons = []
 	for [w,b],i in rounds[currRound]
-		persons.push [players[w].name, "#{i+1} • W", players[w].elo]
-		persons.push [players[b].name, "#{i+1} • B", players[b].elo]
+		pw = [players[w].name, "#{i+1} • W", players[w].elo]
+		pb = [players[b].name, "#{i+1} • B", players[b].elo]
+		if pw[0] == 'FRIROND' 
+			pb[1] = 'BYE'
+			persons.push pb
+		else if pb[0] == 'FRIROND' 
+			pw[1] = 'BYE'
+			persons.push pw
+		else
+			persons.push pw
+			persons.push pb
+
+	#persons = (person for person in persons when person[0] != 'FRIROND')
+
+	echo persons
 
 	persons.sort()
 	rows = []
