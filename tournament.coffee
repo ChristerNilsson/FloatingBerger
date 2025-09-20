@@ -430,10 +430,6 @@ showNames = ->
 			persons.push pw
 			persons.push pb
 
-	#persons = (person for person in persons when person[0] != 'FRIROND')
-
-	echo persons
-
 	persons.sort()
 	rows = []
 	cells = []
