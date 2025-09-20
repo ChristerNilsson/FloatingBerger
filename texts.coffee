@@ -30,9 +30,9 @@ Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagar
 * p • sortering på P (partipoäng)
 * r • sortering på PR (performance rating)
 
-* a • visar enbart ställning
-* b • visar enbart bord
-* c • visar både ställning och bord (default)
+* a • togglar spelarlistan
+* b • togglar bordslistan
+* c • togglar namnlistan
 
 * m • PR: fler decimaler 
 * l • PR: färre decimaler
@@ -41,6 +41,6 @@ Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagar
 * ctrl + • zoomar in
 * ctrl - • zoomar ut
 <h3>Backup</h3>Kopiera urlen och spara på säker plats. T ex på en USB-sticka.
-Länken finns även i webläsarens historik.
+Länken finns även i webläsarens historik, om ingen rensat.
 
 """
