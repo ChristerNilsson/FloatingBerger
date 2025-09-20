@@ -57,6 +57,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	currTable = 0
 	
 	showTables shorts, currRound
+	showNames()
 
 changeTable = (delta) -> # byt bord
 	currTable = (currTable + delta) %% tableCount()
@@ -476,34 +477,10 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 	document.getElementById('stallning').innerHTML = result
 
 showTables = (shorts, selectedRound) -> # Visa bordslistan
-	# G1: Filtrera fram vitspelarna. De sätter bordsordningen mha rounds
-	# G2: w b w b osv
 	if rounds.length == 0 then return
-
 	rows = []
-	bord = 0
-
-	for short in shorts[selectedRound]
-		[w, b, color, res] = short
-
-		if settings.GAMES == 1
-			if color == 'w'
-			
-				if frirond and w == frirond 
-					rows.push addTable bord,'0',w,b
-				else if frirond and b == frirond 
-					rows.push addTable bord,'2',w,b
-				else 
-					rows.push addTable bord,res,w,b
-				bord++
-
-		if settings.GAMES == 2
-			if color == 'w' and selectedRound % 2 == 0 
-				rows.push addTable rows.length,res,w,b
-				bord++
-			else if color == 'b' and selectedRound % 2 == 1
-				rows.push addTable rows.length,res,b,w
-				bord++
+	for [w,b],iTable in rounds[selectedRound]
+		rows.push addTable iTable,results[selectedRound][iTable] ,w, b
 
 	result = div {},
 		h2 {}, "Bordslista för rond #{selectedRound + settings.ONE}"
