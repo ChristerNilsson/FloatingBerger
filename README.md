@@ -45,18 +45,19 @@ x = partiet ej spelat
 
 * Rondnummerna är klickbara. Då visas Bordslistan för klickad rond
 * Övriga kolumner sorteras när man klickar på dem
-* 1 visar enbart Spelarlistan
-* 2 visar enbart Bordslistan
-* 3 visar båda listorna
+
+* a togglar Spelarlistan
+* b togglar Bordslistan
+* c togglar Namnlistan
+
 * ctrl p skriver ut sidan
 * ctrl + zoomar in
 * ctrl - zoomar ut
-* ctrl h visar tidigare ronder
 
 # Skillnader gentemot andra turneringssystem
 
 * Ratingen styr vilka som möts. Skillnaden minimeras
-* Man behöver inte använda särskiljning
+* Man behöver ytterst sällan använda särskiljning
 * Man lottar alla ronder direkt
 * Man kan spela partierna i valfri ordning
 * Turneringen behöver ej delas upp i flera Berger-grupper
@@ -71,15 +72,6 @@ x = partiet ej spelat
 	* Detta pga att lottningen kan påverkas
 * Skriv alltid ut Bordslistorna!
 	* De fungerar som backup
-* Historiken innehåller tidigare ronder
-
-# Begränsningar
-
-* URL:en bör vara mindre än cirka 8000 tecken lång. 
-* Begränsningar finns dels i bläddraren, men även på servern, i detta fall chrome + github.com
-
-250 spelare och tio ronder gav en url på 6700 tecken.  
-400 spelare med sex tecken per namn krävde 7935 tecken.  
 
 # Utveckling
 
