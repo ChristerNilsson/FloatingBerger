@@ -27,7 +27,7 @@ players = []
 results = [] # ronder x bord. cell: 'x', '0', '1' eller '2'
 rounds  = [] # ronder x bord. cell: [w,b] 
 longs   = [] # players x ronder. cell: [w,b,col,res]
-shorts  = [] # ronder x players. cell: [w,b,col,res]
+#shorts  = [] # ronder x players. cell: [w,b,col,res]
 
 currScreen = 'a'
 currRound = 0
@@ -44,10 +44,7 @@ addBord = (bord,res,c0,c1) ->
 	svart_elo = players[c1].elo
 	tr1 = document.createElement 'tr'
 	color = if bord == currTable then 'yellow' else 'white'
-	echo color
-	# echo 'addBord',bord,currTable,"background-color:#{bord == currTable ? 'yellow' : 'white'}"
-	# tr1.style = "background-color:#{if bord == currTable then 'yellow' else 'white'}"
-	#tr1.setAttribute 'style', "background-color:#{bord == currTable ? 'yellow' : 'white'}"
+
 	koppla 'td', tr1, {textContent : bord + settings.ONE}
 	koppla 'td', tr1, {style:"text-align:left", textContent : vit}
 	koppla 'td', tr1, {style:"text-align:left", textContent : vit_elo}
@@ -61,7 +58,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	currTable = 0
 	
 	setScreen currScreen
-	showTables currRound
+	showTables()
 	showNames()
 
 changeTable = (delta) -> # byt bord
@@ -87,7 +84,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 				key = _th.textContent
 				if !isNaN parseInt key
 					key = parseInt(key) - settings.ONE
-					showTables key
+					showTables() # key
 					return
 				sortColumn index, key in "# Namn".split ' '
 
@@ -147,6 +144,7 @@ export longForm = (rounds, results) -> # produces the long form for ONE round (s
 	result
 
 makeBerger = -> # lotta en hel berger-turnering.
+	echo 'makeBerger'
 	n = players.length
 	half = n // 2 
 	A = [0...n]
@@ -376,7 +374,7 @@ setPR = (trs, index, translator) ->
 	_tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
-
+	echo 'setResult'
 	trs = document.querySelectorAll '#stallning tr'
 
 	old = results[currRound][currTable]
@@ -384,12 +382,16 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	if frirond and (w==frirond or b==frirond) then return
 
 	cell = old + res # transition, 16 possibilities
+	echo 'cell',cell
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
 		currTable = (currTable + 1) %% tableCount()
+		echo 'currTable',currTable
 		return
 
-	if cell in '01 02 10 12 20 21'.split ' ' then return # inmatning stämmer ej, lämna
+	if cell in '01 02 10 12 20 21'.split ' '
+		echo 'exit'
+		return # inmatning stämmer ej, lämna
 
 	# uppdatera och gå till nästa bord
 	results[currRound][currTable] = res
@@ -418,7 +420,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	# Sätt tables
 	trs = document.querySelectorAll '#tables tr'
 #	echo (item.textContent for item in trs)
-	_tr = trs[currTable+1]
+	_tr = trs[currTable + 0] # Ska vara NOLL!
 	echo _tr
 	tr5 = _tr.children[5]
 
@@ -525,7 +527,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 
 	document.getElementById('stallning').innerHTML = result
 
-showTables = (selectedRound) -> # Visa bordslistan
+showTables = -> # Visa bordslistan
 
 	if rounds.length == 0 then return
 
@@ -542,8 +544,8 @@ showTables = (selectedRound) -> # Visa bordslistan
 	koppla 'th', _thead, {textContent:"Svart"}
 	koppla 'th', _thead, {textContent:"Resultat"}
 	
-	for [w,b], iTable in rounds[selectedRound]
-		_table.appendChild addBord iTable, results[selectedRound][iTable], w, b
+	for [w,b], iTable in rounds[currRound]
+		_table.appendChild addBord iTable, results[currRound][iTable], w, b
 
 sortColumn = (index,stigande) ->
 	tbody = document.querySelector '#stallning tbody'
@@ -569,7 +571,7 @@ tableCount = -> players.length // 2 # Beräkna antal bord
 
 updateLongsAndShorts = -> # Uppdaterar longs och shorts utifrån rounds och results
 	longs = (longForm rounds[r],results[r] for r in range rounds.length)
-	shorts = longs
+	#shorts = longs
 	longs = _.zip ...longs # transponerar matrisen
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
@@ -609,7 +611,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	updateLongsAndShorts()
 	showPlayers longs
-	showTables 0
+	showTables()
 	showNames()
 
 	setScreen 'b'
@@ -640,13 +642,15 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		if key == 'd'
 			echo 'Dump:'
+			echo 'currRound',currRound
+			echo 'currTable',currTable
 			echo '  settings',settings
 			# echo '  href',window.location.href
 			echo '  players',players
 			echo '  rounds',rounds
 			echo '  results', results
 			echo '  longs',longs
-			echo '  shorts',shorts
+			#echo '  shorts',shorts
 
 		gxr = settings.GAMES * settings.ROUNDS
 
