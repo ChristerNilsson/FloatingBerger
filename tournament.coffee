@@ -113,12 +113,30 @@ invert = (lst) ->
 		result[item] = i
 	result
 
-koppla = (typ, parent, attrs={}) ->
-	elem = document.createElement typ
-	for key of attrs
-		elem.setAttribute key, attrs[key]
-	parent.appendChild elem
-	elem
+# koppla = (typ, parent, attrs={}) ->
+# 	elem = document.createElement typ
+# 	for key of attrs
+# 		elem.setAttribute key, attrs[key]
+# 	parent.appendChild elem
+# 	elem
+
+koppla = (typ, parent, attrs = {}) ->
+  elem = document.createElement typ
+
+  if 'textContent' of attrs
+    elem.textContent = attrs.textContent
+    delete attrs.textContent
+
+  if 'html' of attrs
+    elem.innerHTML = attrs.html
+    delete attrs.html
+
+  for own key of attrs
+    elem.setAttribute key, attrs[key]
+
+  parent.appendChild elem
+  elem
+
 
 export longForm = (rounds, results) -> # produces the long form for ONE round (spelarlistan). If there is a BYE, put it last in the list
 	result = []
@@ -455,7 +473,7 @@ showNames = ->
 
 	persons.sort()
 	
-	ROWS_PER_COL = 25
+	ROWS_PER_COL = 30
 
 	# Dela upp i kolumner om max 30 spelare vardera
 	chunkIntoColumns = (items, size) ->
@@ -479,10 +497,8 @@ showNames = ->
 
 		col.forEach (p) => 
 			tr1 = koppla 'tr',tabell
-			td1 = koppla 'td',tr1, {class:'name'}
-			td2 = koppla 'td',tr1, {class:'seat'}
-			td1.textContent = p[0]
-			td2.textContent = p[1]
+			td1 = koppla 'td',tr1, {class:'name', textContent:p[0]}
+			td2 = koppla 'td',tr1, {class:'seat', textContent:p[1]}
   
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
