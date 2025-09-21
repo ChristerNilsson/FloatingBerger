@@ -37,20 +37,25 @@ frirond = null # ingen frirond. Annars index för frironden
 
 ## F U N K T I O N E R ##
 
-addTable = (bord,res,c0,c1) ->
+addBord = (bord,res,c0,c1) ->
 	vit = players[c0].name
 	svart = players[c1].name
 	vit_elo = players[c0].elo
 	svart_elo = players[c1].elo
-	hash = {style : "background-color:#{bord == currTable ? 'yellow' : 'white'}" }
-	tr hash,
-		td {}, bord + settings.ONE
-		td ALIGN_LEFT, vit
-		td ALIGN_LEFT, vit_elo
-		td ALIGN_LEFT, svart_elo
-		td ALIGN_LEFT, svart
-		td ALIGN_CENTER, prettyResult res # prettify
-
+	tr1 = document.createElement 'tr'
+	color = if bord == currTable then 'yellow' else 'white'
+	echo color
+	# echo 'addBord',bord,currTable,"background-color:#{bord == currTable ? 'yellow' : 'white'}"
+	# tr1.style = "background-color:#{if bord == currTable then 'yellow' else 'white'}"
+	#tr1.setAttribute 'style', "background-color:#{bord == currTable ? 'yellow' : 'white'}"
+	koppla 'td', tr1, {textContent : bord + settings.ONE}
+	koppla 'td', tr1, {style:"text-align:left", textContent : vit}
+	koppla 'td', tr1, {style:"text-align:left", textContent : vit_elo}
+	koppla 'td', tr1, {style:"text-align:left", textContent : svart_elo}
+	koppla 'td', tr1, {style:"text-align:left", textContent : svart}
+	koppla 'td', tr1, {style:"text-align:center; background-color:#{color}", textContent : prettyResult res}
+	tr1
+	
 changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	currRound = (currRound + delta) %% rounds.length
 	currTable = 0
@@ -113,13 +118,6 @@ invert = (lst) ->
 		result[item] = i
 	result
 
-# koppla = (typ, parent, attrs={}) ->
-# 	elem = document.createElement typ
-# 	for key of attrs
-# 		elem.setAttribute key, attrs[key]
-# 	parent.appendChild elem
-# 	elem
-
 koppla = (typ, parent, attrs = {}) ->
   elem = document.createElement typ
 
@@ -136,7 +134,6 @@ koppla = (typ, parent, attrs = {}) ->
 
   parent.appendChild elem
   elem
-
 
 export longForm = (rounds, results) -> # produces the long form for ONE round (spelarlistan). If there is a BYE, put it last in the list
 	result = []
@@ -335,18 +332,18 @@ setByeResults = ->
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#stallning th'
-	index = -1
-	for _th in ths
-		index++
+	# index = -1
+	for _th,index in ths
+		# index++
 		color = if index == currRound + 3 then 'yellow' else 'white'
 		_th.style = "background-color:#{color}"
 
 	trs = document.querySelectorAll '#tables tr'
-	index = -1
-	for _tr in trs
-		index++
-		color = if index == currTable + 1 then 'yellow' else 'white'
-		_tr.children[3+2].style = "background-color:#{color}"
+	# index = -1
+	for _tr,index in trs
+		# index++
+		color = if index == currTable + 0 then 'yellow' else 'white'
+		_tr.children[5].style = "background-color:#{color}"
 
 setP = (trs, index, translator) ->
 	scoresP = 0
@@ -420,8 +417,10 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	# Sätt tables
 	trs = document.querySelectorAll '#tables tr'
-	_tr = trs[currTable + 1]
-	tr5 = _tr.children[3+2]
+#	echo (item.textContent for item in trs)
+	_tr = trs[currTable+1]
+	echo _tr
+	tr5 = _tr.children[5]
 
 	tr5.textContent = prettyResult res
 	currTable = (currTable + 1) %% tableCount()
@@ -529,22 +528,22 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 showTables = (selectedRound) -> # Visa bordslistan
 
 	if rounds.length == 0 then return
-	rows = []
-	for [w,b],iTable in rounds[selectedRound]
-		rows.push addTable iTable,results[selectedRound][iTable] ,w, b
 
-	result = div {},
-		table {},
-			thead {},
-				th {}, "Bord"
-				th {}, "Vit"
-				th {}, "Elo"
-				th {}, "Elo"
-				th {}, "Svart"
-				th {}, "Resultat" 
-			rows.join ""
+	root = document.getElementById 'tables'
+	root.innerHTML = ''
 
-	document.getElementById('tables').innerHTML = result
+	_div = koppla 'div', root
+	_table = koppla 'table', _div
+	_thead = koppla 'thead', _table
+	koppla 'th', _thead, {textContent:"Bord"}
+	koppla 'th', _thead, {textContent:"Vit"}
+	koppla 'th', _thead, {textContent:"Elo"}
+	koppla 'th', _thead, {textContent:"Elo"}
+	koppla 'th', _thead, {textContent:"Svart"}
+	koppla 'th', _thead, {textContent:"Resultat"}
+	
+	for [w,b], iTable in rounds[selectedRound]
+		_table.appendChild addBord iTable, results[selectedRound][iTable], w, b
 
 sortColumn = (index,stigande) ->
 	tbody = document.querySelector '#stallning tbody'
@@ -613,7 +612,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showTables 0
 	showNames()
 
-	setScreen 'a'
+	setScreen 'b'
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -621,16 +620,16 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.title = settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
-
-		if event.key in ['a','b','c'] then setScreen event.key
+		key = event.key
+		echo 'keydown',key,currTable
+		if key in ['a','b','c'] then setScreen key
 		
-		if event.key == 'ArrowLeft'  then changeRound -1
-		if event.key == 'ArrowRight' then changeRound +1
-		if event.key == 'ArrowUp'    then changeTable -1
-		if event.key == 'ArrowDown'  then changeTable +1
+		if key == 'ArrowLeft'  then changeRound -1
+		if key == 'ArrowRight' then changeRound +1
+		if key == 'ArrowUp'    then changeTable -1
+		if key == 'ArrowDown'  then changeTable +1
 
 		del = 'Delete'
-		key = event.key
 		if key == del then setResult key, 'x' # "  -  "
 		if key == '0' then setResult key, '0' # "0 - 1"
 		if key == ' ' then setResult key, '1' # "½ - ½"
