@@ -56,7 +56,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	currTable = 0
 	
 	setScreen currScreen
-	showTables shorts, currRound
+	showTables currRound
 	showNames()
 
 changeTable = (delta) -> # byt bord
@@ -82,7 +82,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 				key = _th.textContent
 				if !isNaN parseInt key
 					key = parseInt(key) - settings.ONE
-					showTables shorts, key
+					showTables key
 					return
 				sortColumn index, key in "# Namn".split ' '
 
@@ -493,7 +493,7 @@ showNames = ->
 
 	columns.forEach (col) =>
 		colDiv = koppla 'div', container, {class:'column'}
-		tabell = koppla 'table', colDiv #, {class:'player'}
+		tabell = koppla 'table', colDiv
 
 		col.forEach (p) => 
 			tr1 = koppla 'tr',tabell
@@ -526,7 +526,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 
 	document.getElementById('stallning').innerHTML = result
 
-showTables = (shorts, selectedRound) -> # Visa bordslistan
+showTables = (selectedRound) -> # Visa bordslistan
 
 	if rounds.length == 0 then return
 	rows = []
@@ -610,7 +610,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	updateLongsAndShorts()
 	showPlayers longs
-	showTables shorts, 0
+	showTables 0
 	showNames()
 
 	setScreen 'a'
