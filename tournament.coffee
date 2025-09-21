@@ -32,9 +32,9 @@ shorts  = [] # ronder x players. cell: [w,b,col,res]
 currRound = 0
 currTable = 0
 
-flagStällning = 1
-flagTables = 1
-flagNames = 1
+# flagStällning = 1
+# flagTables = 1
+# flagNames = 1
 
 frirond = null # ingen frirond. Annars index för frironden
 
@@ -424,20 +424,7 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join('   ') + '  ' + players[i].elo
 
-
-# makeCells = (chunk) ->
-# 	rows = []
-# 	for row in chunk
-# 		cells = []
-# 		for cell in row
-# 			if cell 
-# 				[name,plats] = cell
-# 				cells.push td {}, plats
-# 				cells.push td ALIGN_LEFT, name
-# 		rows.push tr {}, cells.join ""
-# 	echo rows.join ""
-
-koppla = (typ,parent, attrs={}) ->
+koppla = (typ, parent, attrs={}) ->
 	elem = document.createElement typ
 	for key of attrs
 		elem.setAttribute key, attrs[key]
@@ -461,64 +448,36 @@ showNames = ->
 
 	persons.sort()
 
-
-	ROWS_PER_COL = 30
+	ROWS_PER_COL = 25
 
 	# Dela upp i kolumner om max 30 spelare vardera
 	chunkIntoColumns = (items, size) ->
 		cols = []
-		for i in range 0, items.length, size #(let i = 0; i < items.length; i += size) {
+		for i in range 0, items.length, size
 			cols.push items.slice i, i + size
 		cols
 
 	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
 	columns = chunkIntoColumns persons, ROWS_PER_COL
-	container = document.getElementById 'cols'
-	# container.className = 'columns'
+	root = document.getElementById 'names'
+	root.innerHTML = '' # rensa
 
-	columns.forEach (col, cIdx) =>
-		colDiv = document.createElement 'div'
-		colDiv.className = 'column'
-		colDiv.setAttribute 'aria-label', "Kolumn #{cIdx + 1}"
+	header = koppla 'h2', root
+	header.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+
+	container = koppla 'div', root
+	container.className = 'columns'
+
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv #, {class:'player'}
 
 		col.forEach (p) => 
-			t = document.createElement 'table'
-			t.className = 'player'
-
-			r1 = t.insertRow()
-			c1 = r1.insertCell()
-			c1.className = 'name'
-			c1.textContent = p[0]
-
-			r2 = t.insertRow()
-			c2 = r2.insertCell()
-			c2.className = 'seat'
-			c2.textContent = p[1]
-
-			colDiv.appendChild t
-
-		container.appendChild colDiv
-
-
-	# numCols = 5
-	# numRows = Math.ceil persons.length / numCols
-
-	# container = document.getElementById "names"
-
-	# for c in range numCols
-	# 	colDiv = koppla "div", container, {class:"column"}
-	# 	tabell = koppla "table", colDiv
-
-	# 	for r in range numRows
-	# 		idx = c * numRows + r
-	# 		if idx >= persons.length then break
-	# 		person = persons[idx]
-
-	# 		row1 = koppla "tr",tabell
-	# 		td1 = koppla "td", row1, {class:'right'}
-	# 		td2 = koppla "td", row1, {class:'left'}
-	# 		td1.textContent = person[1]
-	# 		td2.textContent = person[0]
+			tr1 = koppla 'tr',tabell
+			td1 = koppla 'td',tr1, {class:'name'}
+			td2 = koppla 'td',tr1, {class:'seat'}
+			td1.textContent = p[0]
+			td2.textContent = p[1]
   
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
@@ -534,7 +493,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 			roundsContent long, i
 
 	result = div {},
-		h2 {}, "A " + settings.TITLE + " (#{if settings.ROUNDS == players.length - 1 then 'Berger' else 'Floating'})"
+		h2 {}, "A Ställning för " + settings.TITLE
 		table {},
 			thead {},
 				th {}, "#"
@@ -554,7 +513,7 @@ showTables = (shorts, selectedRound) -> # Visa bordslistan
 		rows.push addTable iTable,results[selectedRound][iTable] ,w, b
 
 	result = div {},
-		h2 {}, "B Bordslista för rond #{selectedRound + settings.ONE}"
+		h2 {}, "B Bordslista rond #{selectedRound + settings.ONE} för #{settings.TITLE}"
 		table {},
 			thead {},
 				th {}, "Bord"
@@ -593,6 +552,11 @@ updateLongsAndShorts = -> # Uppdaterar longs och shorts utifrån rounds och resu
 	longs = (longForm rounds[r],results[r] for r in range rounds.length)
 	shorts = longs
 	longs = _.zip ...longs # transponerar matrisen
+
+setScreen = (key) ->
+	document.getElementById('stallning').style.display = if key=='a' then 'flex' else 'none'
+	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
+	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
@@ -633,7 +597,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showPlayers longs
 	showTables shorts, 0
 	showNames()
-	# overview()
+
+	setScreen 'a'
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -642,10 +607,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 
-		if event.key == 'a' then flagStällning = flip flagStällning, "stallning" 
-		if event.key == 'b' then flagTables = flip flagTables, "tables" 
-		if event.key == 'c' then flagNames = flip flagNames, "names" 
-		# overview()
+		if event.key in ['a','b','c'] then setScreen event.key
 		
 		if event.key == 'ArrowLeft'  then changeRound -1
 		if event.key == 'ArrowRight' then changeRound +1
