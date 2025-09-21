@@ -319,16 +319,12 @@ setByeResults = ->
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#stallning th'
-	# index = -1
 	for _th,index in ths
-		# index++
 		color = if index == currRound + 3 then 'yellow' else 'white'
 		_th.style = "background-color:#{color}"
 
 	trs = document.querySelectorAll '#tables tr'
-	# index = -1
 	for _tr,index in trs
-		# index++
 		color = if index == currTable + 0 then 'yellow' else 'white'
 		_tr.children[5].style = "background-color:#{color}"
 
