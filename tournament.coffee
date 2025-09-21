@@ -42,12 +42,12 @@ addBord = (bord,res,c0,c1) ->
 	tr1 = document.createElement 'tr'
 	color = if bord == currTable then 'yellow' else 'white'
 
-	koppla 'td', tr1, {textContent : bord + settings.ONE}
-	koppla 'td', tr1, {style:"text-align:left", textContent : vit}
-	koppla 'td', tr1, {style:"text-align:left", textContent : vit_elo}
-	koppla 'td', tr1, {style:"text-align:left", textContent : svart_elo}
-	koppla 'td', tr1, {style:"text-align:left", textContent : svart}
-	koppla 'td', tr1, {style:"text-align:center; background-color:#{color}", textContent : prettyResult res}
+	koppla 'td', tr1, {text : bord + settings.ONE}
+	koppla 'td', tr1, {style:"text-align:left", text : vit}
+	koppla 'td', tr1, {style:"text-align:left", text : vit_elo}
+	koppla 'td', tr1, {style:"text-align:left", text : svart_elo}
+	koppla 'td', tr1, {style:"text-align:left", text : svart}
+	koppla 'td', tr1, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
 	tr1
 	
 changeRound = (delta) -> # byt rond och uppdatera bordslistan
@@ -108,9 +108,9 @@ invert = (lst) ->
 koppla = (typ, parent, attrs = {}) ->
   elem = document.createElement typ
 
-  if 'textContent' of attrs
-    elem.textContent = attrs.textContent
-    delete attrs.textContent
+  if 'text' of attrs
+    elem.textContent = attrs.text
+    delete attrs.text
 
   if 'html' of attrs
     elem.innerHTML = attrs.html
@@ -273,8 +273,8 @@ roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelar
 		result = convert result, 'x201FG', ' 10½11'
 		attr = if color == 'w' then "right:0px;" else "left:0px;"
 		cell = koppla 'td', _tr, {style: "position:relative;"}
-		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, textContent: opponent}
-		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, textContent: result}
+		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, text: opponent}
+		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, text: result}
 	div3 = koppla 'td', _tr, {style : "text-align:right"} # P
 	div4 = koppla 'td', _tr, {style : "text-align:right"} # PR
 
@@ -492,8 +492,8 @@ showNames = ->
 
 		col.forEach (p) => 
 			tr1 = koppla 'tr',tabell
-			td1 = koppla 'td',tr1, {class:'name', textContent:p[0]}
-			td2 = koppla 'td',tr1, {class:'seat', textContent:p[1]}
+			td1 = koppla 'td',tr1, {class:'name', text:p[0]}
+			td2 = koppla 'td',tr1, {class:'seat', text:p[1]}
   
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
@@ -503,23 +503,23 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 	_div = koppla 'div', root
 	_table = koppla 'table', _div
 	_thead = koppla 'thead', _table
-	koppla 'th', _thead, {textContent:"#"}
-	koppla 'th', _thead, {textContent:"Namn"}
-	koppla 'th', _thead, {textContent:"Elo"}
+	koppla 'th', _thead, {text:"#"}
+	koppla 'th', _thead, {text:"Namn"}
+	koppla 'th', _thead, {text:"Elo"}
 
 	for i in range rounds.length
-		koppla 'th', _thead, {textContent:"#{i + settings.ONE}"}
+		koppla 'th', _thead, {text:"#{i + settings.ONE}"}
 
-	koppla 'th', _thead, {textContent:"P"}
-	koppla 'th', _thead, {textContent:"PR"}
+	koppla 'th', _thead, {text:"P"}
+	koppla 'th', _thead, {text:"PR"}
 
 	for long, i in longs
 		player = players[i]
 		if player.name == 'FRIROND' then continue
 		_tr = koppla 'tr', _table
-		koppla 'td', _tr, {textContent: "#{i + settings.ONE}"}
-		koppla 'td', _tr, {style:"text-align:left" , textContent: player.name}
-		koppla 'td', _tr, {style:"text-align:left" , textContent: player.elo}
+		koppla 'td', _tr, {text: "#{i + settings.ONE}"}
+		koppla 'td', _tr, {style:"text-align:left" , text: player.name}
+		koppla 'td', _tr, {style:"text-align:left" , text: player.elo}
 		roundsContent long, i, _tr
 
 showTables = -> # Visa bordslistan
@@ -532,12 +532,12 @@ showTables = -> # Visa bordslistan
 	_div = koppla 'div', root
 	_table = koppla 'table', _div
 	_thead = koppla 'thead', _table
-	koppla 'th', _thead, {textContent:"Bord"}
-	koppla 'th', _thead, {textContent:"Vit"}
-	koppla 'th', _thead, {textContent:"Elo"}
-	koppla 'th', _thead, {textContent:"Elo"}
-	koppla 'th', _thead, {textContent:"Svart"}
-	koppla 'th', _thead, {textContent:"Resultat"}
+	koppla 'th', _thead, {text:"Bord"}
+	koppla 'th', _thead, {text:"Vit"}
+	koppla 'th', _thead, {text:"Elo"}
+	koppla 'th', _thead, {text:"Elo"}
+	koppla 'th', _thead, {text:"Svart"}
+	koppla 'th', _thead, {text:"Resultat"}
 	
 	for [w,b], iTable in rounds[currRound]
 		_table.appendChild addBord iTable, results[currRound][iTable], w, b
