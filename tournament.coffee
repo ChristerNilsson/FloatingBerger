@@ -29,12 +29,9 @@ rounds  = [] # ronder x bord. cell: [w,b]
 longs   = [] # players x ronder. cell: [w,b,col,res]
 shorts  = [] # ronder x players. cell: [w,b,col,res]
 
+currScreen = 'a'
 currRound = 0
 currTable = 0
-
-# flagStällning = 1
-# flagTables = 1
-# flagNames = 1
 
 frirond = null # ingen frirond. Annars index för frironden
 
@@ -58,6 +55,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	currRound = (currRound + delta) %% rounds.length
 	currTable = 0
 	
+	setScreen currScreen
 	showTables shorts, currRound
 	showNames()
 
@@ -115,6 +113,13 @@ invert = (lst) ->
 		result[item] = i
 	result
 
+koppla = (typ, parent, attrs={}) ->
+	elem = document.createElement typ
+	for key of attrs
+		elem.setAttribute key, attrs[key]
+	parent.appendChild elem
+	elem
+
 export longForm = (rounds, results) -> # produces the long form for ONE round (spelarlistan). If there is a BYE, put it last in the list
 	result = []
 	for i in range rounds.length
@@ -165,13 +170,6 @@ makeURL = ->
 	url
 
 export other = (input) -> convert input, "012FG","21022"
-
-# overview = ->
-# 	res = ""
-# 	if flagStällning == 1 then res += 'A'
-# 	if flagTables == 1 then res += 'B'
-# 	if flagNames == 1 then res += 'C'
-# 	document.getElementById('info').innerHTML = div {}, res
 
 parseTextarea = -> # läs in initiala uppgifter om spelarna
 	raw = document.getElementById "textarea"
@@ -412,6 +410,22 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
+setScreen = (key) ->
+
+	currScreen = key
+
+	header = document.getElementById 'header'
+	header.innerHTML = ''
+	_h2 = koppla 'h2', header
+
+	if key == 'a' then _h2.textContent = "A Ställning för " + settings.TITLE
+	if key == 'b' then _h2.textContent = "B Bordslista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+	if key == 'c' then _h2.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+
+	document.getElementById('stallning').style.display = if key=='a' then 'flex' else 'none'
+	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
+	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
+
 showInfo = (message) -> # Visa helpText på skärmen
 	document.getElementById('info').innerHTML = div {},
 		div {class:"help"}, pre {}, message
@@ -423,13 +437,6 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 	for i in range n
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join('   ') + '  ' + players[i].elo
-
-koppla = (typ, parent, attrs={}) ->
-	elem = document.createElement typ
-	for key of attrs
-		elem.setAttribute key, attrs[key]
-	parent.appendChild elem
-	elem
 
 showNames = ->
 	persons = []
@@ -447,7 +454,7 @@ showNames = ->
 			persons.push pb
 
 	persons.sort()
-
+	
 	ROWS_PER_COL = 25
 
 	# Dela upp i kolumner om max 30 spelare vardera
@@ -459,11 +466,9 @@ showNames = ->
 
 	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
 	columns = chunkIntoColumns persons, ROWS_PER_COL
+
 	root = document.getElementById 'names'
 	root.innerHTML = '' # rensa
-
-	header = koppla 'h2', root
-	header.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
 
 	container = koppla 'div', root
 	container.className = 'columns'
@@ -493,7 +498,6 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 			roundsContent long, i
 
 	result = div {},
-		h2 {}, "A Ställning för " + settings.TITLE
 		table {},
 			thead {},
 				th {}, "#"
@@ -507,13 +511,13 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 	document.getElementById('stallning').innerHTML = result
 
 showTables = (shorts, selectedRound) -> # Visa bordslistan
+
 	if rounds.length == 0 then return
 	rows = []
 	for [w,b],iTable in rounds[selectedRound]
 		rows.push addTable iTable,results[selectedRound][iTable] ,w, b
 
 	result = div {},
-		h2 {}, "B Bordslista rond #{selectedRound + settings.ONE} för #{settings.TITLE}"
 		table {},
 			thead {},
 				th {}, "Bord"
@@ -552,11 +556,6 @@ updateLongsAndShorts = -> # Uppdaterar longs och shorts utifrån rounds och resu
 	longs = (longForm rounds[r],results[r] for r in range rounds.length)
 	shorts = longs
 	longs = _.zip ...longs # transponerar matrisen
-
-setScreen = (key) ->
-	document.getElementById('stallning').style.display = if key=='a' then 'flex' else 'none'
-	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
-	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
