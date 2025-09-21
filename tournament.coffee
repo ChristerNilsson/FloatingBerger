@@ -4,7 +4,6 @@ import {Player} from './player.js'
 import {Floating} from './floating.js'
 import {helpText} from './texts.js'
 import {performance} from './rating.js'
-# import {table,thead,th,tr,td,a,div,pre,p,h2} from './html.js'
 
 echo = console.log
 range = _.range
@@ -14,8 +13,7 @@ ALIGN_CENTER = {style: "text-align:center"}
 ALIGN_RIGHT  = {style: "text-align:right"}
 
 ALFABET = '12345678901234567890123456789012345678901234567890'
-
-NAME_COLS = 5
+NAMES_PER_COL = 30
 
 ## V A R I A B L E R ##
 
@@ -109,8 +107,7 @@ flip = (flag,id) ->
 
 invert = (lst) ->
 	result = _.clone lst
-	for i in range lst.length
-		item = lst[i]
+	for item,i in lst
 		result[item] = i
 	result
 
@@ -290,14 +287,22 @@ savePairing = (r, A, half, n) -> # skapa en bordslista utifrån berger.
 	lst.sort()
 
 setAllPR = (delta) ->
+	echo 'setAllPR'
+
+	trs = document.querySelectorAll '#stallning tr'
+	translator = []
+	for i in range trs.length
+		translator.push Math.round(trs[i].children[0].textContent) - 1
+	translator = invert translator
+
 	decimals = settings.DECIMALS + delta
 	if 0 <= decimals <= 6 then settings.DECIMALS = decimals
 
 	trs = document.querySelectorAll '#stallning tr'
 	for index in range players.length
 		if players[index].PR > 0
-			_tdPR = trs[index + 1].children[4 + settings.GAMES * settings.ROUNDS]
-			_tdPR.textContent = players[index].PR.toFixed settings.DECIMALS
+			_tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
+			_tdPR.textContent = players[translator[index]].PR.toFixed settings.DECIMALS
 
 setByeResults = ->
 	if not frirond then return
@@ -338,7 +343,7 @@ setP = (trs, index, translator) ->
 				scoresPR += value
 				elos.push Math.round elo
 
-	_tdP  = trs[translator[index] + 1 - 1].children[3 + settings.GAMES * settings.ROUNDS]
+	_tdP  = trs[translator[index]].children[3 + settings.GAMES * settings.ROUNDS]
 	_tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
 
 	# kalkylera performance rating mha vinstandel och elo-tal
@@ -349,20 +354,24 @@ setP = (trs, index, translator) ->
 		perf = performance andel, elos
 		players[index].PR = perf
 
+setP_all = (trs,translator) ->
+	for i in range longs.length
+		setP trs,i,translator
+
 setPR = (trs, index, translator) ->
-	_tdPR = trs[translator[index] + 1 - 1].children[4 + settings.GAMES * settings.ROUNDS]
+	_tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
 	_tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
 
-setResult = (key, res) -> # Uppdatera results samt gui:t.
-	#echo 'setResult'
-	trs = document.querySelectorAll '#stallning tr'
+setPR_all = (trs,translator) ->
+	for i in range translator.length
+		setPR trs,i,translator
 
+setResult = (key, res) -> # Uppdatera results samt gui:t.
 	old = results[currRound][currTable]
 	[w,b] = rounds[currRound][currTable]
 	if frirond and (w==frirond or b==frirond) then return
 
 	cell = old + res # transition, 16 possibilities
-	#echo 'cell',cell
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
 		currTable = (currTable + 1) %% tableCount()
@@ -380,17 +389,16 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	one = settings.ONE
 
+	trs = document.querySelectorAll '#stallning tr'
 	translator = []
 	for i in range trs.length
 		translator.push Math.round(trs[i].children[0].textContent) - 1
 	translator = invert translator
 
-	#echo 'translator',translator
-
-	_td = trs[translator[w] + one - one].children[3 + currRound].children[1]
+	_td = trs[translator[w]].children[3 + currRound].children[1]
 	_td.textContent = "0½1"[res]
 
-	_td = trs[translator[b] + one - one].children[3 + currRound].children[1]
+	_td = trs[translator[b]].children[3 + currRound].children[1]
 	_td.textContent = "1½0"[res]
 
 	setP trs, b, translator
@@ -401,9 +409,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	# Sätt tables
 	trs = document.querySelectorAll '#tables tr'
-#	echo (item.textContent for item in trs)
-	_tr = trs[currTable + 0] # Ska vara NOLL!
-	#echo _tr
+	_tr = trs[currTable] # Ska vara NOLL!
 	tr5 = _tr.children[5]
 
 	tr5.textContent = prettyResult res
@@ -446,8 +452,8 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 showNames = ->
 	persons = []
 	for [w,b],i in rounds[currRound]
-		pw = [players[w].name, "#{i+1} • W"]
-		pb = [players[b].name, "#{i+1} • B"]
+		pw = [players[w].name, "#{i + settings.ONE} • W"]
+		pb = [players[b].name, "#{i + settings.ONE} • B"]
 		if pw[0] == 'FRIROND' 
 			pb[1] = 'BYE'
 			persons.push pb
@@ -460,8 +466,6 @@ showNames = ->
 
 	persons.sort()
 	
-	ROWS_PER_COL = 30
-
 	# Dela upp i kolumner om max 30 spelare vardera
 	chunkIntoColumns = (items, size) ->
 		cols = []
@@ -470,7 +474,7 @@ showNames = ->
 		cols
 
 	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
-	columns = chunkIntoColumns persons, ROWS_PER_COL
+	columns = chunkIntoColumns persons,NAMES_PER_COL
 
 	root = document.getElementById 'names'
 	root.innerHTML = '' # rensa
@@ -500,7 +504,6 @@ roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelar
 
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
-	# rows = []
 	root = document.getElementById 'stallning'
 	root.innerHTML = ''
 
@@ -547,8 +550,8 @@ showTables = -> # Visa bordslistan
 		_table.appendChild addBord iTable, results[currRound][iTable], w, b
 
 sortColumn = (index,stigande) ->
-	tbody = document.querySelector '#stallning tbody'
-	rader = Array.from tbody.querySelectorAll 'tr'
+	table = document.querySelector '#stallning table'
+	rader = Array.from table.querySelectorAll 'tr'
 
 	rader.sort (a, b) ->
 		cellA = a.children[index].textContent.trim()
@@ -564,7 +567,7 @@ sortColumn = (index,stigande) ->
 
 	# Lägg tillbaka raderna i sorterad ordning
 	for rad in rader
-		tbody.appendChild rad
+		table.appendChild rad
 
 tableCount = -> players.length // 2 # Beräkna antal bord
 
@@ -608,11 +611,21 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	setByeResults()
 
 	updateLongs()
+
 	showPlayers longs
 	showTables()
 	showNames()
 
-	setScreen 'b'
+	trs = document.querySelectorAll '#stallning tr'
+	translator = []
+	for i in range trs.length
+		translator.push Math.round(trs[i].children[0].textContent) - 1
+	translator = invert translator
+
+	setP_all trs,translator
+	setPR_all trs,translator
+
+	setScreen 'a'
 
 	createSortEvents()
 	setCursor currRound,currTable
@@ -620,8 +633,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.title = settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
+		start = new Date()
 		key = event.key
-		# echo 'keydown',key,currTable
 		if key in ['a','b','c'] then setScreen key
 		
 		if key == 'ArrowLeft'  then changeRound -1
@@ -657,5 +670,9 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == 'r' then sortColumn 4+gxr,false
 
 		setCursor currRound,currTable
+		echo 'cpu', key, new Date() - start
 
+
+start = new Date()
 main()
+echo 'cpu',new Date() - start
