@@ -15,7 +15,7 @@ ALIGN_RIGHT  = {style: "text-align:right"}
 
 ALFABET = '12345678901234567890123456789012345678901234567890'
 
-NAME_COLUMNS = 5
+NAME_COLS = 5
 
 ## V A R I A B L E R ##
 
@@ -424,11 +424,31 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join('   ') + '  ' + players[i].elo
 
+
+# makeCells = (chunk) ->
+# 	rows = []
+# 	for row in chunk
+# 		cells = []
+# 		for cell in row
+# 			if cell 
+# 				[name,plats] = cell
+# 				cells.push td {}, plats
+# 				cells.push td ALIGN_LEFT, name
+# 		rows.push tr {}, cells.join ""
+# 	echo rows.join ""
+
+koppla = (typ,parent, attrs={}) ->
+	elem = document.createElement typ
+	for key of attrs
+		elem.setAttribute key, attrs[key]
+	parent.appendChild elem
+	elem
+
 showNames = ->
 	persons = []
 	for [w,b],i in rounds[currRound]
-		pw = [players[w].name, "#{i+1} • W", players[w].elo]
-		pb = [players[b].name, "#{i+1} • B", players[b].elo]
+		pw = [players[w].name, "#{i+1} • W"]
+		pb = [players[b].name, "#{i+1} • B"]
 		if pw[0] == 'FRIROND' 
 			pb[1] = 'BYE'
 			persons.push pb
@@ -439,28 +459,67 @@ showNames = ->
 			persons.push pw
 			persons.push pb
 
-	persons.sort (a,b) -> a[0].length - b[0].length
-	rows = []
-	cells = []
-	for [name, plats, elo],i in persons
-		cells.push td ALIGN_LEFT, name
-		cells.push td {}, plats
-		cells.push td {}, elo
-		if i % NAME_COLUMNS == NAME_COLUMNS - 1
-			rows.push tr {}, cells.join ""
-			cells = []
-	rows.push tr {}, cells.join ""
+	persons.sort()
 
-	result = div {},
-		h2 {}, "C #{settings.TITLE} Namnlista"
-		table {},
-			thead {},
-				th {}, "Namn"
-				th {}, "Bord"
-				th {}, "Elo"
-			rows.join ""
-	document.getElementById('names').innerHTML = result
 
+	ROWS_PER_COL = 30
+
+	# Dela upp i kolumner om max 30 spelare vardera
+	chunkIntoColumns = (items, size) ->
+		cols = []
+		for i in range 0, items.length, size #(let i = 0; i < items.length; i += size) {
+			cols.push items.slice i, i + size
+		cols
+
+	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
+	columns = chunkIntoColumns persons, ROWS_PER_COL
+	container = document.getElementById 'cols'
+	# container.className = 'columns'
+
+	columns.forEach (col, cIdx) =>
+		colDiv = document.createElement 'div'
+		colDiv.className = 'column'
+		colDiv.setAttribute 'aria-label', "Kolumn #{cIdx + 1}"
+
+		col.forEach (p) => 
+			t = document.createElement 'table'
+			t.className = 'player'
+
+			r1 = t.insertRow()
+			c1 = r1.insertCell()
+			c1.className = 'name'
+			c1.textContent = p[0]
+
+			r2 = t.insertRow()
+			c2 = r2.insertCell()
+			c2.className = 'seat'
+			c2.textContent = p[1]
+
+			colDiv.appendChild t
+
+		container.appendChild colDiv
+
+
+	# numCols = 5
+	# numRows = Math.ceil persons.length / numCols
+
+	# container = document.getElementById "names"
+
+	# for c in range numCols
+	# 	colDiv = koppla "div", container, {class:"column"}
+	# 	tabell = koppla "table", colDiv
+
+	# 	for r in range numRows
+	# 		idx = c * numRows + r
+	# 		if idx >= persons.length then break
+	# 		person = persons[idx]
+
+	# 		row1 = koppla "tr",tabell
+	# 		td1 = koppla "td", row1, {class:'right'}
+	# 		td2 = koppla "td", row1, {class:'left'}
+	# 		td1.textContent = person[1]
+	# 		td2.textContent = person[0]
+  
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
 	rows = []
