@@ -4,7 +4,7 @@ import {Player} from './player.js'
 import {Floating} from './floating.js'
 import {helpText} from './texts.js'
 import {performance} from './rating.js'
-import {table,thead,th,tr,td,a,div,pre,p,h2} from './html.js'
+# import {table,thead,th,tr,td,a,div,pre,p,h2} from './html.js'
 
 echo = console.log
 range = _.range
@@ -27,7 +27,6 @@ players = []
 results = [] # ronder x bord. cell: 'x', '0', '1' eller '2'
 rounds  = [] # ronder x bord. cell: [w,b] 
 longs   = [] # players x ronder. cell: [w,b,col,res]
-#shorts  = [] # ronder x players. cell: [w,b,col,res]
 
 currScreen = 'a'
 currRound = 0
@@ -144,7 +143,7 @@ export longForm = (rounds, results) -> # produces the long form for ONE round (s
 	result
 
 makeBerger = -> # lotta en hel berger-turnering.
-	echo 'makeBerger'
+# 
 	n = players.length
 	half = n // 2 
 	A = [0...n]
@@ -277,25 +276,6 @@ readResults = (params) -> # Resultaten läses från urlen
 			if ch=='x' then arr.push 'x'
 		results.push arr
 
-roundsContent = (long, i) -> # rondernas data + poäng + PR. i anger spelarnummer
-
-	ronder = []
-	oppElos = []
-
-	for [w,b,color,result] in long
-		opponent = settings.ONE + if w == i then b else w
-		result = convert result, 'x201FG', ' 10½11'
-
-		attr = if color == 'w' then "right:0px;" else "left:0px;"
-		cell = td {style: "position:relative;"},
-			div {style: "position:absolute; top:0px;  font-size:0.7em;" + attr}, opponent
-			div {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)"}, result
-
-		ronder.push cell
-
-	ronder.push	td ALIGN_RIGHT, ""
-	ronder.push td {}, ""
-	ronder.join ""
 
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
@@ -358,7 +338,7 @@ setP = (trs, index, translator) ->
 				scoresPR += value
 				elos.push Math.round elo
 
-	_tdP  = trs[translator[index] + 1].children[3 + settings.GAMES * settings.ROUNDS]
+	_tdP  = trs[translator[index] + 1 - 1].children[3 + settings.GAMES * settings.ROUNDS]
 	_tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
 
 	# kalkylera performance rating mha vinstandel och elo-tal
@@ -370,11 +350,11 @@ setP = (trs, index, translator) ->
 		players[index].PR = perf
 
 setPR = (trs, index, translator) ->
-	_tdPR = trs[translator[index] + 1].children[4 + settings.GAMES * settings.ROUNDS]
+	_tdPR = trs[translator[index] + 1 - 1].children[4 + settings.GAMES * settings.ROUNDS]
 	_tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
-	echo 'setResult'
+	#echo 'setResult'
 	trs = document.querySelectorAll '#stallning tr'
 
 	old = results[currRound][currTable]
@@ -382,7 +362,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	if frirond and (w==frirond or b==frirond) then return
 
 	cell = old + res # transition, 16 possibilities
-	echo 'cell',cell
+	#echo 'cell',cell
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
 		currTable = (currTable + 1) %% tableCount()
@@ -396,19 +376,21 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	# uppdatera och gå till nästa bord
 	results[currRound][currTable] = res
 
-	updateLongsAndShorts()
+	updateLongs()
 
 	one = settings.ONE
 
 	translator = []
-	for i in range 1, trs.length
+	for i in range trs.length
 		translator.push Math.round(trs[i].children[0].textContent) - 1
 	translator = invert translator
 
-	_td = trs[translator[w] + one].children[3 + currRound].children[1]
+	#echo 'translator',translator
+
+	_td = trs[translator[w] + one - one].children[3 + currRound].children[1]
 	_td.textContent = "0½1"[res]
 
-	_td = trs[translator[b] + one].children[3 + currRound].children[1]
+	_td = trs[translator[b] + one - one].children[3 + currRound].children[1]
 	_td.textContent = "1½0"[res]
 
 	setP trs, b, translator
@@ -421,7 +403,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	trs = document.querySelectorAll '#tables tr'
 #	echo (item.textContent for item in trs)
 	_tr = trs[currTable + 0] # Ska vara NOLL!
-	echo _tr
+	#echo _tr
 	tr5 = _tr.children[5]
 
 	tr5.textContent = prettyResult res
@@ -446,8 +428,12 @@ setScreen = (key) ->
 	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
 
 showInfo = (message) -> # Visa helpText på skärmen
-	document.getElementById('info').innerHTML = div {},
-		div {class:"help"}, pre {}, message
+	root = document.getElementById('info')
+	root.innerHTML = ""
+	div1 = koppla 'div', root
+	div2 = koppla 'div', div1, {class:"help"} 
+	pre1 = koppla 'pre', div2
+	pre1.innerHTML = message
 
 showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	n = players.length
@@ -501,31 +487,44 @@ showNames = ->
 			td1 = koppla 'td',tr1, {class:'name', textContent:p[0]}
 			td2 = koppla 'td',tr1, {class:'seat', textContent:p[1]}
   
+roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelarnummer
+	for [w,b,color,result] in long
+		opponent = settings.ONE + if w == i then b else w
+		result = convert result, 'x201FG', ' 10½11'
+		attr = if color == 'w' then "right:0px;" else "left:0px;"
+		cell = koppla 'td', _tr, {style: "position:relative;"}
+		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, textContent: opponent}
+		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, textContent: result}
+	div3 = koppla 'td', _tr, {style : "text-align:right"} # P
+	div4 = koppla 'td', _tr, {style : "text-align:right"} # PR
+
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
-	rows = []
+	# rows = []
+	root = document.getElementById 'stallning'
+	root.innerHTML = ''
+
+	_div = koppla 'div', root
+	_table = koppla 'table', _div
+	_thead = koppla 'thead', _table
+	koppla 'th', _thead, {textContent:"#"}
+	koppla 'th', _thead, {textContent:"Namn"}
+	koppla 'th', _thead, {textContent:"Elo"}
+
+	for i in range rounds.length
+		koppla 'th', _thead, {textContent:"#{i + settings.ONE}"}
+
+	koppla 'th', _thead, {textContent:"P"}
+	koppla 'th', _thead, {textContent:"PR"}
 
 	for long, i in longs
 		player = players[i]
 		if player.name == 'FRIROND' then continue
-		rows.push tr {},
-			td {}, i + settings.ONE
-			td ALIGN_LEFT, player.name
-			td {}, player.elo
-			roundsContent long, i
-
-	result = div {},
-		table {},
-			thead {},
-				th {}, "#"
-				th {}, "Namn"
-				th {}, "Elo"
-				(th {}, "#{i + settings.ONE}" for i in range rounds.length).join ""
-				th {}, "P"
-				th {}, "PR"
-			rows.join ""
-
-	document.getElementById('stallning').innerHTML = result
+		_tr = koppla 'tr', _table
+		koppla 'td', _tr, {textContent: "#{i + settings.ONE}"}
+		koppla 'td', _tr, {style:"text-align:left" , textContent: player.name}
+		koppla 'td', _tr, {style:"text-align:left" , textContent: player.elo}
+		roundsContent long, i, _tr
 
 showTables = -> # Visa bordslistan
 
@@ -569,9 +568,8 @@ sortColumn = (index,stigande) ->
 
 tableCount = -> players.length // 2 # Beräkna antal bord
 
-updateLongsAndShorts = -> # Uppdaterar longs och shorts utifrån rounds och results
+updateLongs = -> # Uppdaterar longs utifrån rounds och results
 	longs = (longForm rounds[r],results[r] for r in range rounds.length)
-	#shorts = longs
 	longs = _.zip ...longs # transponerar matrisen
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
@@ -609,7 +607,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	setByeResults()
 
-	updateLongsAndShorts()
+	updateLongs()
 	showPlayers longs
 	showTables()
 	showNames()
@@ -623,7 +621,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		key = event.key
-		echo 'keydown',key,currTable
+		# echo 'keydown',key,currTable
 		if key in ['a','b','c'] then setScreen key
 		
 		if key == 'ArrowLeft'  then changeRound -1
@@ -645,12 +643,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 			echo 'currRound',currRound
 			echo 'currTable',currTable
 			echo '  settings',settings
-			# echo '  href',window.location.href
 			echo '  players',players
 			echo '  rounds',rounds
 			echo '  results', results
 			echo '  longs',longs
-			#echo '  shorts',shorts
 
 		gxr = settings.GAMES * settings.ROUNDS
 

@@ -30,9 +30,9 @@ Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagar
 * p • sortering på P (partipoäng)
 * r • sortering på PR (performance rating)
 
-* a • togglar spelarlistan
-* b • togglar bordslistan
-* c • togglar namnlistan
+* a • visar spelarna
+* b • visar borden
+* c • visar namnen
 
 * m • PR: fler decimaler 
 * l • PR: färre decimaler
