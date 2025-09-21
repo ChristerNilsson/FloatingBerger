@@ -267,6 +267,17 @@ readResults = (params) -> # Resultaten läses från urlen
 			if ch=='x' then arr.push 'x'
 		results.push arr
 
+roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelarnummer
+	for [w,b,color,result] in long
+		opponent = settings.ONE + if w == i then b else w
+		result = convert result, 'x201FG', ' 10½11'
+		attr = if color == 'w' then "right:0px;" else "left:0px;"
+		cell = koppla 'td', _tr, {style: "position:relative;"}
+		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, textContent: opponent}
+		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, textContent: result}
+	div3 = koppla 'td', _tr, {style : "text-align:right"} # P
+	div4 = koppla 'td', _tr, {style : "text-align:right"} # PR
+
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
 	if params.get ' ' + key then return params.get(' ' + key).trim()
@@ -484,17 +495,6 @@ showNames = ->
 			td1 = koppla 'td',tr1, {class:'name', textContent:p[0]}
 			td2 = koppla 'td',tr1, {class:'seat', textContent:p[1]}
   
-roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelarnummer
-	for [w,b,color,result] in long
-		opponent = settings.ONE + if w == i then b else w
-		result = convert result, 'x201FG', ' 10½11'
-		attr = if color == 'w' then "right:0px;" else "left:0px;"
-		cell = koppla 'td', _tr, {style: "position:relative;"}
-		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, textContent: opponent}
-		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, textContent: result}
-	div3 = koppla 'td', _tr, {style : "text-align:right"} # P
-	div4 = koppla 'td', _tr, {style : "text-align:right"} # PR
-
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 
 	root = document.getElementById 'stallning'
