@@ -90,7 +90,6 @@ export expand = (games, rounds) -> # make a double round from a single round
 	for round in rounds
 		result.push ([w,b] for [w,b] in round)
 		if games == 2 then result.push ([b,w] for [w,b] in round)
-	# echo players
 	return result
 
 export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som krävs för unikhet i listan
@@ -99,11 +98,6 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som kr�
 		unik = _.uniq (item.toFixed(i) for item in lst)
 		if unik.length > best then [best,ibest] = [unik.length,i]
 	ibest
-
-flip = (flag,id) ->
-	flag = 1 - flag
-	document.getElementById(id).style.display = ["none","table"][flag]
-	flag
 
 invert = (lst) ->
 	result = _.clone lst
@@ -272,7 +266,6 @@ readResults = (params) -> # Resultaten läses från urlen
 			if ch=='2' then arr.push '2'
 			if ch=='x' then arr.push 'x'
 		results.push arr
-
 
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
@@ -671,7 +664,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		setCursor currRound,currTable
 		echo 'cpu', key, new Date() - start
-
 
 start = new Date()
 main()
