@@ -1,4 +1,4 @@
-# ½ •
+# ½ • ↑ ↓ ← →
 
 import {Player} from './player.js'
 import {Floating} from './floating.js'
@@ -199,7 +199,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 
 	if players.length % 2 == 1
 		frirond = players.length
-		players.push '0000 FRIROND'
+		players.push '0000 BYE'
 	else
 		frirond = null
 
@@ -225,7 +225,7 @@ parseURL = ->
 	players = []
 	persons = params.getAll "p"
 
-	if window.location.href.includes 'FRIROND' then frirond = persons.length - 1
+	if window.location.href.includes 'BYE' then frirond = persons.length - 1
 	if settings.SORT == 1 then persons.sort().reverse()
 
 	settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{players.length-1}"
@@ -291,7 +291,7 @@ savePairing = (r, A, half, n) -> # skapa en bordslista utifrån berger.
 	lst.sort()
 
 setAllPR = (delta) ->
-	echo 'setAllPR'
+	#echo 'setAllPR'
 
 	trs = document.querySelectorAll '#stallning tr'
 	translator = []
@@ -355,7 +355,8 @@ setP = (trs, index, translator) ->
 		players[index].PR = perf
 
 setP_all = (trs,translator) ->
-	for i in range longs.length
+	echo 'setP_all',longs.length,translator.length
+	for i in range translator.length
 		setP trs,i,translator
 
 setPR = (trs, index, translator) ->
@@ -375,7 +376,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
 		currTable = (currTable + 1) %% tableCount()
-		echo 'currTable',currTable
+		#echo 'currTable',currTable
 		return
 
 	if cell in '01 02 10 12 20 21'.split ' '
@@ -454,10 +455,10 @@ showNames = ->
 	for [w,b],i in rounds[currRound]
 		pw = [players[w].name, "#{i + settings.ONE} • W"]
 		pb = [players[b].name, "#{i + settings.ONE} • B"]
-		if pw[0] == 'FRIROND' 
+		if pw[0] == 'BYE' 
 			pb[1] = 'BYE'
 			persons.push pb
-		else if pb[0] == 'FRIROND' 
+		else if pb[0] == 'BYE' 
 			pw[1] = 'BYE'
 			persons.push pw
 		else
@@ -511,7 +512,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 
 	for long, i in longs
 		player = players[i]
-		if player.name == 'FRIROND' then continue
+		if player.name == 'BYE' then continue
 		_tr = koppla 'tr', _table
 		koppla 'td', _tr, {text: "#{i + settings.ONE}"}
 		koppla 'td', _tr, {style:"text-align:left" , text: player.name}
@@ -659,8 +660,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == 'r' then sortColumn 4+gxr,false
 
 		setCursor currRound,currTable
-		echo 'cpu', key, new Date() - start
+		#echo 'cpu', key, new Date() - start
 
 start = new Date()
 main()
-echo 'cpu',new Date() - start
+#echo 'cpu',new Date() - start

@@ -1,46 +1,49 @@
-export helpText = """<h3>Floating Berger version 1.2</h3>TITLE   = turneringens namn
+export helpText = """<h3>Floating Berger version 1.2</h3>Namnet Floating Berger kommer av att de flesta spelare upplever att de är i mitten av sin egen lilla virtuella Berger-grupp.
+Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.
+
+Programmet hanterar både Floating och Berger:
+
+* Floating: som Schweizer, fast spelarna möter spelare med samma rating istf poäng
+* Berger: alla möter alla
+
+Formatet styrs mha ROUNDS
+<h3>Handhavande</h3>A B C   (Ställning, Bord och Namn)
+
+a a a   : Visa Ställning
+b b b   : Visa Bordslista
+c c c   : Visa Namnlista
+
+← ← ←   : Rond - 1
+→ → →   : Rond + 1
+
+  ↑     : Bord - 1
+  ↓     : Bord + 1
+
+#       : Sortera på #
+n       : Sortera på Namn
+e       : Sortera på Elo
+p       : Sortera på P  (poäng)
+r       : Sortera på PR (performance rating)
+
+m       : + decimaler i PR (more)
+l       : - decimaler i PR (less)
+
+  0     : Vit förlust
+  Space : Remi
+  1     : Vit vinst
+  Del   : Tag bort
+
+ctrl p • skriver ut
+ctrl + • zoomar in
+ctrl - • zoomar ut
+<h3>Parametrar</h3>TITLE   = turneringens namn
 ROUNDS  = antal ronder
 GAMES   = antal partier per rond • 1=enkelrond • 2=dubbelrond 
 SORT    = spelarnas sorteras på elo • 0=utan sortering • 1=med sortering
 BALANCE = färgbalans • 0=utan färgbalans • 1=med färgbalans
 
 1653 Christer Nilsson: elo + namn. Ange 1400 om elo saknas
-
-Programmet hanterar två olika turneringsformat:
-
-* Berger: alla möter alla
-* Floating: som Schweizer, fast spelarna möter spelare med samma rating istf poäng
-* Formatet styrs mha ROUNDS
-
-Namnet Floating kommer av att de flesta spelare upplever att de är i mitten av sin egen lilla virtuella Berger-grupp.
-Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva detta.
-<h3>Handhavande</h3>* 0      • Vit Förlust
-* space  • Remi
-* 1      • Vit Vinst
-* delete • tar bort ett resultat
-
-* nedåtpil   • nästa bord
-* uppåtpil   • förra bordet
-* högerpil   • nästa rond
-* vänsterpil • förra ronden
-
-* # • sortering på spelarens id
-* n • sortering på Namn
-* e • sortering på Elo
-* p • sortering på P (partipoäng)
-* r • sortering på PR (performance rating)
-
-* a • visar spelarna
-* b • visar borden
-* c • visar namnen
-
-* m • PR: fler decimaler 
-* l • PR: färre decimaler
-
-* ctrl p • skriver ut
-* ctrl + • zoomar in
-* ctrl - • zoomar ut
 <h3>Backup</h3>Kopiera urlen och spara på säker plats. T ex på en USB-sticka.
-Länken finns även i webläsarens historik, om ingen rensat.
+Urlen finns även i webläsarens historik, om ingen rensat.
 
 """
