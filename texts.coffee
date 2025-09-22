@@ -1,4 +1,4 @@
-export helpText = """<h3>Floating Berger version 1.2</h3>Namnet Floating Berger kommer av att de flesta spelare upplever att de är i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
+export helpText = """<h3>Floating Berger version 1.2</h3>Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
 
 Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.
 

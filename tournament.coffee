@@ -16,9 +16,9 @@ ALFABET = '12345678901234567890123456789012345678901234567890'
 NAMES_PER_COL = 30
 
 KEYS = {}
-KEYS.a = "a b c  ← →  # n e p r  m l"
-KEYS.b = "a b c  ← →  ↑ ↓  0 Space 1  Del"
-KEYS.c = "a b c  ← →"
+KEYS.a = "  b c  ← →  # n e p r  m l"
+KEYS.b = "a   c  ← →  ↑ ↓  0 Space 1  Del"
+KEYS.c = "a b    ← →"
 
 ## V A R I A B L E R ##
 
