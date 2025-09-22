@@ -15,6 +15,11 @@ ALIGN_RIGHT  = {style: "text-align:right"}
 ALFABET = '12345678901234567890123456789012345678901234567890'
 NAMES_PER_COL = 30
 
+KEYS = {}
+KEYS.a = "a b c  ← →  # n e p r  m l"
+KEYS.b = "a b c  ← →  ↑ ↓  0 Space 1  Del"
+KEYS.c = "a b c  ← →"
+
 ## V A R I A B L E R ##
 
 settings = {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:0} # ONE = 1 # 0=dev 1=prod
@@ -426,6 +431,8 @@ setScreen = (key) ->
 	header.innerHTML = ''
 	_h2 = koppla 'h2', header
 
+	koppla 'pre', header, {text: KEYS[key]}
+
 	if key == 'a' then _h2.textContent = "A Ställning för " + settings.TITLE
 	if key == 'b' then _h2.textContent = "B Bordslista rond #{currRound + settings.ONE} för #{settings.TITLE}"
 	if key == 'c' then _h2.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
@@ -518,6 +525,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 		koppla 'td', _tr, {style:"text-align:left" , text: player.name}
 		koppla 'td', _tr, {style:"text-align:left" , text: player.elo}
 		roundsContent long, i, _tr
+	
 
 showTables = -> # Visa bordslistan
 
