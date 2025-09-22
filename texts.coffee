@@ -1,4 +1,5 @@
-export helpText = """<h3>Floating Berger version 1.2</h3>Namnet Floating Berger kommer av att de flesta spelare upplever att de är i mitten av sin egen lilla virtuella Berger-grupp.
+export helpText = """<h3>Floating Berger version 1.2</h3>Namnet Floating Berger kommer av att de flesta spelare upplever att de är i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
+
 Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.
 
 Programmet hanterar både Floating och Berger:
@@ -6,32 +7,34 @@ Programmet hanterar både Floating och Berger:
 * Floating: som Schweizer, fast spelarna möter spelare med samma rating istf poäng
 * Berger: alla möter alla
 
-Formatet styrs mha ROUNDS
-<h3>Handhavande</h3>A B C   (Ställning, Bord och Namn)
+Alla ronder lottas innan turneringen startar, precis som i Berger.
 
-a a a   : Visa Ställning
-b b b   : Visa Bordslista
-c c c   : Visa Namnlista
+Formatet styrs mha ROUNDS, se nedan.
+<h3>Handhavande</h3>A   B   C   (Ställning, Bord och Namn)
 
-← ← ←   : Rond - 1
-→ → →   : Rond + 1
+a   a   a   : Visa Ställning
+b   b   b   : Visa Bordslista
+c   c   c   : Visa Namnlista
 
-  ↑     : Bord - 1
-  ↓     : Bord + 1
+←   ←   ←   : Rond - 1
+→   →   →   : Rond + 1
 
-#       : Sortera på #
-n       : Sortera på Namn
-e       : Sortera på Elo
-p       : Sortera på P  (poäng)
-r       : Sortera på PR (performance rating)
+    ↑       : Bord - 1
+    ↓       : Bord + 1
 
-m       : + decimaler i PR (more)
-l       : - decimaler i PR (less)
+#           : Sortera på # (spelarens nummer)
+n           : Sortera på Namn
+e           : Sortera på Elo
+p           : Sortera på P  (poäng)
+r           : Sortera på PR (performance rating)
 
-  0     : Vit förlust
-  Space : Remi
-  1     : Vit vinst
-  Del   : Tag bort
+m           : + decimaler för PR (more)
+l           : - decimaler för PR (less)
+
+    0       : Vit förlust
+  Space     : Remi
+    1       : Vit vinst
+   Del      : Tag bort
 
 ctrl p • skriver ut
 ctrl + • zoomar in
