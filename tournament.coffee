@@ -177,7 +177,7 @@ makeURL = ->
 	url = url.replaceAll ' ', '+'
 	url
 
-export other = (input) -> convert input, "012FG","21022"
+export other = (input) -> convert input, "012x","210x"
 
 parseTextarea = -> # läs in initiala uppgifter om spelarna
 	raw = document.getElementById "textarea"

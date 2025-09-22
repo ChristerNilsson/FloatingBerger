@@ -41,8 +41,6 @@ import {other} from './tournament.js'
 ass '2', other '0'
 ass '1', other '1'
 ass '0', other '2'
-ass '2', other 'F'
-ass '2', other 'G'
 ass 'x', other 'x'
 
 import {prettyResult} from './tournament.js'
