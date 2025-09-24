@@ -31,8 +31,8 @@ export class Floating
 	ok : (a,b) -> 
 		if a.id == b.id then return false
 		if a.id in b.opp then return false
-		if @settings.BALANS == 0 then return true
-		Math.abs(a.balans() + b.balans()) < 2
+		if @settings.BALANCE == 0 then return true
+		Math.abs(a.balance() + b.balance()) < 2
 
 	save : (a, b, ca, cb, ia, ib) ->
 		a.col += ca
@@ -54,7 +54,7 @@ export class Floating
 			b = @players[j]
 			a.opp.push j
 			b.opp.push i
-			diff = a.balans() - b.balans()
+			diff = a.balance() - b.balance()
 			if diff > 0
 				@save a,b,'b','w',j,i
 			else if diff < 0

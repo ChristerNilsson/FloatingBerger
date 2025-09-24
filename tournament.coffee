@@ -154,6 +154,7 @@ makeBerger = -> # lotta en hel berger-turnering.
 makeFloating = -> # lotta en hel floating-turnering
 	floating = new Floating players, settings
 	showMatrix floating
+	echo 'summa',floating.summa
 	floating.rounds
 
 makeURL = ->
@@ -198,7 +199,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			if key == 'ROUNDS' then settings.ROUNDS = val
 			if key == 'SORT' then settings.SORT = val
 			if key == 'ONE' then settings.ONE = val
-			if key == 'BALANCE' then settings.BALANCE = val
+			#if key == 'BALANCE' then settings.BALANCE = val
 		else
 			players.push line
 
@@ -225,7 +226,7 @@ parseURL = ->
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
 	settings.SORT = parseInt safeGet params, "SORT", "1"
 	settings.ONE = parseInt safeGet params, "ONE", "1"
-	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
+	settings.BALANCE = 1 #parseInt safeGet params, "BALANCE", "1"
 
 	players = []
 	persons = params.getAll "p"
