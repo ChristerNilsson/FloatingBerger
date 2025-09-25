@@ -2,6 +2,7 @@ export class Player
 	constructor : (@id, @name, @elo) ->
 		@opp = [] # används endast av Floating
 		@col = "" # används endast av Floating
+		@summa = 0
 	balance : ->
 		b = 0
 		for c in @col

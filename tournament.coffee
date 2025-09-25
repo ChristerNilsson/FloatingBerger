@@ -12,7 +12,7 @@ ALIGN_LEFT   = {style: "text-align:left"}
 ALIGN_CENTER = {style: "text-align:center"}
 ALIGN_RIGHT  = {style: "text-align:right"}
 
-ALFABET = '12345678901234567890123456789012345678901234567890'
+ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789012345678'
 NAMES_PER_COL = 30
 
 KEYS = {}
@@ -199,7 +199,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			if key == 'ROUNDS' then settings.ROUNDS = val
 			if key == 'SORT' then settings.SORT = val
 			if key == 'ONE' then settings.ONE = val
-			#if key == 'BALANCE' then settings.BALANCE = val
+			if key == 'BALANCE' then settings.BALANCE = val
 		else
 			players.push line
 
@@ -226,7 +226,7 @@ parseURL = ->
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
 	settings.SORT = parseInt safeGet params, "SORT", "1"
 	settings.ONE = parseInt safeGet params, "ONE", "1"
-	settings.BALANCE = 1 #parseInt safeGet params, "BALANCE", "1"
+	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
 	players = []
 	persons = params.getAll "p"
@@ -451,12 +451,13 @@ showInfo = (message) -> # Visa helpText på skärmen
 	pre1.innerHTML = message
 
 showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
+	SPACING = ' '
 	n = players.length
 	if n > ALFABET.length then n = ALFABET.length
-	echo '    ' + (ALFABET[i] for i in range n).join '   '
+	echo '    ' + (ALFABET[i] for i in range n).join SPACING
 	for i in range n
 		line = floating.matrix[i].slice 0,n
-		echo ALFABET[i] + '   ' + line.join('   ') + '  ' + players[i].elo
+		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo + ' ' + Math.round players[i].summa
 
 showNames = ->
 	persons = []

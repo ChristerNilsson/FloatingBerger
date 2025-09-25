@@ -68,10 +68,22 @@ x = partiet ej spelat
 # Att tänka på
 
 * När turneringen börjat får man bara modifiera resultaten. Dvs r1 = osv
-* Man får EJ ändra elo, namn, SORT, ROUND eller GAMES under turneringens gång
+* Man får EJ ändra elo, namn, SORT, ROUNDS, BALANCE eller GAMES under turneringens gång
 	* Detta pga att lottningen kan påverkas
 * Skriv alltid ut Bordslistorna!
 	* De fungerar som backup
+
+# BALANCE
+
+* BALANCE == 0 innebär att balansering inte görs. Som i dubbelrond.  
+* BALANCE == 1 innebär att balansering görs. Typ enkelrond
+* BALANCE == 2 verkar ge samma resultat som 1
+* BALANCE == 3 verkar ge samma resultat som 0
+
+När man satt igång turneringen får man inte ändra på parametrarna. Det kan göra resultatinmatning omöjlig.  
+Man får inte heller justera elo-tal.  
+Däremot kan man uppdatera ett felstavat namn i urlen.  
+Felaktiga resultat kan korrigeras. Detta görs i GUI:t  
 
 # Utveckling
 

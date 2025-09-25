@@ -31,8 +31,8 @@ export class Floating
 	ok : (a,b) -> 
 		if a.id == b.id then return false
 		if a.id in b.opp then return false
-		if @settings.BALANCE == 0 then return true
-		Math.abs(a.balance() + b.balance()) < 2
+		if @settings.GAMES == 2 or @settings.BALANCE == 0 then return true
+		Math.abs(a.balance() + b.balance()) < @settings.BALANCE
 
 	save : (a, b, ca, cb, ia, ib) ->
 		a.col += ca
@@ -49,7 +49,10 @@ export class Floating
 			if i == @matrix.length or j == @matrix[0].length then continue
 			@matrix[i][j] = "#{'123456789abcdefgh'[r]}"
 			if i > j then continue
-			@summa += Math.abs @players[i].elo - @players[j].elo
+			diff = Math.abs @players[i].elo - @players[j].elo
+			@players[i].summa += diff ** 1.01
+			@players[j].summa += diff ** 1.01
+			@summa += diff ** 1.01
 			a = @players[i]
 			b = @players[j]
 			a.opp.push j
