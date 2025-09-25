@@ -37,6 +37,8 @@ currTable = 0
 
 frirond = null # ingen frirond. Annars index för frironden
 
+berger = null
+
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
@@ -320,8 +322,12 @@ setByeResults = ->
 		round = rounds[r]
 		for t in range round.length
 			[w,b] = round[t]
-			if w == frirond then results[r][t] = '0'
-			if b == frirond then results[r][t] = '2'
+			if berger
+				if w == frirond then results[r][t] = '2'
+				if b == frirond then results[r][t] = '0'
+			else
+				if w == frirond then results[r][t] = '0'
+				if b == frirond then results[r][t] = '2'
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#stallning th'
