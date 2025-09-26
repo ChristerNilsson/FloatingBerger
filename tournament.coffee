@@ -94,6 +94,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
+	echo 'rounds',rounds
 	for round in rounds
 		result.push ([w,b] for [w,b] in round)
 		if games == 2 then result.push ([b,w] for [w,b] in round)
@@ -157,6 +158,7 @@ makeFloating = -> # lotta en hel floating-turnering
 	floating = new Floating players, settings
 	showMatrix floating
 	echo 'summa',floating.summa
+	echo players
 	floating.rounds
 
 makeURL = ->
@@ -608,6 +610,11 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	rounds = if berger then makeBerger() else makeFloating()
 	rounds = expand settings.GAMES, rounds
+
+	arr = []
+	for p in players
+		arr.push "[#{(o+1 for o in p.opp)}]"
+	echo arr.join "\n"	
 
 	for i in range settings.ROUNDS
 		results.push Array(tableCount()).fill 'x'
