@@ -535,7 +535,6 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 		koppla 'td', _tr, {style:"text-align:left" , text: player.name}
 		koppla 'td', _tr, {style:"text-align:left" , text: player.elo}
 		roundsContent long, i, _tr
-	
 
 showTables = -> # Visa bordslistan
 
