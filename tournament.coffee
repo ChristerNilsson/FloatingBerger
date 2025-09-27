@@ -495,8 +495,6 @@ showNames = ->
 			persons.push pb
 
 	persons.sort()
-	
-	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
 	columns = chunkIntoColumns persons,NAMES_PER_COL
 
 	root = document.getElementById 'names'
