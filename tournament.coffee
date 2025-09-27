@@ -4,9 +4,7 @@ import {Player} from './player.js'
 import {Floating} from './floating.js'
 import {helpText} from './texts.js'
 import {performance} from './rating.js'
-
-echo = console.log
-range = _.range
+import {echo,global,range} from './global.js'
 
 ALIGN_LEFT   = {style: "text-align:left"}
 ALIGN_CENTER = {style: "text-align:center"}
@@ -15,6 +13,7 @@ ALIGN_RIGHT  = {style: "text-align:right"}
 ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
 NAMES_PER_COL = 30
 TABLES_PER_COL = 30
+PLAYERS_PER_COL = 30
 
 KEYS = {}
 KEYS.a = "  b c  ← →  # n e p r  m l"
@@ -23,35 +22,20 @@ KEYS.c = "a b    ← →"
 
 ## V A R I A B L E R ##
 
-settings = {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:0} # ONE = 1 # 0=dev 1=prod
 
-# Tillståndet ges av dessa variabler:
-players = []
-
-results = [] # ronder x bord. cell: 'x', '0', '1' eller '2'
-rounds  = [] # ronder x bord. cell: [w,b] 
-longs   = [] # players x ronder. cell: [w,b,col,res]
-
-currScreen = 'a'
-currRound = 0
-currTable = 0
-
-frirond = null # ingen frirond. Annars index för frironden
-
-berger = null
 
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
-	echo 'addBord',bord,res,c0,c1
-	vit = players[c0].name
-	svart = players[c1].name
-	vit_elo = players[c0].elo
-	svart_elo = players[c1].elo
+	# echo 'addBord',bord,res,c0,c1
+	vit = global.players[c0].name
+	svart = global.players[c1].name
+	vit_elo = global.players[c0].elo
+	svart_elo = global.players[c1].elo
 	tr1 = document.createElement 'tr'
-	color = if bord == currTable then 'yellow' else 'white'
+	color = if bord == global.currTable then 'yellow' else 'white'
 
-	koppla 'td', tr1, {text : bord + settings.ONE}
+	koppla 'td', tr1, {text : bord + global.settings.ONE}
 	koppla 'td', tr1, {style:"text-align:left", text : vit}
 	koppla 'td', tr1, {style:"text-align:left", text : vit_elo}
 	koppla 'td', tr1, {style:"text-align:left", text : svart_elo}
@@ -60,15 +44,15 @@ addBord = (bord,res,c0,c1) ->
 	tr1
 	
 changeRound = (delta) -> # byt rond och uppdatera bordslistan
-	currRound = (currRound + delta) %% rounds.length
-	currTable = 0
+	global.currRound = (global.currRound + delta) %% global.rounds.length
+	global.currTable = 0
 	
-	setScreen currScreen
+	setScreen global.currScreen
 	showTables()
 	showNames()
 
 changeTable = (delta) -> # byt bord
-	currTable = (currTable + delta) %% tableCount()
+	global.currTable = (global.currTable + delta) %% tableCount()
 
 chunkIntoColumns = (items, size) -> # Dela upp en lista i flera med samma storlek, t ex 30 + 30 + 18
 	cols = []
@@ -86,7 +70,7 @@ convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng
 
 createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
 
-	ths = document.querySelectorAll '#stallning th'
+	ths = document.querySelectorAll '#players th'
 
 	index = -1
 	for th in ths
@@ -95,7 +79,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 			th.addEventListener 'click', (event) ->
 				key = th.textContent
 				if !isNaN parseInt key
-					key = parseInt(key) - settings.ONE
+					key = parseInt(key) - global.settings.ONE
 					showTables() # key
 					return
 				sortColumn index, key in "# Namn".split ' '
@@ -150,40 +134,38 @@ export longForm = (rounds, results) -> # produces the long form for ONE round (s
 	result
 
 makeBerger = -> # lotta en hel berger-turnering.
-# 
-	n = players.length
+	n = global.players.length
 	half = n // 2 
 	A = [0...n]
-	rounds = []
-	for i in range settings.ROUNDS
-		rounds.push savePairing i, A, half, n
+	global.rounds = []
+	for i in range global.settings.ROUNDS
+		global.rounds.push savePairing i, A, half, n
 		A.pop()
 		A = A.slice(half).concat A.slice(0,half)
 		A.push n-1
-	rounds
+	global.rounds
 
 makeFloating = -> # lotta en hel floating-turnering
-	floating = new Floating players, settings
+	floating = new Floating global.players, global.settings
 	showMatrix floating
-	#echo 'summa',floating.summa
-	echo players
+	echo global.players
 	floating.rounds
 
 makeURL = ->
 	url = "./"
 
-	url += "?TITLE=#{settings.TITLE}"
-	url += "&GAMES=#{settings.GAMES}"
-	url += "&ROUNDS=#{settings.ROUNDS}"
-	url += "&SORT=#{settings.SORT}"
-	url += "&ONE=#{settings.ONE}"
-	url += "&BALANCE=#{settings.BALANCE}"
+	url += "?TITLE=#{global.settings.TITLE}"
+	url += "&GAMES=#{global.settings.GAMES}"
+	url += "&ROUNDS=#{global.settings.ROUNDS}"
+	url += "&SORT=#{global.settings.SORT}"
+	url += "&ONE=#{global.settings.ONE}"
+	url += "&BALANCE=#{global.settings.BALANCE}"
 
-	for player in players
+	for player in global.players
 		url += "&p=#{player}"
 
-	for r in range rounds.length
-		s = results[r].join ''
+	for r in range global.rounds.length
+		s = global.results[r].join ''
 		s = _.trimEnd s, 'x'
 		if s != '' then url += "&r#{r+1}=#{s}"
 
@@ -198,7 +180,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 	lines = raw.value
 	lines = lines.split "\n"
 
-	rounds = null
+	global.rounds = null
 
 	for line in lines 
 		if line.length == 0 or line[0] == '#' then continue
@@ -206,60 +188,60 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			[key, val] = line.split '='
 			key = key.trim()
 			val = val.trim()
-			if key == 'TITLE' then settings.TITLE = val
-			if key == 'GAMES' then settings.GAMES = val
-			if key == 'ROUNDS' then settings.ROUNDS = val
-			if key == 'SORT' then settings.SORT = val
-			if key == 'ONE' then settings.ONE = val
-			if key == 'BALANCE' then settings.BALANCE = val
+			if key == 'TITLE' then global.settings.TITLE = val
+			if key == 'GAMES' then global.settings.GAMES = val
+			if key == 'ROUNDS' then global.settings.ROUNDS = val
+			if key == 'SORT' then global.settings.SORT = val
+			if key == 'ONE' then global.settings.ONE = val
+			if key == 'BALANCE' then global.settings.BALANCE = val
 		else
-			players.push line
+			global.players.push line
 
-	if players.length % 2 == 1
-		frirond = players.length
-		players.push '0000 BYE'
+	if global.players.length % 2 == 1
+		global.frirond = global.players.length
+		global.players.push '0000 BYE'
 	else
-		frirond = null
+		global.frirond = null
 
-	if settings.ROUNDS == 0 then settings.ROUNDS = players.length - 1
+	if global.settings.ROUNDS == 0 then global.settings.ROUNDS = global.players.length - 1
 
-	if rounds == null then rounds = []
+	if global.rounds == null then global.rounds = []
 
 	url = makeURL()
-	players = []
-	rounds = []
+	global.players = []
+	global.rounds = []
 	window.location.href = url
 	echo 'window.location.href = url'
 
 parseURL = -> 
 	params = new URLSearchParams window.location.search
 
-	settings.TITLE = safeGet params, "TITLE"
-	settings.GAMES = parseInt safeGet params, "GAMES", "1"
-	settings.SORT = parseInt safeGet params, "SORT", "1"
-	settings.ONE = parseInt safeGet params, "ONE", "1"
-	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
+	global.settings.TITLE = safeGet params, "TITLE"
+	global.settings.GAMES = parseInt safeGet params, "GAMES", "1"
+	global.settings.SORT = parseInt safeGet params, "SORT", "1"
+	global.settings.ONE = parseInt safeGet params, "ONE", "1"
+	global.settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
-	players = []
+	global.players = []
 	persons = params.getAll "p"
 
-	if window.location.href.includes 'BYE' then frirond = persons.length - 1
-	if settings.SORT == 1 then persons.sort().reverse()
+	if window.location.href.includes 'BYE' then global.frirond = persons.length - 1
+	if global.settings.SORT == 1 then persons.sort().reverse()
 
-	settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{players.length-1}"
+	global.settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{global.players.length-1}"
 
 	i = 0
 	for person in persons
 		i += 1
 		elo = parseInt person.slice 0,4
 		name = person.slice(4).trim()
-		players.push new Player players.length, name, elo
+		global.players.push new Player global.players.length, name, elo
 
 	# initialisera rounds med 'x' i alla celler
-	n = players.length // 2
-	rounds = []
-	for i in range settings.GAMES * settings.ROUNDS
-		rounds.push new Array(n).fill 'x'
+	n = global.players.length // 2
+	global.rounds = []
+	for i in range global.settings.GAMES * global.settings.ROUNDS
+		global.rounds.push new Array(n).fill 'x'
 
 	readResults params
 
@@ -270,12 +252,12 @@ export prettyResult = (ch) -> # översätt interna resultat till externa
 	if ch == '2' then return "1 - 0"
 
 readResults = (params) -> # Resultaten läses från urlen
-	results = []
-	n = players.length
-	if frirond then n -= 2
+	global.results = []
+	n = global.players.length
+	if global.frirond then n -= 2
 	n //= 2
 	
-	for r in range settings.GAMES * settings.ROUNDS
+	for r in range global.settings.GAMES * global.settings.ROUNDS
 		result = safeGet params, "r#{r+1}", new Array(n).fill "x"
 		arr = []
 		for ch in result 
@@ -283,11 +265,11 @@ readResults = (params) -> # Resultaten läses från urlen
 			if ch=='1' then arr.push '1'
 			if ch=='2' then arr.push '2'
 			if ch=='x' then arr.push 'x'
-		results.push arr
+		global.results.push arr
 
 roundsContent = (long, i, tr) -> # rondernas data + poäng + PR. i anger spelarnummer
 	for [w,b,color,result] in long
-		opponent = settings.ONE + if w == i then b else w
+		opponent = global.settings.ONE + if w == i then b else w
 		result = convert result, 'x201FG', ' 10½11'
 		attr = if color == 'w' then "right:0px;" else "left:0px;"
 		cell = koppla 'td', tr, {style: "position:relative;"}
@@ -297,8 +279,8 @@ roundsContent = (long, i, tr) -> # rondernas data + poäng + PR. i anger spelarn
 
 		# text-align:center; position:relative; top:3px;
 
-	koppla 'td', tr, {style : "text-align:right"} # P
-	koppla 'td', tr, {style : "text-align:right"} # PR
+	# koppla 'td', tr, {style : "text-align:right"} # P
+	# koppla 'td', tr, {style : "text-align:right"} # PR
 
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
@@ -309,100 +291,62 @@ savePairing = (r, A, half, n) -> # skapa en bordslista utifrån berger.
 	lst = if r % 2 == 1 then [[A[n - 1], A[0]]] else [[A[0], A[n - 1]]]
 	for i in [1...half]
 		lst.push [A[i], A[n - 1 - i]]
-	if frirond then lst.push lst.shift()
+	if global.frirond then lst.push lst.shift()
 	lst.sort()
 
 setAllPR = (delta) ->
 	#echo 'setAllPR'
 
-	trs = document.querySelectorAll '#stallning tr'
+	trs = document.querySelectorAll '#players tr'
 	translator = []
 	for i in range trs.length
 		translator.push Math.round(trs[i].children[0].textContent) - 1
 	translator = invert translator
 
-	decimals = settings.DECIMALS + delta
-	if 0 <= decimals <= 6 then settings.DECIMALS = decimals
+	decimals = global.settings.DECIMALS + delta
+	if 0 <= decimals <= 6 then global.settings.DECIMALS = decimals
 
-	trs = document.querySelectorAll '#stallning tr'
-	for index in range players.length
-		if players[index].PR > 0
-			tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
-			tdPR.textContent = players[translator[index]].PR.toFixed settings.DECIMALS
+	trs = document.querySelectorAll '#players tr'
+	for index in range global.players.length
+		if global.players[index].PR > 0
+			tdPR = trs[translator[index]].children[4 + global.settings.GAMES * global.settings.ROUNDS]
+			tdPR.textContent = global.players[translator[index]].PR.toFixed global.settings.DECIMALS
 
 setByeResults = ->
-	if not frirond then return
-	for r in range rounds.length
-		round = rounds[r]
+	if not global.frirond then return
+	for r in range global.rounds.length
+		round = global.rounds[r]
 		for t in range round.length
 			[w,b] = round[t]
-			if berger
-				if w == frirond then results[r][t] = '2'
-				if b == frirond then results[r][t] = '0'
+			if global.berger
+				if w == global.frirond then global.results[r][t] = '2'
+				if b == global.frirond then global.results[r][t] = '0'
 			else
-				if w == frirond then results[r][t] = '0'
-				if b == frirond then results[r][t] = '2'
+				if w == global.frirond then global.results[r][t] = '0'
+				if b == global.frirond then global.results[r][t] = '2'
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
-	ths = document.querySelectorAll '#stallning th'
+	ths = document.querySelectorAll '#players th'
 	for th,index in ths
-		color = if index == currRound + 3 then 'yellow' else 'white'
+		color = if index == global.currRound + 3 then 'yellow' else 'white'
 		th.style = "background-color:#{color}"
 
 	trs = document.querySelectorAll '#tables tr'
 	for tr,index in trs
-		color = if index == currTable + 0 then 'yellow' else 'white'
+		color = if index == global.currTable + 0 then 'yellow' else 'white'
 		tr.children[5].style = "background-color:#{color}"
 
-setP = (trs, index, translator) ->
-	scoresP = 0
-	scoresPR = 0
-	elos = []
-	for r in range settings.GAMES * settings.ROUNDS
-		ch = longs[index][r][3]
-		value = '012'.indexOf ch
-		opp = longs[index][r][1]
-		if value != -1
-			elo = players[opp].elo
-			scoresP += value
-			if elo != 0
-				scoresPR += value
-				elos.push Math.round elo
-
-	tdP  = trs[translator[index]].children[3 + settings.GAMES * settings.ROUNDS]
-	tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
-
-	# kalkylera performance rating mha vinstandel och elo-tal
-	if elos.length == 0 
-		players[index].PR = 0
-	else
-		andel = scoresPR/2
-		perf = performance andel, elos
-		players[index].PR = perf
-
-setP_all = (trs,translator) ->
-	#echo 'setP_all',longs.length,translator.length
-	for i in range translator.length
-		setP trs,i,translator
-
-setPR = (trs, index, translator) ->
-	tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
-	tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
-
-setPR_all = (trs,translator) ->
-	for i in range translator.length
-		setPR trs,i,translator
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
-	old = results[currRound][currTable]
-	[w,b] = rounds[currRound][currTable]
-	if frirond and (w==frirond or b==frirond) then return
+	old = global.results[global.currRound][global.currTable]
+	[w,b] = global.rounds[global.currRound][global.currTable]
+	if global.frirond and (w==global.frirond or b==global.frirond) then return
 
 	cell = old + res # transition, 16 possibilities
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
-		currTable = (currTable + 1) %% tableCount()
-		#echo 'currTable',currTable
+		global.currTable = (global.currTable + 1) %% tableCount()
+		#echo 'global.currTable',global.currTable
 		return
 
 	if cell in '01 02 10 12 20 21'.split ' '
@@ -410,43 +354,51 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 		return # inmatning stämmer ej, lämna
 
 	# uppdatera och gå till nästa bord
-	results[currRound][currTable] = res
+	global.results[global.currRound][global.currTable] = res
 
 	updateLongs()
 
-	one = settings.ONE
 
-	trs = document.querySelectorAll '#stallning tr'
-	translator = []
-	for i in range trs.length
-		translator.push Math.round(trs[i].children[0].textContent) - 1
-	translator = invert translator
+	# Nedanstående GUI-uppdatering ska ej utföras här!
 
-	td = trs[translator[w]].children[3 + currRound].children[1]
-	td.textContent = "0½1"[res]
+	# one = global.settings.ONE
+	# trs = document.querySelectorAll '#players tr'
+	# translator = []
+	# for i in range trs.length
+	# 	translator.push Math.round(trs[i].children[0].textContent) - 1
+	# translator = invert translator
 
-	td = trs[translator[b]].children[3 + currRound].children[1]
-	td.textContent = "1½0"[res]
+	# td = trs[translator[w]].children[3 + global.currRound].children[1]
+	# td.textContent = "0½1"[res]
 
-	setP trs, b, translator
-	setP trs, w, translator
+	# td = trs[translator[b]].children[3 + global.currRound].children[1]
+	# td.textContent = "1½0"[res]
 
-	setPR trs, b, translator
-	setPR trs, w, translator
+	# setP trs, b, translator
+	# setP trs, w, translator
 
-	# Sätt tables
+	# setPR trs, b, translator
+	# setPR trs, w, translator
+
+
+
+	# Uppdatera GUI för tables kirurgiskt
 	trs = document.querySelectorAll '#tables tr'
-	tr = trs[currTable] # Ska vara NOLL!
+	tr = trs[global.currTable] # Ska vara NOLL!
 	tr5 = tr.children[5]
 
 	tr5.textContent = prettyResult res
-	currTable = (currTable + 1) %% tableCount()
+	global.currTable = (global.currTable + 1) %% tableCount()
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
 setScreen = (key) ->
 
-	currScreen = key
+	if key == 'a' then showPlayers() #global.longs
+	if key == 'b' then showTables()
+	if key == 'c' then showNames()
+
+	global.currScreen = key
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
@@ -454,11 +406,11 @@ setScreen = (key) ->
 
 	koppla 'pre', header, {text: KEYS[key]}
 
-	if key == 'a' then h2.textContent = "A Ställning för " + settings.TITLE
-	if key == 'b' then h2.textContent = "B Bordslista rond #{currRound + settings.ONE} för #{settings.TITLE}"
-	if key == 'c' then h2.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+	if key == 'a' then h2.textContent = "A Ställning för " + global.settings.TITLE
+	if key == 'b' then h2.textContent = "B Bordslista rond #{global.currRound + global.settings.ONE} för #{global.settings.TITLE}"
+	if key == 'c' then h2.textContent = "C Namnlista rond #{global.currRound + global.settings.ONE} för #{global.settings.TITLE}"
 
-	document.getElementById('stallning').style.display = if key=='a' then 'flex' else 'none'
+	document.getElementById('players').style.display   = if key=='a' then 'flex' else 'none'
 	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
 	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
 
@@ -472,18 +424,18 @@ showInfo = (message) -> # Visa helpText på skärmen
 
 showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	SPACING = ' '
-	n = players.length
+	n = global.players.length
 	if n > ALFABET.length then n = ALFABET.length
 	echo '    ' + (ALFABET[i] for i in range n).join SPACING
 	for i in range n
 		line = floating.matrix[i].slice 0,n
-		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo  # + ' ' + Math.round players[i].summa
+		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
 
 showNames = ->
 	persons = []
-	for [w,b],i in rounds[currRound]
-		pw = [players[w].name, "#{i + settings.ONE} • W"]
-		pb = [players[b].name, "#{i + settings.ONE} • B"]
+	for [w,b],i in global.rounds[global.currRound]
+		pw = [global.players[w].name, "#{i + global.settings.ONE} • W"]
+		pb = [global.players[b].name, "#{i + global.settings.ONE} • B"]
 		if pw[0] == 'BYE' 
 			pb[1] = 'BYE'
 			persons.push pb
@@ -516,72 +468,9 @@ showNames = ->
 			tr1 = koppla 'tr',tabell
 			td1 = koppla 'td',tr1, {class:'name', text:p[0]}
 			td2 = koppla 'td',tr1, {class:'seat', text:p[1]}
-  
-showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
-	columns = chunkIntoColumns longs,NAMES_PER_COL
-	root = document.getElementById 'stallning'
-	root.innerHTML = ''
-	container = koppla 'div', root
-	container.className = 'columns'
-
-	offset = 0
-	columns.forEach (col) =>
-		colDiv = koppla 'div', container, {class:'column'}
-		tabell = koppla 'table', colDiv
-		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"#"}
-		koppla 'th', thead, {text:"Namn"}
-		koppla 'th', thead, {text:"Elo"}
-		for i in range rounds.length
-			koppla 'th', thead, {text:"#{i + settings.ONE}"}
-		koppla 'th', thead, {text:"P"}
-		koppla 'th', thead, {text:"PR"}
-
-		col.forEach (long,i) =>
-			player = players[offset + i]
-			if player.name == 'BYE' then return
-			tr = koppla 'tr', tabell
-			koppla 'td', tr, {text: "#{offset + i + settings.ONE}"}
-			koppla 'td', tr, {style:"text-align:left" , text: player.name}
-			koppla 'td', tr, {style:"text-align:left" , text: player.elo}
-			roundsContent long, offset + i, tr
-		offset += 30
-
-showTables = -> # Visa bordslistan
-	if rounds.length == 0 then return
-	round = rounds[currRound]
-	columns = chunkIntoColumns round, TABLES_PER_COL
-	echo 'columns',columns
-
-	root = document.getElementById 'tables'
-	root.innerHTML = ''
-
-	echo 'players',players
-
-	container = koppla 'div', root
-	container.className = 'columns'
-
-	offset = 0
-	columns.forEach (col) =>
-		colDiv = koppla 'div', container, {class:'column'}
-		tabell = koppla 'table', colDiv
-
-		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"Bord"}
-		koppla 'th', thead, {text:"Vit"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Svart"}
-		koppla 'th', thead, {text:"Resultat"}
-
-		echo 'col',col
-		col.forEach ([w,b],iTable) =>
-			echo 'w,b',[w,b], iTable
-			tabell.appendChild addBord offset + iTable, results[currRound][offset + iTable], w,b
-		offset += TABLES_PER_COL
 
 sortColumn = (index,stigande) ->
-	table = document.querySelector '#stallning table'
+	table = document.querySelector '#players table'
 	rader = Array.from table.querySelectorAll 'tr'
 
 	rader.sort (a, b) ->
@@ -600,11 +489,103 @@ sortColumn = (index,stigande) ->
 	for rad in rader
 		table.appendChild rad
 
-tableCount = -> players.length // 2 # Beräkna antal bord
+
+
+
+
+showPlayers = -> # Visa spelarlistan. (longs lagrad som lista av spelare)
+
+	for player,i in global.players
+		# echo {player,i}
+		player.update_P_and_PR global.longs,i
+
+	sortedPlayers = _.clone global.players
+	sortedPlayers.pop() # remove BYE if odd
+
+	sortedPlayers.sort (a, b) => 
+		if global.sortKey == '#' then return a.id - b.id
+		if global.sortKey == 'n' then return a.name.localeCompare b.name, "sv"
+		if global.sortKey == 'e' then return b.elo - a.elo
+		if global.sortKey == 'p' then return b.P - a.P 
+		if global.sortKey == 'r' then return b.PR - a.PR
+
+	gxr = global.settings.GAMES * global.settings.ROUNDS
+
+	columns = chunkIntoColumns sortedPlayers,NAMES_PER_COL
+	root = document.getElementById 'players'
+	root.innerHTML = ''
+	container = koppla 'div', root
+	container.className = 'columns'
+
+	# offset = 0
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"#"}
+		koppla 'th', thead, {text:"Namn"}
+		koppla 'th', thead, {text:"Elo"}
+		for i in range global.rounds.length
+			koppla 'th', thead, {text:"#{i + global.settings.ONE}"}
+		koppla 'th', thead, {text:"P"}
+		koppla 'th', thead, {text:"PR"}
+
+		col.forEach (player,i) =>
+			long = global.longs[i]
+			echo 'player',player
+			if player.name == 'BYE' then return
+			tr = koppla 'tr', tabell
+			koppla 'td', tr, {text: player.id + global.settings.ONE}
+			koppla 'td', tr, {style:"text-align:left" , text: player.name}
+			koppla 'td', tr, {text: player.elo}
+
+			roundsContent long, i, tr
+
+			for i in range long.length, global.rounds.length
+				koppla 'td', tr, {style:"text-align:left" , 'x'}
+
+			koppla 'td', tr, {style:"text-align:right" , text: player.P.toFixed 1}
+			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed global.settings.DECIMALS}
+
+		# offset += PLAYERS_PER_COL
+
+showTables = -> # Visa bordslistan
+	if global.rounds.length == 0 then return
+	round = global.rounds[global.currRound]
+	columns = chunkIntoColumns round, TABLES_PER_COL
+	echo 'columns',columns
+
+	root = document.getElementById 'tables'
+	root.innerHTML = ''
+
+	echo 'players',global.players
+
+	container = koppla 'div', root
+	container.className = 'columns'
+
+	offset = 0
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv
+
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"Bord"}
+		koppla 'th', thead, {text:"Vit"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Svart"}
+		koppla 'th', thead, {text:"Resultat"}
+
+		col.forEach ([w,b],iTable) =>
+			tabell.appendChild addBord offset + iTable, global.results[global.currRound][offset + iTable], w,b
+		offset += TABLES_PER_COL
+
+tableCount = -> global.players.length // 2 # Beräkna antal bord
 
 updateLongs = -> # Uppdaterar longs utifrån rounds och results
-	longs = (longForm rounds[r],results[r] for r in range rounds.length)
-	longs = _.zip ...longs # transponerar matrisen
+	global.longs = (longForm global.rounds[r],global.results[r] for r in range global.rounds.length)
+	global.longs = _.zip ...global.longs # transponerar matrisen
+	# echo global.longs
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
@@ -620,27 +601,27 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	parseURL()
 
-	if players.length < 4
+	if global.players.length < 4
 		showInfo "Du måste ange minst fyra spelare!"
 		return
 
-	berger = settings.ROUNDS == players.length - 1
-	floating = settings.ROUNDS <= players.length // 2
+	global.berger = global.settings.ROUNDS == global.players.length - 1
+	floating = global.settings.ROUNDS <= global.players.length // 2
 
-	if not berger ^ floating #settings.ROUNDS >= players.length // 2 and settings.ROUNDS != players.length - 1
+	if not global.berger ^ floating #global.settings.ROUNDS >= players.length // 2 and global.settings.ROUNDS != players.length - 1
 		showInfo "Antalet ronder du angivit är ej acceptabelt!"
 		return
 
-	rounds = if berger then makeBerger() else makeFloating()
-	rounds = expand settings.GAMES, rounds
+	global.rounds = if global.berger then makeBerger() else makeFloating()
+	global.rounds = expand global.settings.GAMES, global.rounds
 
 	# arr = []
 	# for p in players
 	# 	arr.push "[#{(o+1 for o in p.opp)}]"
 	# echo arr.join "\n"	
 
-	for i in range settings.ROUNDS
-		results.push Array(tableCount()).fill 'x'
+	for i in range global.settings.ROUNDS
+		global.results.push Array(tableCount()).fill 'x'
 
 	readResults params
 
@@ -648,25 +629,25 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	updateLongs()
 
-	showPlayers longs
+	showPlayers()
 	showTables()
 	showNames()
 
-	trs = document.querySelectorAll '#stallning tr'
+	trs = document.querySelectorAll '#players tr'
 	translator = []
 	for i in range trs.length
 		translator.push Math.round(trs[i].children[0].textContent) - 1
 	translator = invert translator
 
-	setP_all trs,translator
-	setPR_all trs,translator
+	#setP_all trs,translator
+	#setPR_all trs,translator
 
 	setScreen 'a'
 
 	createSortEvents()
-	setCursor currRound,currTable
+	setCursor global.currRound,global.currTable
 
-	document.title = settings.TITLE
+	document.title = global.settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		start = new Date()
@@ -689,27 +670,24 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		if key == 'd'
 			echo 'Dump:'
-			echo 'currRound',currRound
-			echo 'currTable',currTable
-			echo '  settings',settings
-			echo '  players',players
-			echo '  rounds',rounds
-			echo '  results', results
-			echo '  longs',longs
+			echo 'currRound',global.currRound
+			echo 'currTable',global.currTable
+			echo '  settings',global.settings
+			echo '  players',global.players
+			echo '  rounds',global.rounds
+			echo '  results', global.results
+			echo '  longs',global.longs
 
-		gxr = settings.GAMES * settings.ROUNDS
+		if '#nepr'.includes key
+			echo 'key',key
+			global.sortKey = key
+			showPlayers()
 
-		if key == '#' then sortColumn 0,    true
-		if key == 'n' then sortColumn 1,    true
-		if key == 'e' then sortColumn 2,    false
-		if key == 'p' then sortColumn 3+gxr,false
-		if key == 'r' then sortColumn 4+gxr,false
-
-		setCursor currRound,currTable
+		setCursor global.currRound,global.currTable
 		#echo 'cpu', key, new Date() - start
 
 		# tvinga bordet att synas
-		rad = document.querySelectorAll("#tables table tr")[currTable]
+		rad = document.querySelectorAll("#tables table tr")[global.currTable]
 		rad.scrollIntoView { behavior: "smooth", block: "center" }
 
 start = new Date()
