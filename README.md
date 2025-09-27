@@ -96,3 +96,7 @@ T ex ger 2001 .. 2020 en annan matris än 2001 .. 2010 + 2100 .. 2110
 
 Kan avhjälpas genom att spela ronderna i omvänd ordning.
 Med detta enkla trick kommer partierna för alla spelare att bli jämnare för varje rond som spelas.
+
+# Fördelar med FairPair
+
+* Man ser skrällarna tydligare än i Swiss

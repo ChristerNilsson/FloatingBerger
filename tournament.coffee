@@ -157,7 +157,7 @@ makeBerger = -> # lotta en hel berger-turnering.
 makeFloating = -> # lotta en hel floating-turnering
 	floating = new Floating players, settings
 	showMatrix floating
-	echo 'summa',floating.summa
+	#echo 'summa',floating.summa
 	echo players
 	floating.rounds
 
@@ -465,7 +465,7 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 	echo '    ' + (ALFABET[i] for i in range n).join SPACING
 	for i in range n
 		line = floating.matrix[i].slice 0,n
-		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo + ' ' + Math.round players[i].summa
+		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo  # + ' ' + Math.round players[i].summa
 
 showNames = ->
 	persons = []
