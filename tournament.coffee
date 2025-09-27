@@ -279,16 +279,20 @@ readResults = (params) -> # Resultaten läses från urlen
 			if ch=='x' then arr.push 'x'
 		results.push arr
 
-roundsContent = (long, i, _tr) -> # rondernas data + poäng + PR. i anger spelarnummer
+roundsContent = (long, i, tr) -> # rondernas data + poäng + PR. i anger spelarnummer
 	for [w,b,color,result] in long
 		opponent = settings.ONE + if w == i then b else w
 		result = convert result, 'x201FG', ' 10½11'
 		attr = if color == 'w' then "right:0px;" else "left:0px;"
-		cell = koppla 'td', _tr, {style: "position:relative;"}
-		div1 = koppla 'div', cell, {style: "position:absolute; top:0px;  font-size:0.7em;" + attr, text: opponent}
-		div2 = koppla 'div', cell, {style: "position:absolute; top:12px; font-size:1.1em; transform: translate(-10%, -10%)" + attr, text: result}
-	div3 = koppla 'td', _tr, {style : "text-align:right"} # P
-	div4 = koppla 'td', _tr, {style : "text-align:right"} # PR
+		cell = koppla 'td', tr, {style: "position:relative;"}
+		koppla 'div', cell, {style: "position:absolute; top:0px; font-size:0.7em;" + attr, text: opponent}
+		# koppla 'div', cell, {style: "position:absolute; top:7px; font-size:1.1em; transform: translate(-10%, -10%)", text: result}
+		koppla 'div', cell, {style: "position:relative; font-size:1.1em; top:6px", text: result}
+
+		# text-align:center; position:relative; top:3px;
+
+	koppla 'td', tr, {style : "text-align:right"} # P
+	koppla 'td', tr, {style : "text-align:right"} # PR
 
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
@@ -526,13 +530,6 @@ showNames = ->
 
 	persons.sort()
 	
-	# Dela upp i kolumner om max 30 spelare vardera
-	# chunkIntoColumns = (items, size) ->
-	# 	cols = []
-	# 	for i in range 0, items.length, size
-	# 		cols.push items.slice i, i + size
-	# 	cols
-
 	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
 	columns = chunkIntoColumns persons,NAMES_PER_COL
 
@@ -557,52 +554,34 @@ showNames = ->
 			td2 = koppla 'td',tr1, {class:'seat', text:p[1]}
   
 showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare)
-
+	columns = chunkIntoColumns longs,NAMES_PER_COL
 	root = document.getElementById 'stallning'
 	root.innerHTML = ''
+	container = koppla 'div', root
+	container.className = 'columns'
 
-	_div = koppla 'div', root
-	_table = koppla 'table', _div
-	_thead = koppla 'thead', _table
-	koppla 'th', _thead, {text:"#"}
-	koppla 'th', _thead, {text:"Namn"}
-	koppla 'th', _thead, {text:"Elo"}
+	offset = 0
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"#"}
+		koppla 'th', thead, {text:"Namn"}
+		koppla 'th', thead, {text:"Elo"}
+		for i in range rounds.length
+			koppla 'th', thead, {text:"#{i + settings.ONE}"}
+		koppla 'th', thead, {text:"P"}
+		koppla 'th', thead, {text:"PR"}
 
-	for i in range rounds.length
-		koppla 'th', _thead, {text:"#{i + settings.ONE}"}
-
-	koppla 'th', _thead, {text:"P"}
-	koppla 'th', _thead, {text:"PR"}
-
-	for long, i in longs
-		player = players[i]
-		if player.name == 'BYE' then continue
-		_tr = koppla 'tr', _table
-		koppla 'td', _tr, {text: "#{i + settings.ONE}"}
-		koppla 'td', _tr, {style:"text-align:left" , text: player.name}
-		koppla 'td', _tr, {style:"text-align:left" , text: player.elo}
-		roundsContent long, i, _tr
-
-showTables_OLD = -> # Visa bordslistan
-
-	if rounds.length == 0 then return
-
-	root = document.getElementById 'tables'
-	root.innerHTML = ''
-
-	_div = koppla 'div', root
-	_table = koppla 'table', _div
-	_thead = koppla 'thead', _table
-	koppla 'th', _thead, {text:"Bord"}
-	koppla 'th', _thead, {text:"Vit"}
-	koppla 'th', _thead, {text:"Elo"}
-	koppla 'th', _thead, {text:"Elo"}
-	koppla 'th', _thead, {text:"Svart"}
-	koppla 'th', _thead, {text:"Resultat"}
-	
-	for [w,b], iTable in rounds[currRound]
-		_table.appendChild addBord iTable, results[currRound][iTable], w, b
-
+		col.forEach (long,i) =>
+			player = players[offset + i]
+			if player.name == 'BYE' then return
+			tr = koppla 'tr', tabell
+			koppla 'td', tr, {text: "#{offset + i + settings.ONE}"}
+			koppla 'td', tr, {style:"text-align:left" , text: player.name}
+			koppla 'td', tr, {style:"text-align:left" , text: player.elo}
+			roundsContent long, offset + i, tr
+		offset += 30
 
 sortColumn = (index,stigande) ->
 	table = document.querySelector '#stallning table'
