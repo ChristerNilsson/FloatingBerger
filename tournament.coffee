@@ -14,6 +14,7 @@ ALIGN_RIGHT  = {style: "text-align:right"}
 
 ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
 NAMES_PER_COL = 30
+TABLES_PER_COL = 30
 
 KEYS = {}
 KEYS.a = "  b c  ← →  # n e p r  m l"
@@ -42,6 +43,7 @@ berger = null
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
+	echo 'addBord',bord,res,c0,c1
 	vit = players[c0].name
 	svart = players[c1].name
 	vit_elo = players[c0].elo
@@ -467,6 +469,46 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo  # + ' ' + Math.round players[i].summa
 
+# Dela upp i kolumner om max 30 bord vardera
+chunkIntoColumns = (items, size) ->
+	cols = []
+	for i in range 0, items.length, size
+		cols.push items.slice i, i + size
+	cols
+
+showTables = -> # Visa bordslistan
+	if rounds.length == 0 then return
+	round = rounds[currRound]
+	columns = chunkIntoColumns round, TABLES_PER_COL
+	echo 'columns',columns
+
+	root = document.getElementById 'tables'
+	root.innerHTML = ''
+
+	echo 'players',players
+
+	container = koppla 'div', root
+	container.className = 'columns'
+
+	offset = 0
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv
+
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"Bord"}
+		koppla 'th', thead, {text:"Vit"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Svart"}
+		koppla 'th', thead, {text:"Resultat"}
+
+		echo 'col',col
+		col.forEach ([w,b],iTable) =>
+			echo 'w,b',[w,b], iTable
+			tabell.appendChild addBord offset + iTable, results[currRound][offset + iTable], w,b
+		offset += TABLES_PER_COL
+
 showNames = ->
 	persons = []
 	for [w,b],i in rounds[currRound]
@@ -485,11 +527,11 @@ showNames = ->
 	persons.sort()
 	
 	# Dela upp i kolumner om max 30 spelare vardera
-	chunkIntoColumns = (items, size) ->
-		cols = []
-		for i in range 0, items.length, size
-			cols.push items.slice i, i + size
-		cols
+	# chunkIntoColumns = (items, size) ->
+	# 	cols = []
+	# 	for i in range 0, items.length, size
+	# 		cols.push items.slice i, i + size
+	# 	cols
 
 	# Bygg kolumnerna (fylls kolumnvis: 30 + 30 + 30 + 10)
 	columns = chunkIntoColumns persons,NAMES_PER_COL
@@ -501,8 +543,13 @@ showNames = ->
 	container.className = 'columns'
 
 	columns.forEach (col) =>
+
 		colDiv = koppla 'div', container, {class:'column'}
 		tabell = koppla 'table', colDiv
+
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"Namn"}
+		koppla 'th', thead, {text:"Plats"}
 
 		col.forEach (p) => 
 			tr1 = koppla 'tr',tabell
@@ -536,7 +583,7 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 		koppla 'td', _tr, {style:"text-align:left" , text: player.elo}
 		roundsContent long, i, _tr
 
-showTables = -> # Visa bordslistan
+showTables_OLD = -> # Visa bordslistan
 
 	if rounds.length == 0 then return
 
@@ -555,6 +602,7 @@ showTables = -> # Visa bordslistan
 	
 	for [w,b], iTable in rounds[currRound]
 		_table.appendChild addBord iTable, results[currRound][iTable], w, b
+
 
 sortColumn = (index,stigande) ->
 	table = document.querySelector '#stallning table'
