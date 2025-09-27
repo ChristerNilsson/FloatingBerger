@@ -68,7 +68,7 @@ x = partiet ej spelat
 # Att tänka på
 
 * När turneringen börjat får man bara modifiera resultaten. Dvs r1 = osv
-* Man får EJ ändra elo, namn, SORT, ROUNDS, BALANCE eller GAMES under turneringens gång
+* Man får EJ ändra elo, SORT, ROUNDS, BALANCE eller GAMES under turneringens gång
 	* Detta pga att lottningen kan påverkas
 * Skriv alltid ut Bordslistorna!
 	* De fungerar som backup
@@ -77,8 +77,6 @@ x = partiet ej spelat
 
 * BALANCE == 0 innebär att balansering inte görs. Som i dubbelrond.  
 * BALANCE == 1 innebär att balansering görs. Typ enkelrond
-* BALANCE == 2 verkar ge samma resultat som 1
-* BALANCE == 3 verkar ge samma resultat som 0
 
 När man satt igång turneringen får man inte ändra på parametrarna. Det kan göra resultatinmatning omöjlig.  
 Man får inte heller justera elo-tal.  
@@ -88,3 +86,12 @@ Felaktiga resultat kan korrigeras. Detta görs i GUI:t
 # Utveckling
 
 ONE används för att visa noll- eller ett-baserade värden.  
+
+# ELO-talens inverkan
+
+Givet två monotont stigande uppsättningar elotal, kan de ge helt olika matriser.  
+T ex ger 2001 .. 2020 en annan matris än 2001 .. 2010 + 2100 .. 2110  
+
+# Bör verkligen de två bästa mötas i första ronden?
+
+Kan avhjälpas genom att spela ronderna i omvänd ordning.

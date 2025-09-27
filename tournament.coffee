@@ -12,7 +12,7 @@ ALIGN_LEFT   = {style: "text-align:left"}
 ALIGN_CENTER = {style: "text-align:center"}
 ALIGN_RIGHT  = {style: "text-align:right"}
 
-ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789012345678'
+ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
 NAMES_PER_COL = 30
 
 KEYS = {}
@@ -94,7 +94,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
-	echo 'rounds',rounds
+	#echo 'rounds',rounds
 	for round in rounds
 		result.push ([w,b] for [w,b] in round)
 		if games == 2 then result.push ([b,w] for [w,b] in round)
@@ -369,7 +369,7 @@ setP = (trs, index, translator) ->
 		players[index].PR = perf
 
 setP_all = (trs,translator) ->
-	echo 'setP_all',longs.length,translator.length
+	#echo 'setP_all',longs.length,translator.length
 	for i in range translator.length
 		setP trs,i,translator
 
@@ -611,10 +611,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	rounds = if berger then makeBerger() else makeFloating()
 	rounds = expand settings.GAMES, rounds
 
-	arr = []
-	for p in players
-		arr.push "[#{(o+1 for o in p.opp)}]"
-	echo arr.join "\n"	
+	# arr = []
+	# for p in players
+	# 	arr.push "[#{(o+1 for o in p.opp)}]"
+	# echo arr.join "\n"	
 
 	for i in range settings.ROUNDS
 		results.push Array(tableCount()).fill 'x'
