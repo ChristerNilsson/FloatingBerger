@@ -70,6 +70,12 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 changeTable = (delta) -> # byt bord
 	currTable = (currTable + delta) %% tableCount()
 
+chunkIntoColumns = (items, size) -> # Dela upp en lista i flera med samma storlek, t ex 30 + 30 + 18
+	cols = []
+	for i in range 0, items.length, size
+		cols.push items.slice i, i + size
+	cols
+
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
 
@@ -83,11 +89,11 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 	ths = document.querySelectorAll '#stallning th'
 
 	index = -1
-	for _th in ths
+	for th in ths
 		index++
-		do (_th,index) ->
-			_th.addEventListener 'click', (event) ->
-				key = _th.textContent
+		do (th,index) ->
+			th.addEventListener 'click', (event) ->
+				key = th.textContent
 				if !isNaN parseInt key
 					key = parseInt(key) - settings.ONE
 					showTables() # key
@@ -321,8 +327,8 @@ setAllPR = (delta) ->
 	trs = document.querySelectorAll '#stallning tr'
 	for index in range players.length
 		if players[index].PR > 0
-			_tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
-			_tdPR.textContent = players[translator[index]].PR.toFixed settings.DECIMALS
+			tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
+			tdPR.textContent = players[translator[index]].PR.toFixed settings.DECIMALS
 
 setByeResults = ->
 	if not frirond then return
@@ -339,14 +345,14 @@ setByeResults = ->
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#stallning th'
-	for _th,index in ths
+	for th,index in ths
 		color = if index == currRound + 3 then 'yellow' else 'white'
-		_th.style = "background-color:#{color}"
+		th.style = "background-color:#{color}"
 
 	trs = document.querySelectorAll '#tables tr'
-	for _tr,index in trs
+	for tr,index in trs
 		color = if index == currTable + 0 then 'yellow' else 'white'
-		_tr.children[5].style = "background-color:#{color}"
+		tr.children[5].style = "background-color:#{color}"
 
 setP = (trs, index, translator) ->
 	scoresP = 0
@@ -363,8 +369,8 @@ setP = (trs, index, translator) ->
 				scoresPR += value
 				elos.push Math.round elo
 
-	_tdP  = trs[translator[index]].children[3 + settings.GAMES * settings.ROUNDS]
-	_tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
+	tdP  = trs[translator[index]].children[3 + settings.GAMES * settings.ROUNDS]
+	tdP.textContent = if elos.length == 0 then '' else (scoresP/2).toFixed 1
 
 	# kalkylera performance rating mha vinstandel och elo-tal
 	if elos.length == 0 
@@ -380,8 +386,8 @@ setP_all = (trs,translator) ->
 		setP trs,i,translator
 
 setPR = (trs, index, translator) ->
-	_tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
-	_tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
+	tdPR = trs[translator[index]].children[4 + settings.GAMES * settings.ROUNDS]
+	tdPR.textContent = if players[index].PR == 0 then '' else players[index].PR.toFixed settings.DECIMALS
 
 setPR_all = (trs,translator) ->
 	for i in range translator.length
@@ -416,11 +422,11 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 		translator.push Math.round(trs[i].children[0].textContent) - 1
 	translator = invert translator
 
-	_td = trs[translator[w]].children[3 + currRound].children[1]
-	_td.textContent = "0½1"[res]
+	td = trs[translator[w]].children[3 + currRound].children[1]
+	td.textContent = "0½1"[res]
 
-	_td = trs[translator[b]].children[3 + currRound].children[1]
-	_td.textContent = "1½0"[res]
+	td = trs[translator[b]].children[3 + currRound].children[1]
+	td.textContent = "1½0"[res]
 
 	setP trs, b, translator
 	setP trs, w, translator
@@ -430,8 +436,8 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	# Sätt tables
 	trs = document.querySelectorAll '#tables tr'
-	_tr = trs[currTable] # Ska vara NOLL!
-	tr5 = _tr.children[5]
+	tr = trs[currTable] # Ska vara NOLL!
+	tr5 = tr.children[5]
 
 	tr5.textContent = prettyResult res
 	currTable = (currTable + 1) %% tableCount()
@@ -444,13 +450,13 @@ setScreen = (key) ->
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
-	_h2 = koppla 'h2', header
+	h2 = koppla 'h2', header
 
 	koppla 'pre', header, {text: KEYS[key]}
 
-	if key == 'a' then _h2.textContent = "A Ställning för " + settings.TITLE
-	if key == 'b' then _h2.textContent = "B Bordslista rond #{currRound + settings.ONE} för #{settings.TITLE}"
-	if key == 'c' then _h2.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+	if key == 'a' then h2.textContent = "A Ställning för " + settings.TITLE
+	if key == 'b' then h2.textContent = "B Bordslista rond #{currRound + settings.ONE} för #{settings.TITLE}"
+	if key == 'c' then h2.textContent = "C Namnlista rond #{currRound + settings.ONE} för #{settings.TITLE}"
 
 	document.getElementById('stallning').style.display = if key=='a' then 'flex' else 'none'
 	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
@@ -472,46 +478,6 @@ showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget mö
 	for i in range n
 		line = floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + players[i].elo  # + ' ' + Math.round players[i].summa
-
-# Dela upp i kolumner om max 30 bord vardera
-chunkIntoColumns = (items, size) ->
-	cols = []
-	for i in range 0, items.length, size
-		cols.push items.slice i, i + size
-	cols
-
-showTables = -> # Visa bordslistan
-	if rounds.length == 0 then return
-	round = rounds[currRound]
-	columns = chunkIntoColumns round, TABLES_PER_COL
-	echo 'columns',columns
-
-	root = document.getElementById 'tables'
-	root.innerHTML = ''
-
-	echo 'players',players
-
-	container = koppla 'div', root
-	container.className = 'columns'
-
-	offset = 0
-	columns.forEach (col) =>
-		colDiv = koppla 'div', container, {class:'column'}
-		tabell = koppla 'table', colDiv
-
-		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"Bord"}
-		koppla 'th', thead, {text:"Vit"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Svart"}
-		koppla 'th', thead, {text:"Resultat"}
-
-		echo 'col',col
-		col.forEach ([w,b],iTable) =>
-			echo 'w,b',[w,b], iTable
-			tabell.appendChild addBord offset + iTable, results[currRound][offset + iTable], w,b
-		offset += TABLES_PER_COL
 
 showNames = ->
 	persons = []
@@ -582,6 +548,39 @@ showPlayers = (longs) -> # Visa spelarlistan. (longs lagrad som lista av spelare
 			koppla 'td', tr, {style:"text-align:left" , text: player.elo}
 			roundsContent long, offset + i, tr
 		offset += 30
+
+showTables = -> # Visa bordslistan
+	if rounds.length == 0 then return
+	round = rounds[currRound]
+	columns = chunkIntoColumns round, TABLES_PER_COL
+	echo 'columns',columns
+
+	root = document.getElementById 'tables'
+	root.innerHTML = ''
+
+	echo 'players',players
+
+	container = koppla 'div', root
+	container.className = 'columns'
+
+	offset = 0
+	columns.forEach (col) =>
+		colDiv = koppla 'div', container, {class:'column'}
+		tabell = koppla 'table', colDiv
+
+		thead = koppla 'thead', tabell
+		koppla 'th', thead, {text:"Bord"}
+		koppla 'th', thead, {text:"Vit"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"Svart"}
+		koppla 'th', thead, {text:"Resultat"}
+
+		echo 'col',col
+		col.forEach ([w,b],iTable) =>
+			echo 'w,b',[w,b], iTable
+			tabell.appendChild addBord offset + iTable, results[currRound][offset + iTable], w,b
+		offset += TABLES_PER_COL
 
 sortColumn = (index,stigande) ->
 	table = document.querySelector '#stallning table'
