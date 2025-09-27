@@ -685,6 +685,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		setCursor currRound,currTable
 		#echo 'cpu', key, new Date() - start
 
+		# tvinga bordet att synas
+		rad = document.querySelectorAll("#tables table tr")[currTable]
+		rad.scrollIntoView { behavior: "smooth", block: "center" }
+
 start = new Date()
 main()
 #echo 'cpu',new Date() - start
