@@ -95,3 +95,4 @@ T ex ger 2001 .. 2020 en annan matris än 2001 .. 2010 + 2100 .. 2110
 # Bör verkligen de två bästa mötas i första ronden?
 
 Kan avhjälpas genom att spela ronderna i omvänd ordning.
+Med detta enkla trick kommer partierna för alla spelare att bli jämnare för varje rond som spelas.

@@ -15,7 +15,7 @@ export class Floating
 			edges = @makeEdges()
 			edmonds = new Edmonds edges
 			magic = edmonds.maxWeightMatching edges
-			@rounds.push @updatePlayers magic,r
+			@rounds.unshift @updatePlayers magic,r
 
 	makeEdges : ->
 		edges = [] 
@@ -25,8 +25,6 @@ export class Floating
 				if i==j then @matrix[i][j] = ' '
 				b = @players[j]
 				diff = Math.abs a.elo - b.elo
-				# diff = Math.abs a.id - b.id
-				#echo diff
 				if @ok a,b then edges.push [i, j, 10000 - diff ** 1.01]
 		edges
 
