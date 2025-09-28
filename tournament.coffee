@@ -78,13 +78,13 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som krÃ
 		if unik.length > best then [best,ibest] = [unik.length,i]
 	ibest
 
-invert = (lst) ->
-	echo 'invert',lst
-	result = _.clone lst
-	for item,i in lst
-		result[item] = i
-	echo result
-	result
+# invert = (lst) ->
+# 	echo 'invert',lst
+# 	result = _.clone lst
+# 	for item,i in lst
+# 		result[item] = i
+# 	echo result
+# 	result
 
 koppla = (typ, parent, attrs = {}) ->
   elem = document.createElement typ
@@ -411,8 +411,6 @@ showPlayers = -> # Visa spelarlistan.
 		player.update_P_and_PR global.longs,i
 
 	sortedPlayers = _.clone global.players
-	# if _.last(sortedPlayers).name.includes 'BYE' then sortedPlayers.pop() 
-	echo sortedPlayers
 
 	sortedPlayers.sort (a, b) =>
 		if global.sortKey == '#' then return a.id - b.id
@@ -421,9 +419,7 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
-	#global.translator = makeTranslator sortedPlayers
-
-	gxr = global.settings.GAMES * global.settings.ROUNDS
+#	gxr = global.settings.GAMES * global.settings.ROUNDS
 
 	columns = chunkIntoColumns sortedPlayers,NAMES_PER_COL
 	root = document.getElementById 'players'
