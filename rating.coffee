@@ -27,7 +27,7 @@ performance_rating = (pp, ratings) ->
 			lo = rating
 		else
 			hi = rating
-	echo 'performance_rating', pp, ratings,rating
+	#echo 'performance_rating', pp, ratings,rating
 	rating
 
 summa = (arr) ->

@@ -20,4 +20,6 @@ export global = {
 	frirond : null # ingen frirond. Annars index för frironden
 
 	berger : null
+	floating : null
+	#translator : null
 }

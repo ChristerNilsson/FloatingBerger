@@ -21,7 +21,7 @@ export class Player
 
 	update_P_and_PR : (longs,i) ->
 		long = longs[i]
-		echo 'longs',longs
+		#echo 'longs',longs
 		@P = 0
 		@PR = 0
 		@elos = []

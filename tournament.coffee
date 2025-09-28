@@ -20,10 +20,6 @@ KEYS.a = "  b c  ← →  # n e p r  m l"
 KEYS.b = "a   c  ← →  ↑ ↓  0 Space 1  Del"
 KEYS.c = "a b    ← →"
 
-## V A R I A B L E R ##
-
-
-
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
@@ -68,25 +64,8 @@ convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng
 	b = b.split '|'
 	if input in a then b[i] else input
 
-createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
-
-	ths = document.querySelectorAll '#players th'
-
-	index = -1
-	for th in ths
-		index++
-		do (th,index) ->
-			th.addEventListener 'click', (event) ->
-				key = th.textContent
-				if !isNaN parseInt key
-					key = parseInt(key) - global.settings.ONE
-					showTables() # key
-					return
-				sortColumn index, key in "# Namn".split ' '
-
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
-	#echo 'rounds',rounds
 	for round in rounds
 		result.push ([w,b] for [w,b] in round)
 		if games == 2 then result.push ([b,w] for [w,b] in round)
@@ -100,9 +79,11 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som kr�
 	ibest
 
 invert = (lst) ->
+	echo 'invert',lst
 	result = _.clone lst
 	for item,i in lst
 		result[item] = i
+	echo result
 	result
 
 koppla = (typ, parent, attrs = {}) ->
@@ -146,10 +127,8 @@ makeBerger = -> # lotta en hel berger-turnering.
 	global.rounds
 
 makeFloating = -> # lotta en hel floating-turnering
-	floating = new Floating global.players, global.settings
-	showMatrix floating
-	echo global.players
-	floating.rounds
+	global.floating = new Floating global.players, global.settings
+	global.floating.rounds
 
 makeURL = ->
 	url = "./"
@@ -269,18 +248,12 @@ readResults = (params) -> # Resultaten läses från urlen
 
 roundsContent = (long, i, tr) -> # rondernas data + poäng + PR. i anger spelarnummer
 	for [w,b,color,result] in long
-		opponent = global.settings.ONE + if w == i then b else w
+		opponent = if w == i then b else w
 		result = convert result, 'x201FG', ' 10½11'
 		attr = if color == 'w' then "right:0px;" else "left:0px;"
 		cell = koppla 'td', tr, {style: "position:relative;"}
-		koppla 'div', cell, {style: "position:absolute; top:0px; font-size:0.7em;" + attr, text: opponent}
-		# koppla 'div', cell, {style: "position:absolute; top:7px; font-size:1.1em; transform: translate(-10%, -10%)", text: result}
+		koppla 'div', cell, {style: "position:absolute; top:0px; font-size:0.7em;" + attr, text: global.settings.ONE + opponent}
 		koppla 'div', cell, {style: "position:relative; font-size:1.1em; top:6px", text: result}
-
-		# text-align:center; position:relative; top:3px;
-
-	# koppla 'td', tr, {style : "text-align:right"} # P
-	# koppla 'td', tr, {style : "text-align:right"} # PR
 
 safeGet = (params,key,standard="") -> # Hämta parametern given av key från urlen
 	if params.get key then return params.get(key).trim()
@@ -295,22 +268,9 @@ savePairing = (r, A, half, n) -> # skapa en bordslista utifrån berger.
 	lst.sort()
 
 setAllPR = (delta) ->
-	#echo 'setAllPR'
-
-	trs = document.querySelectorAll '#players tr'
-	translator = []
-	for i in range trs.length
-		translator.push Math.round(trs[i].children[0].textContent) - 1
-	translator = invert translator
-
 	decimals = global.settings.DECIMALS + delta
 	if 0 <= decimals <= 6 then global.settings.DECIMALS = decimals
-
-	trs = document.querySelectorAll '#players tr'
-	for index in range global.players.length
-		if global.players[index].PR > 0
-			tdPR = trs[translator[index]].children[4 + global.settings.GAMES * global.settings.ROUNDS]
-			tdPR.textContent = global.players[translator[index]].PR.toFixed global.settings.DECIMALS
+	showPlayers()
 
 setByeResults = ->
 	if not global.frirond then return
@@ -358,30 +318,6 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	updateLongs()
 
-
-	# Nedanstående GUI-uppdatering ska ej utföras här!
-
-	# one = global.settings.ONE
-	# trs = document.querySelectorAll '#players tr'
-	# translator = []
-	# for i in range trs.length
-	# 	translator.push Math.round(trs[i].children[0].textContent) - 1
-	# translator = invert translator
-
-	# td = trs[translator[w]].children[3 + global.currRound].children[1]
-	# td.textContent = "0½1"[res]
-
-	# td = trs[translator[b]].children[3 + global.currRound].children[1]
-	# td.textContent = "1½0"[res]
-
-	# setP trs, b, translator
-	# setP trs, w, translator
-
-	# setPR trs, b, translator
-	# setPR trs, w, translator
-
-
-
 	# Uppdatera GUI för tables kirurgiskt
 	trs = document.querySelectorAll '#tables tr'
 	tr = trs[global.currTable] # Ska vara NOLL!
@@ -422,13 +358,13 @@ showInfo = (message) -> # Visa helpText på skärmen
 	pre1 = koppla 'pre', div2
 	pre1.innerHTML = message
 
-showMatrix = (floating) -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
+showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	SPACING = ' '
 	n = global.players.length
 	if n > ALFABET.length then n = ALFABET.length
 	echo '    ' + (ALFABET[i] for i in range n).join SPACING
 	for i in range n
-		line = floating.matrix[i].slice 0,n
+		line = global.floating.matrix[i].slice 0,n
 		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
 
 showNames = ->
@@ -469,45 +405,23 @@ showNames = ->
 			td1 = koppla 'td',tr1, {class:'name', text:p[0]}
 			td2 = koppla 'td',tr1, {class:'seat', text:p[1]}
 
-sortColumn = (index,stigande) ->
-	table = document.querySelector '#players table'
-	rader = Array.from table.querySelectorAll 'tr'
-
-	rader.sort (a, b) ->
-		cellA = a.children[index].textContent.trim()
-		cellB = b.children[index].textContent.trim()
-
-		# Försök jämföra som tal, annars som text
-		numA = parseFloat cellA
-		numB = parseFloat cellB
-		if !isNaN(numA) and !isNaN(numB)
-			return if stigande then numA - numB else numB - numA
-		else
-			return if stigande then cellA.localeCompare cellB else cellB.localeCompare cellA
-
-	# Lägg tillbaka raderna i sorterad ordning
-	for rad in rader
-		table.appendChild rad
-
-
-
-
-
-showPlayers = -> # Visa spelarlistan. (longs lagrad som lista av spelare)
+showPlayers = -> # Visa spelarlistan.
 
 	for player,i in global.players
-		# echo {player,i}
 		player.update_P_and_PR global.longs,i
 
 	sortedPlayers = _.clone global.players
-	sortedPlayers.pop() # remove BYE if odd
+	# if _.last(sortedPlayers).name.includes 'BYE' then sortedPlayers.pop() 
+	echo sortedPlayers
 
-	sortedPlayers.sort (a, b) => 
+	sortedPlayers.sort (a, b) =>
 		if global.sortKey == '#' then return a.id - b.id
 		if global.sortKey == 'n' then return a.name.localeCompare b.name, "sv"
 		if global.sortKey == 'e' then return b.elo - a.elo
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
+
+	#global.translator = makeTranslator sortedPlayers
 
 	gxr = global.settings.GAMES * global.settings.ROUNDS
 
@@ -517,7 +431,7 @@ showPlayers = -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 	container = koppla 'div', root
 	container.className = 'columns'
 
-	# offset = 0
+	offset = 0
 	columns.forEach (col) =>
 		colDiv = koppla 'div', container, {class:'column'}
 		tabell = koppla 'table', colDiv
@@ -531,15 +445,14 @@ showPlayers = -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 		koppla 'th', thead, {text:"PR"}
 
 		col.forEach (player,i) =>
-			long = global.longs[i]
-			echo 'player',player
+			long = global.longs[player.id]
 			if player.name == 'BYE' then return
 			tr = koppla 'tr', tabell
 			koppla 'td', tr, {text: player.id + global.settings.ONE}
 			koppla 'td', tr, {style:"text-align:left" , text: player.name}
 			koppla 'td', tr, {text: player.elo}
 
-			roundsContent long, i, tr
+			roundsContent long, player.id, tr
 
 			for i in range long.length, global.rounds.length
 				koppla 'td', tr, {style:"text-align:left" , 'x'}
@@ -547,18 +460,15 @@ showPlayers = -> # Visa spelarlistan. (longs lagrad som lista av spelare)
 			koppla 'td', tr, {style:"text-align:right" , text: player.P.toFixed 1}
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed global.settings.DECIMALS}
 
-		# offset += PLAYERS_PER_COL
+		offset += PLAYERS_PER_COL
 
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
 	round = global.rounds[global.currRound]
 	columns = chunkIntoColumns round, TABLES_PER_COL
-	echo 'columns',columns
 
 	root = document.getElementById 'tables'
 	root.innerHTML = ''
-
-	echo 'players',global.players
 
 	container = koppla 'div', root
 	container.className = 'columns'
@@ -585,7 +495,6 @@ tableCount = -> global.players.length // 2 # Beräkna antal bord
 updateLongs = -> # Uppdaterar longs utifrån rounds och results
 	global.longs = (longForm global.rounds[r],global.results[r] for r in range global.rounds.length)
 	global.longs = _.zip ...global.longs # transponerar matrisen
-	# echo global.longs
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
@@ -606,19 +515,14 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		return
 
 	global.berger = global.settings.ROUNDS == global.players.length - 1
-	floating = global.settings.ROUNDS <= global.players.length // 2
+	floatingFlag = global.settings.ROUNDS <= global.players.length // 2
 
-	if not global.berger ^ floating #global.settings.ROUNDS >= players.length // 2 and global.settings.ROUNDS != players.length - 1
+	if not global.berger ^ floatingFlag #global.settings.ROUNDS >= players.length // 2 and global.settings.ROUNDS != players.length - 1
 		showInfo "Antalet ronder du angivit är ej acceptabelt!"
 		return
 
 	global.rounds = if global.berger then makeBerger() else makeFloating()
 	global.rounds = expand global.settings.GAMES, global.rounds
-
-	# arr = []
-	# for p in players
-	# 	arr.push "[#{(o+1 for o in p.opp)}]"
-	# echo arr.join "\n"	
 
 	for i in range global.settings.ROUNDS
 		global.results.push Array(tableCount()).fill 'x'
@@ -633,18 +537,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showTables()
 	showNames()
 
-	trs = document.querySelectorAll '#players tr'
-	translator = []
-	for i in range trs.length
-		translator.push Math.round(trs[i].children[0].textContent) - 1
-	translator = invert translator
-
-	#setP_all trs,translator
-	#setPR_all trs,translator
-
 	setScreen 'a'
 
-	createSortEvents()
 	setCursor global.currRound,global.currTable
 
 	document.title = global.settings.TITLE
@@ -652,44 +546,36 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		start = new Date()
 		key = event.key
-		if key in ['a','b','c'] then setScreen key
+		#echo 'key',key
 		
 		if key == 'ArrowLeft'  then changeRound -1
 		if key == 'ArrowRight' then changeRound +1
-		if key == 'ArrowUp'    then changeTable -1
-		if key == 'ArrowDown'  then changeTable +1
+		if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
+		if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
 
 		del = 'Delete'
-		if key == del then setResult key, 'x' # "  -  "
-		if key == '0' then setResult key, '0' # "0 - 1"
-		if key == ' ' then setResult key, '1' # "½ - ½"
-		if key == '1' then setResult key, '2' # "1 - 0"
+		if key == del and global.currScreen == 'b' then setResult key, 'x' # "  -  "
+		if key == '0' and global.currScreen == 'b' then setResult key, '0' # "0 - 1"
+		if key == ' ' and global.currScreen == 'b' then setResult key, '1' # "½ - ½"
+		if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
 
-		if key == 'm' then setAllPR +1
-		if key == 'l' then setAllPR -1
+		if key == 'm' and global.currScreen == 'a' then setAllPR +1
+		if key == 'l' and global.currScreen == 'a' then setAllPR -1
 
-		if key == 'd'
-			echo 'Dump:'
-			echo 'currRound',global.currRound
-			echo 'currTable',global.currTable
-			echo '  settings',global.settings
-			echo '  players',global.players
-			echo '  rounds',global.rounds
-			echo '  results', global.results
-			echo '  longs',global.longs
+		if key == 'd' then echo 'Dump',global
+		if key == 'x' then showMatrix()
 
-		if '#nepr'.includes key
-			echo 'key',key
+		if global.currScreen == 'a' and '#nepr'.includes key
+			echo 'sorting'
 			global.sortKey = key
 			showPlayers()
 
+		if key in ['a','b','c'] then setScreen key
+
 		setCursor global.currRound,global.currTable
-		#echo 'cpu', key, new Date() - start
 
 		# tvinga bordet att synas
 		rad = document.querySelectorAll("#tables table tr")[global.currTable]
 		rad.scrollIntoView { behavior: "smooth", block: "center" }
 
-start = new Date()
 main()
-#echo 'cpu',new Date() - start
