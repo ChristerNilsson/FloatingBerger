@@ -15,6 +15,8 @@ NAMES_PER_COL = 30
 TABLES_PER_COL = 30
 PLAYERS_PER_COL = 30
 
+BYE = "• BYE •"
+
 KEYS = {}
 KEYS.a = "  b c  ← →  # n e p r  m l"
 KEYS.b = "a   c  ← →  ↑ ↓  0 Space 1  Del"
@@ -49,12 +51,6 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 
 changeTable = (delta) -> # byt bord
 	global.currTable = (global.currTable + delta) %% tableCount()
-
-chunkIntoColumns = (items, size) -> # Dela upp en lista i flera med samma storlek, t ex 30 + 30 + 18
-	cols = []
-	for i in range 0, items.length, size
-		cols.push items.slice i, i + size
-	cols
 
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
@@ -195,7 +191,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 
 	if global.players.length % 2 == 1
 		global.frirond = global.players.length
-		global.players.push '0000 BYE'
+		global.players.push '0000 ' + BYE
 	else
 		global.frirond = null
 
@@ -221,7 +217,7 @@ parseURL = ->
 	global.players = []
 	persons = params.getAll "p"
 
-	if window.location.href.includes 'BYE' then global.frirond = persons.length - 1
+	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if global.settings.SORT == 1 then persons.sort().reverse()
 
 	global.settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{global.players.length-1}"
@@ -389,18 +385,18 @@ showNames = ->
 	for [w,b],i in global.rounds[global.currRound]
 		pw = [global.players[w].name, "#{i + global.settings.ONE} • W"]
 		pb = [global.players[b].name, "#{i + global.settings.ONE} • B"]
-		if pw[0] == 'BYE' 
-			pb[1] = 'BYE'
+		if pw[0] == BYE 
+			pb[1] = BYE
 			persons.push pb
-		else if pb[0] == 'BYE' 
-			pw[1] = 'BYE'
+		else if pb[0] == BYE
+			pw[1] = BYE
 			persons.push pw
 		else
 			persons.push pw
 			persons.push pb
 
 	persons.sort()
-	columns = chunkIntoColumns persons,NAMES_PER_COL
+	columns = _.chunk persons,NAMES_PER_COL
 
 	root = document.getElementById 'names'
 	root.innerHTML = '' # rensa
@@ -419,8 +415,8 @@ showNames = ->
 
 		col.forEach (p) => 
 			tr1 = koppla 'tr',tabell
-			td1 = koppla 'td',tr1, {class:'name', text:p[0]}
-			td2 = koppla 'td',tr1, {class:'seat', text:p[1]}
+			td1 = koppla 'td',tr1, {style: "text-align:left", text:p[0]}
+			td2 = koppla 'td',tr1, {style: "text-align:center", text:p[1]}
 
 showPlayers = -> # Visa spelarlistan.
 
@@ -436,7 +432,7 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
-	columns = chunkIntoColumns sortedPlayers,NAMES_PER_COL
+	columns = _.chunk sortedPlayers,NAMES_PER_COL
 	root = document.getElementById 'players'
 	root.innerHTML = ''
 	container = koppla 'div', root
@@ -457,7 +453,7 @@ showPlayers = -> # Visa spelarlistan.
 
 		col.forEach (player,i) =>
 			long = global.longs[player.id]
-			if player.name == 'BYE' then return
+			if player.name == BYE then return
 			tr = koppla 'tr', tabell
 			koppla 'td', tr, {text: player.id + global.settings.ONE}
 			koppla 'td', tr, {style:"text-align:left", text: player.name} # .slice 0,20
@@ -478,7 +474,7 @@ showPlayers = -> # Visa spelarlistan.
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
 	round = global.rounds[global.currRound]
-	columns = chunkIntoColumns round, TABLES_PER_COL
+	columns = _.chunk round, TABLES_PER_COL
 
 	root = document.getElementById 'tables'
 	root.innerHTML = ''
