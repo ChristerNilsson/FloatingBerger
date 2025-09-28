@@ -91,14 +91,6 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som krÃ
 		if unik.length > best then [best,ibest] = [unik.length,i]
 	ibest
 
-# invert = (lst) ->
-# 	echo 'invert',lst
-# 	result = _.clone lst
-# 	for item,i in lst
-# 		result[item] = i
-# 	echo result
-# 	result
-
 koppla = (typ, parent, attrs = {}) ->
   elem = document.createElement typ
 
