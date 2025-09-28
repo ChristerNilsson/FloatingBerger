@@ -64,6 +64,23 @@ convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng
 	b = b.split '|'
 	if input in a then b[i] else input
 
+createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
+
+	ths = document.querySelectorAll '#players th'
+
+	for th in ths
+		do (th) ->
+			th.addEventListener 'click', (event) ->
+				key = th.textContent
+				if key == '#'    then global.sortKey = '#'
+				if key == 'Namn' then global.sortKey = 'n'
+				if key == 'Elo'  then global.sortKey = 'e'
+				if key == 'P'    then global.sortKey = 'p'
+				if key == 'PR'   then global.sortKey = 'r'
+				if ['#','Namn','Elo','P','PR'].includes key
+					echo 'click',global.sortKey
+					showPlayers()
+
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
 	for round in rounds
@@ -419,8 +436,6 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
-#	gxr = global.settings.GAMES * global.settings.ROUNDS
-
 	columns = chunkIntoColumns sortedPlayers,NAMES_PER_COL
 	root = document.getElementById 'players'
 	root.innerHTML = ''
@@ -445,7 +460,7 @@ showPlayers = -> # Visa spelarlistan.
 			if player.name == 'BYE' then return
 			tr = koppla 'tr', tabell
 			koppla 'td', tr, {text: player.id + global.settings.ONE}
-			koppla 'td', tr, {style:"text-align:left" , text: player.name}
+			koppla 'td', tr, {style:"text-align:left", text: player.name} # .slice 0,20
 			koppla 'td', tr, {text: player.elo}
 
 			roundsContent long, player.id, tr
@@ -457,6 +472,8 @@ showPlayers = -> # Visa spelarlistan.
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed global.settings.DECIMALS}
 
 		offset += PLAYERS_PER_COL
+
+	createSortEvents()
 
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
@@ -523,6 +540,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	for i in range global.settings.ROUNDS
 		global.results.push Array(tableCount()).fill 'x'
 
+	global.sortKey = if global.berger then 'p' else 'r'
+
 	readResults params
 
 	setByeResults()
@@ -534,7 +553,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showNames()
 
 	setScreen 'a'
-
+	
 	setCursor global.currRound,global.currTable
 
 	document.title = global.settings.TITLE
