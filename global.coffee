@@ -2,17 +2,6 @@ export echo = console.log
 export range = _.range
 
 export global =
-	settings : 
-		TITLE : 'Titel saknas'
-		GAMES : 1
-		ROUNDS : 0
-		SORT : 1
-		ONE : 1 # ONE = 1 # 0=dev 1=prod 
-		BALANCE : 1
-		DECIMALS : 0
-		A : 29
-		B : 30
-		C : 30
 
 	players : []
 	player : null
@@ -31,3 +20,15 @@ export global =
 
 	berger : null
 	floating : null
+
+export settings =
+	TITLE : 'Titel saknas'
+	GAMES : 1 # antal partier per rond
+	ROUNDS : 0 # antal ronder
+	SORT : 1 # om spelarna initialt ska sorteras på elo
+	ONE : 1 # ONE = 1 # 0=dev 1=prod 
+	BALANCE : 1 # färgbalans
+	DECIMALS : 0 # Antal decimaler i PR
+	A : 29 # antal spelare i en A-grupp
+	B : 30 # antal bord i en B-grupp
+	C : 30 # antal namn i en C=grupp

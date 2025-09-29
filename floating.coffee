@@ -8,7 +8,6 @@ export class Floating
 		@N = @players.length
 		if @settings.sort==1 then @players.sort (a,b) -> a.elo - b.elo
 		@matrix = (("•" for i in range @N) for j in range @N)
-		# @summa = 0
 		@rounds = []
 
 		for r in range @settings.ROUNDS
@@ -20,7 +19,6 @@ export class Floating
 		for p in @players
 			delete p.opp
 			delete p.col
-			# delete p.summa
 
 	makeEdges : ->
 		edges = [] 
@@ -46,7 +44,6 @@ export class Floating
 
 	updatePlayers : (magic,r) -> 
 		@tables = []
-		# echo 'matrix',@matrix
 		flip = false # om två spelare har diff==0, ska varannan bli vit, varannan svart
 		for id in magic
 			i = id
@@ -55,9 +52,6 @@ export class Floating
 			@matrix[i][j] = "#{'123456789abcdefgh'[r]}"
 			if i > j then continue
 			diff = Math.abs @players[i].elo - @players[j].elo
-			#@players[i].summa += diff ** 1.01
-			#@players[j].summa += diff ** 1.01
-			#@summa += diff ** 1.01
 			a = @players[i]
 			b = @players[j]
 			a.opp.push j
