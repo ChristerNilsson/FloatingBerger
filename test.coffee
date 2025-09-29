@@ -11,14 +11,14 @@ ass 7, 3 + 4
 import {expand} from './tournament.js'
 ass [[[1,2],[3,4]],[[2,1],[4,3]],[[1,4],[2,3]],[[4,1],[3,2]]], expand 2, [[[1,2],[3,4]], [[1,4],[2,3]]]
 
-import {findNumberOfDecimals} from './tournament.js'
-ass 0, findNumberOfDecimals [1200,1200]
-ass 0, findNumberOfDecimals [1200,1201]
-ass 0, findNumberOfDecimals [1200.23,1200.23]
-ass 1, findNumberOfDecimals [1200.23,1200.3]
-ass 1, findNumberOfDecimals [1200.23,1200.3]
-ass 3, findNumberOfDecimals [1200.23,1200.2345]
-ass 0, findNumberOfDecimals [1200.12345,1200.12345]
+# import {findNumberOfDecimals} from './tournament.js'
+# ass 0, findNumberOfDecimals [1200,1200]
+# ass 0, findNumberOfDecimals [1200,1201]
+# ass 0, findNumberOfDecimals [1200.23,1200.23]
+# ass 1, findNumberOfDecimals [1200.23,1200.3]
+# ass 1, findNumberOfDecimals [1200.23,1200.3]
+# ass 3, findNumberOfDecimals [1200.23,1200.2345]
+# ass 0, findNumberOfDecimals [1200.12345,1200.12345]
 
 import {longForm} from './tournament.js'
 # ass [

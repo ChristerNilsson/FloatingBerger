@@ -10,38 +10,33 @@ Programmet hanterar både Floating och Berger:
 Alla ronder lottas innan turneringen startar, precis som i Berger.
 
 Formatet styrs mha ROUNDS, se nedan.
-<h3>Handhavande</h3>A   B   C   (Ställning, Bord och Namn)
+<h3>Tangenter för sidorna A, B och C</h3>w       : Sida +
+s       : Sida -
 
-a   a   a   : Visa Ställning
-b   b   b   : Visa Bordslista
-c   c   c   : Visa Namnlista
+←       : Rond -
+→       : Rond +
 
-←   ←   ←   : Rond -
-→   →   →   : Rond +
+↑       : Bord -
+↓       : Bord +
 
-    ↑       : Bord -
-    ↓       : Bord +
+shift ↑ : Gruppstorlek -
+shift ↓ : Gruppstorlek +
 
-    0       : Vit förlust
-  Space     : Remi
-    1       : Vit vinst
-   Del      : Tag bort
+ctrl p  : Utskrift
+ctrl -  : Zoom -
+ctrl +  : Zoom +
+<h3>Tangenter för sida A Ställning</h3>#       : Sortera på # (spelarens nummer)
+n       : Sortera på Namn
+e       : Sortera på Elo
+p       : Sortera på P  (poäng)
+r       : Sortera på PR (performance rating)
 
-#           : Sortera på # (spelarens nummer)
-n           : Sortera på Namn
-e           : Sortera på Elo
-p           : Sortera på P  (poäng)
-r           : Sortera på PR (performance rating)
-
-shift ↑     : Gruppstorlek +
-shift ↓     : Gruppstorlek -
-
-shift →     : decimaler för PR +
-shift ←     : decimaler för PR -
-
-ctrl p      : skriver ut
-ctrl -      : zoomar ut
-ctrl +      : zoomar in
+shift ← : decimaler för PR -
+shift → : decimaler för PR +
+<h3>Tangenter för sida B Bordslista</h3>0       : Vit förlust
+Space   : Remi
+1       : Vit vinst
+Del     : Tag bort resultat
 <h3>Parametrar</h3>TITLE   = turneringens namn
 ROUNDS  = antal ronder
 GAMES   = antal partier per rond • 1=enkelrond • 2=dubbelrond 

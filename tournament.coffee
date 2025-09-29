@@ -11,9 +11,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS =
-	a : "b c  ← →  # n e p r  shift← shift→  shift↑ shift↓"
-	b : "a c  ← →  ↑ ↓  0 Space 1  Del  shift↑ shift↓"
-	c : "a b  ← →  shift↑ shift↓"
+	a : "w s  ← →  # n e p r  shift← shift→  shift↑ shift↓"
+	b : "w s  ← →  ↑ ↓  0 Space 1  Del  shift↑ shift↓"
+	c : "w s  ← →  shift↑ shift↓"
 
 ## F U N K T I O N E R ##
 
@@ -46,7 +46,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
 	global.currTable = 0
 	
-	setScreen global.currScreen
+	setScreen 0 #global.currScreen
 	showTables()
 	showNames()
 
@@ -333,27 +333,28 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
-setScreen = (key) ->
+setScreen = (delta) ->
+	global.currScreen = (global.currScreen + delta) %% 3
 
-	if key == 'a' then showPlayers() #global.longs
-	if key == 'b' then showTables()
-	if key == 'c' then showNames()
+	if global.currScreen == 0 then showPlayers()
+	if global.currScreen == 1 then showTables()
+	if global.currScreen == 2 then showNames()
 
-	global.currScreen = key
+	# global.currScreen = key
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
 	h2 = koppla 'h2', header
 
-	koppla 'pre', header, {text: KEYS[key]}
+	koppla 'pre', header, {text: KEYS[global.currScreen]}
 
-	if key == 'a' then h2.textContent = "A Ställning för " + settings.TITLE
-	if key == 'b' then h2.textContent = "B Bordslista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
-	if key == 'c' then h2.textContent = "C Namnlista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
+	if global.currScreen == 0 then h2.textContent = "A Ställning för " + settings.TITLE
+	if global.currScreen == 1 then h2.textContent = "B Bordslista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
+	if global.currScreen == 2 then h2.textContent = "C Namnlista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
 
-	document.getElementById('players').style.display = if key == 'a' then 'flex' else 'none'
-	document.getElementById('tables').style.display  = if key == 'b' then 'flex' else 'none'
-	document.getElementById('names').style.display   = if key == 'c' then 'flex' else 'none'
+	document.getElementById('players').style.display = if global.currScreen == 0 then 'flex' else 'none'
+	document.getElementById('tables').style.display  = if global.currScreen == 1 then 'flex' else 'none'
+	document.getElementById('names').style.display   = if global.currScreen == 2 then 'flex' else 'none'
 
 showInfo = (message) -> # Visa helpText på skärmen
 	root = document.getElementById('info')
@@ -529,7 +530,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	showPlayers()
 	showTables()
 	showNames()
-	setScreen 'a'
+	setScreen 0 # 'a'
 	setCursor global.currRound,global.currTable
 	document.title = settings.TITLE
 
@@ -539,32 +540,33 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if not event.shiftKey
 			if key == 'ArrowLeft'  then changeRound -1
 			if key == 'ArrowRight' then changeRound +1
-			if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
-			if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
+			if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
+			if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
 
 		del = 'Delete'
-		if key == del and global.currScreen == 'b' then setResult key, 'x' # "  -  "
-		if key == '0' and global.currScreen == 'b' then setResult key, '0' # "0 - 1"
-		if key == ' ' and global.currScreen == 'b' then setResult key, '1' # "½ - ½"
-		if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
+		if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
+		if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
+		if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
+		if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
 
 		if event.shiftKey
-			if key == 'ArrowLeft'  and global.currScreen == 'a' then setDecimals -1
-			if key == 'ArrowRight' and global.currScreen == 'a' then setDecimals +1
+			if key == 'ArrowLeft'  and global.currScreen == 0 then setDecimals -1
+			if key == 'ArrowRight' and global.currScreen == 0 then setDecimals +1
 
 		if key == 'd' then echo 'Dump',global
 		if key == 'x' then showMatrix()
 
-		if global.currScreen == 'a' and key in '#nepr'
+		if global.currScreen == 0 and key in '#nepr'
 			global.sortKey = key
 			showPlayers()
 
 		if event.shiftKey
-			if global.currScreen == 'a' then changeGroupSize key,'A'
-			if global.currScreen == 'b' then changeGroupSize key,'B'
-			if global.currScreen == 'c' then changeGroupSize key,'C'
+			if global.currScreen == 0 then changeGroupSize key,'A'
+			if global.currScreen == 1 then changeGroupSize key,'B'
+			if global.currScreen == 2 then changeGroupSize key,'C'
 
-		if key in 'abc' then setScreen key
+		if key == 'w' then setScreen +1
+		if key == 's' then setScreen -1
 
 		setCursor global.currRound,global.currTable
 

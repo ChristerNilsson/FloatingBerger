@@ -11,38 +11,33 @@ Programmet hanterar både Floating och Berger:
 Alla ronder lottas innan turneringen startar, precis som i Berger.
 
 Formatet styrs mha ROUNDS, se nedan.
-<h3>Handhavande</h3>A   B   C   (Ställning, Bord och Namn)
+<h3>Tangenter för sidorna A, B och C</h3>w       : Sida +
+s       : Sida -
 
-a   a   a   : Visa Ställning
-b   b   b   : Visa Bordslista
-c   c   c   : Visa Namnlista
+←       : Rond -
+→       : Rond +
 
-←   ←   ←   : Rond -
-→   →   →   : Rond +
+↑       : Bord -
+↓       : Bord +
 
-    ↑       : Bord -
-    ↓       : Bord +
+shift ↑ : Gruppstorlek -
+shift ↓ : Gruppstorlek +
 
-    0       : Vit förlust
-  Space     : Remi
-    1       : Vit vinst
-   Del      : Tag bort
+ctrl p  : Utskrift
+ctrl -  : Zoom -
+ctrl +  : Zoom +
+<h3>Tangenter för sida A Ställning</h3>#       : Sortera på # (spelarens nummer)
+n       : Sortera på Namn
+e       : Sortera på Elo
+p       : Sortera på P  (poäng)
+r       : Sortera på PR (performance rating)
 
-#           : Sortera på # (spelarens nummer)
-n           : Sortera på Namn
-e           : Sortera på Elo
-p           : Sortera på P  (poäng)
-r           : Sortera på PR (performance rating)
-
-shift ↑     : Gruppstorlek +
-shift ↓     : Gruppstorlek -
-
-shift →     : decimaler för PR +
-shift ←     : decimaler för PR -
-
-ctrl p      : skriver ut
-ctrl -      : zoomar ut
-ctrl +      : zoomar in
+shift ← : decimaler för PR -
+shift → : decimaler för PR +
+<h3>Tangenter för sida B Bordslista</h3>0       : Vit förlust
+Space   : Remi
+1       : Vit vinst
+Del     : Tag bort resultat
 <h3>Parametrar</h3>TITLE   = turneringens namn
 ROUNDS  = antal ronder
 GAMES   = antal partier per rond • 1=enkelrond • 2=dubbelrond 
@@ -57,5 +52,5 @@ C       = Gruppstorlek för Names
 Urlen finns även i webläsarens historik, om ingen rensat.
 `;
 
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGV4dHMuanMiLCJzb3VyY2VSb290IjoiXFwiLCJzb3VyY2VzIjpbInRleHRzLmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsT0FBQSxJQUFPLFFBQUEsR0FBVyxDQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGhlbHBUZXh0ID0gXCJcIlwiPGgzPkZsb2F0aW5nIEJlcmdlciB2ZXJzaW9uIDEuMjwvaDM+TmFtbmV0IEZsb2F0aW5nIEJlcmdlciBrb21tZXIgYXYgYXR0IGRlIGZsZXN0YSBzcGVsYXJlIHVwcGxldmVyIGF0dCBkZSBiZWZpbm5lciBzaWcgaSBtaXR0ZW4gYXYgc2luIGVnZW4gbGlsbGEgdmlydHVlbGxhIEJlcmdlci1ncnVwcC4gRGUgZmxlc3RhIGhhbW5hciBrcmluZyA1MCUgdmluc3RyZXN1bHRhdC5cclxuXHJcbkRlbGFyIG1hbiBpbiBlbiB0dXJuZXJpbmcgaSBmbGVyYSBmeXNpc2thIEJlcmdlci1ncnVwcGVyLCBrb21tZXIgZsOkcnJlIGRlbHRhZ2FyZSBhdHQgdXBwbGV2YSBkZW5uYSBrw6Ruc2xhLlxyXG5cclxuUHJvZ3JhbW1ldCBoYW50ZXJhciBiw6VkZSBGbG9hdGluZyBvY2ggQmVyZ2VyOlxyXG5cclxuKiBGbG9hdGluZzogc29tIFNjaHdlaXplciwgZmFzdCBzcGVsYXJuYSBtw7Z0ZXIgc3BlbGFyZSBtZWQgc2FtbWEgcmF0aW5nIGlzdGYgcG/DpG5nXHJcbiogQmVyZ2VyOiBhbGxhIG3DtnRlciBhbGxhXHJcblxyXG5BbGxhIHJvbmRlciBsb3R0YXMgaW5uYW4gdHVybmVyaW5nZW4gc3RhcnRhciwgcHJlY2lzIHNvbSBpIEJlcmdlci5cclxuXHJcbkZvcm1hdGV0IHN0eXJzIG1oYSBST1VORFMsIHNlIG5lZGFuLlxyXG48aDM+SGFuZGhhdmFuZGU8L2gzPkEgICBCICAgQyAgIChTdMOkbGxuaW5nLCBCb3JkIG9jaCBOYW1uKVxyXG5cclxuYSAgIGEgICBhICAgOiBWaXNhIFN0w6RsbG5pbmdcclxuYiAgIGIgICBiICAgOiBWaXNhIEJvcmRzbGlzdGFcclxuYyAgIGMgICBjICAgOiBWaXNhIE5hbW5saXN0YVxyXG5cclxu4oaQICAg4oaQICAg4oaQICAgOiBSb25kIC1cclxu4oaSICAg4oaSICAg4oaSICAgOiBSb25kICtcclxuXHJcbiAgICDihpEgICAgICAgOiBCb3JkIC1cclxuICAgIOKGkyAgICAgICA6IEJvcmQgK1xyXG5cclxuICAgIDAgICAgICAgOiBWaXQgZsO2cmx1c3RcclxuICBTcGFjZSAgICAgOiBSZW1pXHJcbiAgICAxICAgICAgIDogVml0IHZpbnN0XHJcbiAgIERlbCAgICAgIDogVGFnIGJvcnRcclxuXHJcbiMgICAgICAgICAgIDogU29ydGVyYSBww6UgIyAoc3BlbGFyZW5zIG51bW1lcilcclxubiAgICAgICAgICAgOiBTb3J0ZXJhIHDDpSBOYW1uXHJcbmUgICAgICAgICAgIDogU29ydGVyYSBww6UgRWxvXHJcbnAgICAgICAgICAgIDogU29ydGVyYSBww6UgUCAgKHBvw6RuZylcclxuciAgICAgICAgICAgOiBTb3J0ZXJhIHDDpSBQUiAocGVyZm9ybWFuY2UgcmF0aW5nKVxyXG5cclxuc2hpZnQg4oaRICAgICA6IEdydXBwc3RvcmxlayArXHJcbnNoaWZ0IOKGkyAgICAgOiBHcnVwcHN0b3JsZWsgLVxyXG5cclxuc2hpZnQg4oaSICAgICA6IGRlY2ltYWxlciBmw7ZyIFBSICtcclxuc2hpZnQg4oaQICAgICA6IGRlY2ltYWxlciBmw7ZyIFBSIC1cclxuXHJcbmN0cmwgcCAgICAgIDogc2tyaXZlciB1dFxyXG5jdHJsIC0gICAgICA6IHpvb21hciB1dFxyXG5jdHJsICsgICAgICA6IHpvb21hciBpblxyXG48aDM+UGFyYW1ldHJhcjwvaDM+VElUTEUgICA9IHR1cm5lcmluZ2VucyBuYW1uXHJcblJPVU5EUyAgPSBhbnRhbCByb25kZXJcclxuR0FNRVMgICA9IGFudGFsIHBhcnRpZXIgcGVyIHJvbmQg4oCiIDE9ZW5rZWxyb25kIOKAoiAyPWR1YmJlbHJvbmQgXHJcblNPUlQgICAgPSBzcGVsYXJuYXMgc29ydGVyYXMgcMOlIGVsbyDigKIgMD11dGFuIHNvcnRlcmluZyDigKIgMT1tZWQgc29ydGVyaW5nXHJcbkJBTEFOQ0UgPSBmw6RyZ2JhbGFucyDigKIgMD11dGFuIGbDpHJnYmFsYW5zIOKAoiAxPW1lZCBmw6RyZ2JhbGFuc1xyXG5BICAgICAgID0gR3J1cHBzdG9ybGVrIGbDtnIgUGxheWVyc1xyXG5CICAgICAgID0gR3J1cHBzdG9ybGVrIGbDtnIgVGFibGVzXHJcbkMgICAgICAgPSBHcnVwcHN0b3JsZWsgZsO2ciBOYW1lc1xyXG5cclxuMTY1MyBDaHJpc3RlciBOaWxzc29uOiBlbG8gKyBuYW1uLiBBbmdlIDE0MDAgb20gZWxvIHNha25hc1xyXG48aDM+QmFja3VwPC9oMz5Lb3BpZXJhIHVybGVuIG9jaCBzcGFyYSBww6Ugc8Oka2VyIHBsYXRzLiBUIGV4IHDDpSBlbiBVU0Itc3RpY2thLlxyXG5VcmxlbiBmaW5ucyDDpHZlbiBpIHdlYmzDpHNhcmVucyBoaXN0b3Jpaywgb20gaW5nZW4gcmVuc2F0LlxyXG5cclxuXCJcIlwiXHJcbiJdfQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGV4dHMuanMiLCJzb3VyY2VSb290IjoiXFwiLCJzb3VyY2VzIjpbInRleHRzLmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsT0FBQSxJQUFPLFFBQUEsR0FBVyxDQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQSIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBoZWxwVGV4dCA9IFwiXCJcIjxoMz5GbG9hdGluZyBCZXJnZXIgdmVyc2lvbiAxLjI8L2gzPk5hbW5ldCBGbG9hdGluZyBCZXJnZXIga29tbWVyIGF2IGF0dCBkZSBmbGVzdGEgc3BlbGFyZSB1cHBsZXZlciBhdHQgZGUgYmVmaW5uZXIgc2lnIGkgbWl0dGVuIGF2IHNpbiBlZ2VuIGxpbGxhIHZpcnR1ZWxsYSBCZXJnZXItZ3J1cHAuIERlIGZsZXN0YSBoYW1uYXIga3JpbmcgNTAlIHZpbnN0cmVzdWx0YXQuXHJcblxyXG5EZWxhciBtYW4gaW4gZW4gdHVybmVyaW5nIGkgZmxlcmEgZnlzaXNrYSBCZXJnZXItZ3J1cHBlciwga29tbWVyIGbDpHJyZSBkZWx0YWdhcmUgYXR0IHVwcGxldmEgZGVubmEga8OkbnNsYS5cclxuXHJcblByb2dyYW1tZXQgaGFudGVyYXIgYsOlZGUgRmxvYXRpbmcgb2NoIEJlcmdlcjpcclxuXHJcbiogRmxvYXRpbmc6IHNvbSBTY2h3ZWl6ZXIsIGZhc3Qgc3BlbGFybmEgbcO2dGVyIHNwZWxhcmUgbWVkIHNhbW1hIHJhdGluZyBpc3RmIHBvw6RuZ1xyXG4qIEJlcmdlcjogYWxsYSBtw7Z0ZXIgYWxsYVxyXG5cclxuQWxsYSByb25kZXIgbG90dGFzIGlubmFuIHR1cm5lcmluZ2VuIHN0YXJ0YXIsIHByZWNpcyBzb20gaSBCZXJnZXIuXHJcblxyXG5Gb3JtYXRldCBzdHlycyBtaGEgUk9VTkRTLCBzZSBuZWRhbi5cclxuPGgzPlRhbmdlbnRlciBmw7ZyIHNpZG9ybmEgQSwgQiBvY2ggQzwvaDM+dyAgICAgICA6IFNpZGEgK1xyXG5zICAgICAgIDogU2lkYSAtXHJcblxyXG7ihpAgICAgICAgOiBSb25kIC1cclxu4oaSICAgICAgIDogUm9uZCArXHJcblxyXG7ihpEgICAgICAgOiBCb3JkIC1cclxu4oaTICAgICAgIDogQm9yZCArXHJcblxyXG5zaGlmdCDihpEgOiBHcnVwcHN0b3JsZWsgLVxyXG5zaGlmdCDihpMgOiBHcnVwcHN0b3JsZWsgK1xyXG5cclxuY3RybCBwICA6IFV0c2tyaWZ0XHJcbmN0cmwgLSAgOiBab29tIC1cclxuY3RybCArICA6IFpvb20gK1xyXG48aDM+VGFuZ2VudGVyIGbDtnIgc2lkYSBBIFN0w6RsbG5pbmc8L2gzPiMgICAgICAgOiBTb3J0ZXJhIHDDpSAjIChzcGVsYXJlbnMgbnVtbWVyKVxyXG5uICAgICAgIDogU29ydGVyYSBww6UgTmFtblxyXG5lICAgICAgIDogU29ydGVyYSBww6UgRWxvXHJcbnAgICAgICAgOiBTb3J0ZXJhIHDDpSBQICAocG/DpG5nKVxyXG5yICAgICAgIDogU29ydGVyYSBww6UgUFIgKHBlcmZvcm1hbmNlIHJhdGluZylcclxuXHJcbnNoaWZ0IOKGkCA6IGRlY2ltYWxlciBmw7ZyIFBSIC1cclxuc2hpZnQg4oaSIDogZGVjaW1hbGVyIGbDtnIgUFIgK1xyXG48aDM+VGFuZ2VudGVyIGbDtnIgc2lkYSBCIEJvcmRzbGlzdGE8L2gzPjAgICAgICAgOiBWaXQgZsO2cmx1c3RcclxuU3BhY2UgICA6IFJlbWlcclxuMSAgICAgICA6IFZpdCB2aW5zdFxyXG5EZWwgICAgIDogVGFnIGJvcnQgcmVzdWx0YXRcclxuPGgzPlBhcmFtZXRyYXI8L2gzPlRJVExFICAgPSB0dXJuZXJpbmdlbnMgbmFtblxyXG5ST1VORFMgID0gYW50YWwgcm9uZGVyXHJcbkdBTUVTICAgPSBhbnRhbCBwYXJ0aWVyIHBlciByb25kIOKAoiAxPWVua2Vscm9uZCDigKIgMj1kdWJiZWxyb25kIFxyXG5TT1JUICAgID0gc3BlbGFybmFzIHNvcnRlcmFzIHDDpSBlbG8g4oCiIDA9dXRhbiBzb3J0ZXJpbmcg4oCiIDE9bWVkIHNvcnRlcmluZ1xyXG5CQUxBTkNFID0gZsOkcmdiYWxhbnMg4oCiIDA9dXRhbiBmw6RyZ2JhbGFucyDigKIgMT1tZWQgZsOkcmdiYWxhbnNcclxuQSAgICAgICA9IEdydXBwc3RvcmxlayBmw7ZyIFBsYXllcnNcclxuQiAgICAgICA9IEdydXBwc3RvcmxlayBmw7ZyIFRhYmxlc1xyXG5DICAgICAgID0gR3J1cHBzdG9ybGVrIGbDtnIgTmFtZXNcclxuXHJcbjE2NTMgQ2hyaXN0ZXIgTmlsc3NvbjogZWxvICsgbmFtbi4gQW5nZSAxNDAwIG9tIGVsbyBzYWtuYXNcclxuPGgzPkJhY2t1cDwvaDM+S29waWVyYSB1cmxlbiBvY2ggc3BhcmEgcMOlIHPDpGtlciBwbGF0cy4gVCBleCBww6UgZW4gVVNCLXN0aWNrYS5cclxuVXJsZW4gZmlubnMgw6R2ZW4gaSB3ZWJsw6RzYXJlbnMgaGlzdG9yaWssIG9tIGluZ2VuIHJlbnNhdC5cclxuXHJcblwiXCJcIlxyXG4iXX0=
 //# sourceURL=c:\github\FloatingBerger\texts.coffee
