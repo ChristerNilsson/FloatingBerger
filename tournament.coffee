@@ -6,18 +6,14 @@ import {helpText} from './texts.js'
 import {performance} from './rating.js'
 import {echo,global,range} from './global.js'
 
-ALIGN_LEFT   = {style: "text-align:left"}
-ALIGN_CENTER = {style: "text-align:center"}
-ALIGN_RIGHT  = {style: "text-align:right"}
-
 ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
 
 BYE = "• BYE •"
 
-KEYS = {}
-KEYS.a = "  b c  ← →  + -  # n e p r  m l"
-KEYS.b = "a   c  ← →  + -  ↑ ↓  0 Space 1  Del"
-KEYS.c = "a b    ← →  + -"
+KEYS =
+	a : "  b c  ← →  + -  # n e p r  m l"
+	b : "a   c  ← →  + -  ↑ ↓  0 Space 1  Del"
+	c : "a b    ← →  + -"
 
 ## F U N K T I O N E R ##
 
@@ -27,16 +23,16 @@ addBord = (bord,res,c0,c1) ->
 	svart = global.players[c1].name
 	vit_elo = global.players[c0].elo
 	svart_elo = global.players[c1].elo
-	tr1 = document.createElement 'tr'
+	tr = document.createElement 'tr'
 	color = if bord == global.currTable then 'yellow' else 'white'
 
-	koppla 'td', tr1, {text : bord + global.settings.ONE}
-	koppla 'td', tr1, {style:"text-align:left", text : vit}
-	koppla 'td', tr1, {style:"text-align:left", text : vit_elo}
-	koppla 'td', tr1, {style:"text-align:left", text : svart_elo}
-	koppla 'td', tr1, {style:"text-align:left", text : svart}
-	koppla 'td', tr1, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
-	tr1
+	koppla 'td', tr, {text : bord + global.settings.ONE}
+	koppla 'td', tr, {style:"text-align:left", text : vit}
+	koppla 'td', tr, {style:"text-align:left", text : vit_elo}
+	koppla 'td', tr, {style:"text-align:left", text : svart_elo}
+	koppla 'td', tr, {style:"text-align:left", text : svart}
+	koppla 'td', tr, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
+	tr
 	
 changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
@@ -89,21 +85,21 @@ export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som kr�
 	ibest
 
 koppla = (typ, parent, attrs = {}) ->
-  elem = document.createElement typ
+	elem = document.createElement typ
 
-  if 'text' of attrs
-    elem.textContent = attrs.text
-    delete attrs.text
+	if 'text' of attrs
+		elem.textContent = attrs.text
+		delete attrs.text
 
-  if 'html' of attrs
-    elem.innerHTML = attrs.html
-    delete attrs.html
+	if 'html' of attrs
+		elem.innerHTML = attrs.html
+		delete attrs.html
 
-  for own key of attrs
-    elem.setAttribute key, attrs[key]
+	for own key of attrs
+		elem.setAttribute key, attrs[key]
 
-  parent.appendChild elem
-  elem
+	parent.appendChild elem
+	elem
 
 export longForm = (rounds, results) -> # produces the long form for ONE round (spelarlistan). If there is a BYE, put it last in the list
 	result = []

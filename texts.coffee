@@ -16,11 +16,14 @@ a   a   a   : Visa Ställning
 b   b   b   : Visa Bordslista
 c   c   c   : Visa Namnlista
 
-←   ←   ←   : Rond - 1
-→   →   →   : Rond + 1
+←   ←   ←   : Rond -
+→   →   →   : Rond +
 
-    ↑       : Bord - 1
-    ↓       : Bord + 1
+-           : Gruppstorlek -
++           : Gruppstorlek +
+
+    ↑       : Bord -
+    ↓       : Bord +
 
 #           : Sortera på # (spelarens nummer)
 n           : Sortera på Namn
@@ -28,8 +31,8 @@ e           : Sortera på Elo
 p           : Sortera på P  (poäng)
 r           : Sortera på PR (performance rating)
 
-m           : + decimaler för PR (more)
-l           : - decimaler för PR (less)
+m           : decimaler för PR +
+l           : decimaler för PR -
 
     0       : Vit förlust
   Space     : Remi
@@ -37,13 +40,16 @@ l           : - decimaler för PR (less)
    Del      : Tag bort
 
 ctrl p • skriver ut
-ctrl + • zoomar in
 ctrl - • zoomar ut
+ctrl + • zoomar in
 <h3>Parametrar</h3>TITLE   = turneringens namn
 ROUNDS  = antal ronder
 GAMES   = antal partier per rond • 1=enkelrond • 2=dubbelrond 
 SORT    = spelarnas sorteras på elo • 0=utan sortering • 1=med sortering
 BALANCE = färgbalans • 0=utan färgbalans • 1=med färgbalans
+A       = Gruppstorlek för Players
+B       = Gruppstorlek för Tables
+C       = Gruppstorlek för Names
 
 1653 Christer Nilsson: elo + namn. Ange 1400 om elo saknas
 <h3>Backup</h3>Kopiera urlen och spara på säker plats. T ex på en USB-sticka.
