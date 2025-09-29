@@ -1,4 +1,4 @@
-### Floating Berger version 1.2
+## Floating Berger version 1.2
 
 Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
 
