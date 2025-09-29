@@ -559,10 +559,11 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		key = event.key
 		
-		if key == 'ArrowLeft'  then changeRound -1
-		if key == 'ArrowRight' then changeRound +1
-		if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
-		if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
+		if not event.shiftKey
+			if key == 'ArrowLeft'  then changeRound -1
+			if key == 'ArrowRight' then changeRound +1
+			if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
+			if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
 
 		del = 'Delete'
 		if key == del and global.currScreen == 'b' then setResult key, 'x' # "  -  "
