@@ -9,8 +9,8 @@ export global =
 		SORT : 1
 		ONE : 1 # ONE = 1 # 0=dev 1=prod 
 		BALANCE : 1
-		DECIMALS : 3
-		A : 30
+		DECIMALS : 0
+		A : 29
 		B : 30
 		C : 30
 

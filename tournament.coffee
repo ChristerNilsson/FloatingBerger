@@ -8,7 +8,7 @@ import {echo,global,range} from './global.js'
 
 ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
 
-BYE = "• BYE •"
+BYE = "BYE"
 
 KEYS =
 	a : "  b c  ← →  + -  # n e p r  m l"
@@ -202,6 +202,8 @@ parseURL = ->
 	global.players = []
 	persons = params.getAll "p"
 
+	echo 'href',window.location.href
+
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if global.settings.SORT == 1 then persons.sort().reverse()
 
@@ -271,7 +273,7 @@ setAllPR = (delta) ->
 	showPlayers()
 
 setByeResults = ->
-	if not global.frirond then return
+	if global.frirond == null then return
 	for r in range global.rounds.length
 		round = global.rounds[r]
 		for t in range round.length
@@ -344,9 +346,9 @@ setScreen = (key) ->
 	if key == 'b' then h2.textContent = "B Bordslista rond #{global.currRound + global.settings.ONE} för #{global.settings.TITLE}"
 	if key == 'c' then h2.textContent = "C Namnlista rond #{global.currRound + global.settings.ONE} för #{global.settings.TITLE}"
 
-	document.getElementById('players').style.display   = if key=='a' then 'flex' else 'none'
-	document.getElementById('tables').style.display    = if key=='b' then 'flex' else 'none'
-	document.getElementById('names').style.display     = if key=='c' then 'flex' else 'none'
+	document.getElementById('players').style.display = if key == 'a' then 'flex' else 'none'
+	document.getElementById('tables').style.display  = if key == 'b' then 'flex' else 'none'
+	document.getElementById('names').style.display   = if key == 'c' then 'flex' else 'none'
 
 showInfo = (message) -> # Visa helpText på skärmen
 	root = document.getElementById('info')
@@ -410,6 +412,9 @@ showPlayers = -> # Visa spelarlistan.
 
 	sortedPlayers = _.clone global.players
 
+	# Tag bort BYE om den finns.
+	if global.frirond != null then memory = _.first _.remove sortedPlayers, (item) -> item.name == BYE
+
 	sortedPlayers.sort (a, b) =>
 		if global.sortKey == '#' then return a.id - b.id
 		if global.sortKey == 'n' then return a.name.localeCompare b.name, "sv"
@@ -417,7 +422,11 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
+	# Lägg tillbaka BYE till sists position
+	if global.frirond != null then sortedPlayers.push memory
+
 	columns = _.chunk sortedPlayers,global.settings.A
+	if _.last(columns).length == 1 and _.last(columns)[0].name == BYE then columns.pop()
 	root = document.getElementById 'players'
 	root.innerHTML = ''
 	container = koppla 'div', root
@@ -436,14 +445,14 @@ showPlayers = -> # Visa spelarlistan.
 		koppla 'th', thead, {text:"P"}
 		koppla 'th', thead, {text:"PR"}
 
-		col.forEach (player,i) =>
-			long = global.longs[player.id]
+		col.forEach (player) =>
 			if player.name == BYE then return
-			tr = koppla 'tr', tabell
+			tr = koppla 'tr', tabell, {style:"height: 28px"} # 27 ger ojämna höjder
 			koppla 'td', tr, {text: player.id + global.settings.ONE}
 			koppla 'td', tr, {style:"text-align:left", text: player.name} # .slice 0,20
 			koppla 'td', tr, {text: player.elo}
 
+			long = global.longs[player.id]
 			roundsContent long, player.id, tr
 
 			for i in range long.length, global.rounds.length
@@ -569,8 +578,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == 'd' then echo 'Dump',global
 		if key == 'x' then showMatrix()
 
-		if global.currScreen == 'a' and '#nepr'.includes key
-			echo 'sorting'
+		if global.currScreen == 'a' and key in '#nepr'
 			global.sortKey = key
 			showPlayers()
 
@@ -578,7 +586,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if global.currScreen == 'b' then changeGroupSize key,'B'
 		if global.currScreen == 'c' then changeGroupSize key,'C'
 
-		if key in ['a','b','c'] then setScreen key
+		if key in 'abc' then setScreen key
 
 		setCursor global.currRound,global.currTable
 
