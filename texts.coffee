@@ -10,7 +10,8 @@ Programmet hanterar både Floating och Berger:
 Alla ronder lottas innan turneringen startar, precis som i Berger.
 
 Formatet styrs mha ROUNDS, se nedan.
-<h3>Tangenter för sidorna A, B och C</h3>w       : Sida +
+<h3>Tangenter för sidorna A, B och C</h3>?       : Hjälp
+w       : Sida +
 s       : Sida -
 
 ←       : Rond -

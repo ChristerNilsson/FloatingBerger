@@ -2,7 +2,6 @@
 
 import {Player} from './player.js'
 import {Floating} from './floating.js'
-import {helpText} from './texts.js'
 import {performance} from './rating.js'
 import {echo,global,range,settings} from './global.js'
 
@@ -10,15 +9,15 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 
 BYE = "BYE"
 
-KEYS =
-	a : "w s  ← →  # n e p r  shift← shift→  shift↑ shift↓"
-	b : "w s  ← →  ↑ ↓  0 Space 1  Del  shift↑ shift↓"
-	c : "w s  ← →  shift↑ shift↓"
+KEYS = [
+	"w s  ← →  # n e p r  shift← shift→  shift↑ shift↓  ?"
+	"w s  ← →  ↑ ↓  0 Space 1  Del  shift↑ shift↓  ?"
+	"w s  ← →  shift↑ shift↓  ?"
+]
 
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
-	# echo 'addBord',bord,res,c0,c1
 	vit = global.players[c0].name
 	svart = global.players[c1].name
 	vit_elo = global.players[c0].elo
@@ -46,7 +45,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
 	global.currTable = 0
 	
-	setScreen 0 #global.currScreen
+	setScreen 0
 	showTables()
 	showNames()
 
@@ -340,8 +339,6 @@ setScreen = (delta) ->
 	if global.currScreen == 1 then showTables()
 	if global.currScreen == 2 then showNames()
 
-	# global.currScreen = key
-
 	header = document.getElementById 'header'
 	header.innerHTML = ''
 	h2 = koppla 'h2', header
@@ -355,6 +352,22 @@ setScreen = (delta) ->
 	document.getElementById('players').style.display = if global.currScreen == 0 then 'flex' else 'none'
 	document.getElementById('tables').style.display  = if global.currScreen == 1 then 'flex' else 'none'
 	document.getElementById('names').style.display   = if global.currScreen == 2 then 'flex' else 'none'
+
+showHelp = ->
+	# do ->
+	r = await fetch "help.md"
+	mdText = await r.text()
+	win = window.open "", "_blank"
+	win.document.write "<html><head><title>Hjälp</title>
+		<style>
+			body {
+			font-family: Arial, sans-serif;
+			margin: 2em;
+			line-height: 1.5;
+			}
+		</style>
+		</head><body>#{marked.parse(mdText)}</body></html>"
+	win.document.close()
 
 showInfo = (message) -> # Visa helpText på skärmen
 	root = document.getElementById('info')
@@ -495,13 +508,15 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	params = new URLSearchParams window.location.search
 
 	if params.size == 0 
-		document.getElementById("button").addEventListener "click", parseTextarea
+		document.getElementById("help").addEventListener "click", showHelp
+		document.getElementById("continue").addEventListener "click", parseTextarea
 		echo 'settings', settings
-		showInfo helpText
+		# showInfo helpText
 		return
 
+	document.getElementById("help").style = 'display: none'
 	document.getElementById("textarea").style = 'display: none'
-	document.getElementById("button").style = 'display: none'
+	document.getElementById("continue").style = 'display: none'
 
 	parseURL()
 
@@ -536,7 +551,9 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		key = event.key
-		
+
+		if key == '?' then showHelp()
+
 		if not event.shiftKey
 			if key == 'ArrowLeft'  then changeRound -1
 			if key == 'ArrowRight' then changeRound +1
