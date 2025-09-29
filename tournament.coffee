@@ -34,6 +34,14 @@ addBord = (bord,res,c0,c1) ->
 	koppla 'td', tr, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
 	tr
 	
+changeGroupSize = (key,letter) ->
+	if key == 'ArrowUp'   then global.settings[letter] -= 1
+	if key == 'ArrowDown' then global.settings[letter] += 1
+	if key in ['ArrowDown', 'ArrowUp']
+		if letter == 'A' then showPlayers()
+		if letter == 'B' then showTables()
+		if letter == 'C' then showNames()
+
 changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
 	global.currTable = 0
@@ -46,11 +54,6 @@ changeTable = (delta) -> global.currTable = (global.currTable + delta) %% tableC
 
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
-
-# convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng med samma index i b. b är separerad med |
-# 	i = a.indexOf input
-# 	b = b.split '|'
-# 	if input in a then b[i] else input
 
 createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
 
@@ -215,8 +218,6 @@ parseURL = ->
 
 	global.players = []
 	persons = params.getAll "p"
-
-	#echo 'href',window.location.href
 
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if global.settings.SORT == 1 then persons.sort().reverse()
@@ -548,32 +549,16 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	global.sortKey = if global.berger then 'p' else 'r'
 
 	readResults params
-
 	setByeResults()
-
 	updateLongs()
-
 	showPlayers()
 	showTables()
 	showNames()
-
 	setScreen 'a'
-	
 	setCursor global.currRound,global.currTable
-
 	document.title = global.settings.TITLE
 
-	changeGroupSize = (key,letter) ->
-		if key == 'ArrowUp'   then global.settings[letter] -= 1
-		if key == 'ArrowDown' then global.settings[letter] += 1
-		if key in ['ArrowDown', 'ArrowUp']
-			if letter == 'A' then showPlayers()
-			if letter == 'B' then showTables()
-			if letter == 'C' then showNames()
-
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
-		start = new Date()
-		# echo event.shiftKey, event.altKey, event.metaKey, event.key
 		key = event.key
 		
 		if key == 'ArrowLeft'  then changeRound -1
