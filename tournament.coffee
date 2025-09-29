@@ -397,24 +397,24 @@ showNames = ->
 			persons.push pb
 
 	persons.sort()
-	columns = _.chunk persons,global.settings.C
+	groups = _.chunk persons,global.settings.C
 
 	root = document.getElementById 'names'
 	root.innerHTML = '' # rensa
 
 	container = koppla 'div', root
-	container.className = 'columns'
+	container.className = 'groups'
 
-	columns.forEach (col) =>
+	groups.forEach (group) =>
 
-		colDiv = koppla 'div', container, {class:'column'}
+		colDiv = koppla 'div', container, {class:'group'}
 		tabell = koppla 'table', colDiv
 
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"Namn"}
 		koppla 'th', thead, {text:"Plats"}
 
-		col.forEach (p) => 
+		group.forEach (p) => 
 			tr1 = koppla 'tr',tabell
 			td1 = koppla 'td',tr1, {style: "text-align:left", text:p[0]}
 			td2 = koppla 'td',tr1, {style: "text-align:center", text:p[1]}
@@ -436,19 +436,19 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
-	# Lägg tillbaka BYE till sists position
+	# Lägg tillbaka BYE i slutet
 	if global.frirond != null then sortedPlayers.push memory
 
-	columns = _.chunk sortedPlayers,global.settings.A
-	if _.last(columns).length == 1 and _.last(columns)[0].name == BYE then columns.pop()
+	groups = _.chunk sortedPlayers,global.settings.A
+	if _.last(groups).length == 1 and _.last(groups)[0].name == BYE then groups.pop()
 	root = document.getElementById 'players'
 	root.innerHTML = ''
 	container = koppla 'div', root
-	container.className = 'columns'
+	container.className = 'groups'
 
 	offset = 0
-	columns.forEach (col) =>
-		colDiv = koppla 'div', container, {class:'column'}
+	groups.forEach (group) =>
+		colDiv = koppla 'div', container, {class:'group'}
 		tabell = koppla 'table', colDiv
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"#"}
@@ -459,7 +459,7 @@ showPlayers = -> # Visa spelarlistan.
 		koppla 'th', thead, {text:"P"}
 		koppla 'th', thead, {text:"PR"}
 
-		col.forEach (player) =>
+		group.forEach (player) =>
 			if player.name == BYE then return
 			tr = koppla 'tr', tabell, {style:"height: 28px"} # 27 ger ojämna höjder
 			koppla 'td', tr, {text: player.id + global.settings.ONE}
@@ -482,17 +482,17 @@ showPlayers = -> # Visa spelarlistan.
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
 	round = global.rounds[global.currRound]
-	columns = _.chunk round, global.settings.B
+	groups = _.chunk round, global.settings.B
 
 	root = document.getElementById 'tables'
 	root.innerHTML = ''
 
 	container = koppla 'div', root
-	container.className = 'columns'
+	container.className = 'groups'
 
 	offset = 0
-	columns.forEach (col) =>
-		colDiv = koppla 'div', container, {class:'column'}
+	groups.forEach (group) =>
+		colDiv = koppla 'div', container, {class:'group'}
 		tabell = koppla 'table', colDiv
 
 		thead = koppla 'thead', tabell
@@ -503,7 +503,7 @@ showTables = -> # Visa bordslistan
 		koppla 'th', thead, {text:"Svart"}
 		koppla 'th', thead, {text:"Resultat"}
 
-		col.forEach ([w,b],iTable) =>
+		group.forEach ([w,b],iTable) =>
 			tabell.appendChild addBord offset + iTable, global.results[global.currRound][offset + iTable], w,b
 		offset += global.settings.B
 

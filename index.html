@@ -9,22 +9,22 @@
     .help { background: #f0f0f0; padding: 1em; }
     pre { white-space: pre-wrap; word-wrap: break-word; }
     
-    .columns {
+    .groups {
       display: flex;
       flex-wrap: wrap;
-      gap: 0px;                   /* luft mellan kolumnerna */
+      gap: 0px;                   /* luft mellan grupperna */
       align-items: flex-start;    /* undvik att kolumner sträcks i höjd */
     }
 
-    .column {
-      border: none;               /* fet ram runt kolumnen */
+    .group {
+      border: none;               /* fet ram runt gruppen */
       border-collapse: collapse;
-      margin-right: 1px;          /* luft mellan kolumner */
+      margin-right: 1px;          /* luft mellan grupper */
       table-layout: auto;         /* låt innehållet styra bredden */
       width: auto;                /* minsta möjliga bredd */
     }
 
-    .column td {
+    .group td {
       border: 1px solid black;  /* tunn linje runt celler */
       padding: 3px 5px;
       white-space: nowrap;        /* hindra radbrytning */
