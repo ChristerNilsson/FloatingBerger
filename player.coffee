@@ -1,4 +1,4 @@
-import {echo,global,range} from './global.js'
+import {echo,global,range,settings} from './global.js'
 import {performance} from './rating.js'
 
 export class Player
@@ -25,7 +25,7 @@ export class Player
 		@P = 0
 		@PR = 0
 		@elos = []
-		for r in range global.settings.GAMES * global.settings.ROUNDS
+		for r in range settings.GAMES * settings.ROUNDS
 			ch = long[r][3]
 			value = '012'.indexOf ch
 			opp = long[r][1]
