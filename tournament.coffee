@@ -79,12 +79,12 @@ export expand = (games, rounds) -> # make a double round from a single round
 		if games == 2 then result.push ([b,w] for [w,b] in round)
 	return result
 
-export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som krävs för unikhet i listan
-	best = 0
-	for i in range 6
-		unik = _.uniq (item.toFixed(i) for item in lst)
-		if unik.length > best then [best,ibest] = [unik.length,i]
-	ibest
+# export findNumberOfDecimals = (lst) -> # leta upp minsta antal decimaler som krävs för unikhet i listan
+# 	best = 0
+# 	for i in range 6
+# 		unik = _.uniq (item.toFixed(i) for item in lst)
+# 		if unik.length > best then [best,ibest] = [unik.length,i]
+# 	ibest
 
 koppla = (typ, parent, attrs = {}) ->
 	elem = document.createElement typ
@@ -282,11 +282,6 @@ savePairing = (r, A, half, n) -> # skapa en bordslista utifrån berger.
 	if global.frirond then lst.push lst.shift()
 	lst.sort()
 
-setAllPR = (delta) ->
-	decimals = global.settings.DECIMALS + delta
-	if 0 <= decimals <= 6 then global.settings.DECIMALS = decimals
-	showPlayers()
-
 setByeResults = ->
 	if global.frirond == null then return
 	for r in range global.rounds.length
@@ -311,6 +306,10 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 		color = if index == global.currTable + 0 then 'yellow' else 'white'
 		tr.children[5].style = "background-color:#{color}"
 
+setDecimals = (delta) ->
+	decimals = global.settings.DECIMALS + delta
+	if 0 <= decimals <= 6 then global.settings.DECIMALS = decimals
+	showPlayers()
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
 	old = global.results[global.currRound][global.currTable]
@@ -321,7 +320,6 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	if cell in 'xx 00 11 22'.split ' ' # lyckad kontrollinmatning, gå till nästa bord
 		global.currTable = (global.currTable + 1) %% tableCount()
-		#echo 'global.currTable',global.currTable
 		return
 
 	if cell in '01 02 10 12 20 21'.split ' '
@@ -573,8 +571,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
 
 		if event.shiftKey
-			if key == 'ArrowLeft'  and global.currScreen == 'a' then setAllPR -1
-			if key == 'ArrowRight' and global.currScreen == 'a' then setAllPR +1
+			if key == 'ArrowLeft'  and global.currScreen == 'a' then setDecimals -1
+			if key == 'ArrowRight' and global.currScreen == 'a' then setDecimals +1
 
 		if key == 'd' then echo 'Dump',global
 		if key == 'x' then showMatrix()
