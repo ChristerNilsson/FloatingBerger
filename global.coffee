@@ -2,7 +2,7 @@ export echo = console.log
 export range = _.range
 
 export global = {
-	settings : {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:3} # ONE = 1 # 0=dev 1=prod
+	settings : {TITLE:'Titel saknas', GAMES:1, ROUNDS:0, SORT:1, ONE:1, BALANCE:1, DECIMALS:3, A:30, B:30, C:30} # ONE = 1 # 0=dev 1=prod
 
 	players : []
 	player : null

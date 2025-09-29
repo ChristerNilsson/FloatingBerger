@@ -11,16 +11,13 @@ ALIGN_CENTER = {style: "text-align:center"}
 ALIGN_RIGHT  = {style: "text-align:right"}
 
 ALFABET = '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890' # 100
-NAMES_PER_COL = 30
-TABLES_PER_COL = 30
-PLAYERS_PER_COL = 30
 
 BYE = "• BYE •"
 
 KEYS = {}
-KEYS.a = "  b c  ← →  # n e p r  m l"
-KEYS.b = "a   c  ← →  ↑ ↓  0 Space 1  Del"
-KEYS.c = "a b    ← →"
+KEYS.a = "  b c  ← →  + -  # n e p r  m l"
+KEYS.b = "a   c  ← →  + -  ↑ ↓  0 Space 1  Del"
+KEYS.c = "a b    ← →  + -"
 
 ## F U N K T I O N E R ##
 
@@ -388,7 +385,7 @@ showNames = ->
 			persons.push pb
 
 	persons.sort()
-	columns = _.chunk persons,NAMES_PER_COL
+	columns = _.chunk persons,global.settings.C
 
 	root = document.getElementById 'names'
 	root.innerHTML = '' # rensa
@@ -424,7 +421,7 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'p' then return b.P - a.P 
 		if global.sortKey == 'r' then return b.PR - a.PR
 
-	columns = _.chunk sortedPlayers,NAMES_PER_COL
+	columns = _.chunk sortedPlayers,global.settings.A
 	root = document.getElementById 'players'
 	root.innerHTML = ''
 	container = koppla 'div', root
@@ -459,14 +456,14 @@ showPlayers = -> # Visa spelarlistan.
 			koppla 'td', tr, {style:"text-align:right" , text: player.P.toFixed 1}
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed global.settings.DECIMALS}
 
-		offset += PLAYERS_PER_COL
+		offset += global.settings.A
 
 	createSortEvents()
 
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
 	round = global.rounds[global.currRound]
-	columns = _.chunk round, TABLES_PER_COL
+	columns = _.chunk round, global.settings.B
 
 	root = document.getElementById 'tables'
 	root.innerHTML = ''
@@ -489,7 +486,7 @@ showTables = -> # Visa bordslistan
 
 		col.forEach ([w,b],iTable) =>
 			tabell.appendChild addBord offset + iTable, global.results[global.currRound][offset + iTable], w,b
-		offset += TABLES_PER_COL
+		offset += global.settings.B
 
 tableCount = -> global.players.length // 2 # Beräkna antal bord
 
@@ -546,6 +543,14 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.title = global.settings.TITLE
 
+	changeGroupSize = (key,letter) ->
+		if key == '-' then global.settings[letter] -= 1
+		if key == '+' then global.settings[letter] += 1
+		if key in '+-'
+			if letter == 'A' then showPlayers()
+			if letter == 'B' then showTables()
+			if letter == 'C' then showNames()
+
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		start = new Date()
 		key = event.key
@@ -572,6 +577,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 			echo 'sorting'
 			global.sortKey = key
 			showPlayers()
+
+		if global.currScreen == 'a' then changeGroupSize key,'A'
+		if global.currScreen == 'b' then changeGroupSize key,'B'
+		if global.currScreen == 'c' then changeGroupSize key,'C'
 
 		if key in ['a','b','c'] then setScreen key
 
