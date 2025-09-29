@@ -170,15 +170,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			[key, val] = line.split '='
 			key = key.trim()
 			val = val.trim()
-			if key == 'TITLE' then settings.TITLE = val
-			if key == 'GAMES' then settings.GAMES = val
-			if key == 'ROUNDS' then settings.ROUNDS = val
-			if key == 'SORT' then settings.SORT = val
-			if key == 'ONE' then settings.ONE = val
-			if key == 'BALANCE' then settings.BALANCE = val
-			if key == 'A' then settings.A = val
-			if key == 'B' then settings.B = val
-			if key == 'C' then settings.C = val
+			if key in "TITLE GAMES ROUNDS SORT ONE BALANCE A B C".split ' ' then settings[key] = val
 		else
 			global.players.push line
 
@@ -484,12 +476,8 @@ showTables = -> # Visa bordslistan
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"Bord"}
-		koppla 'th', thead, {text:"Vit"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Elo"}
-		koppla 'th', thead, {text:"Svart"}
-		koppla 'th', thead, {text:"Resultat"}
+		for rubrik in "Bord Vit Elo Elo Svart Resultat".split ' '
+			koppla 'th', thead, {text:rubrik}
 
 		group.forEach ([w,b],iTable) =>
 			tabell.appendChild addBord offset + iTable, global.results[global.currRound][offset + iTable], w,b
