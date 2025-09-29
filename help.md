@@ -1,3 +1,5 @@
+
+
 ## Floating Berger version 1.2
 
 Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
@@ -16,18 +18,18 @@ Formatet styrs mha ROUNDS, se nedan.
 ### Tangenter för sidorna A, B och C
 
 ```
-?       : Hjälp
-w       : Sida +
-s       : Sida -
+  ?     : Hjälp
+  w     : Sida +
+  s     : Sida -
 
-←       : Rond -
-→       : Rond +
+  ←     : Rond -
+  →     : Rond +
 
-↑       : Bord -
-↓       : Bord +
+  ↑     : Bord -
+  ↓     : Bord +
 
-shift ↑ : Gruppstorlek -
-shift ↓ : Gruppstorlek +
+  i     : Gruppstorlek -
+  k     : Gruppstorlek +
 
 ctrl p  : Utskrift
 ctrl -  : Zoom -
@@ -36,21 +38,21 @@ ctrl +  : Zoom +
 
 ### Tangenter för sida A Ställning
 ```
-#       : Sortera på # (spelarens nummer)
-n       : Sortera på Namn
-e       : Sortera på Elo
-p       : Sortera på P  (poäng)
-r       : Sortera på PR (performance rating)
+  #     : Sortera på # (spelarens nummer)
+  n     : Sortera på Namn
+  e     : Sortera på Elo
+  p     : Sortera på P  (poäng)
+  r     : Sortera på PR (performance rating)
 
-shift ← : decimaler för PR -
-shift → : decimaler för PR +
+  a     : decimaler för PR -
+  d     : decimaler för PR +
 ```
 ### Tangenter för sida B Bordslista
 ```
-0       : Vit förlust
+  0     : Vit förlust
 Space   : Remi
-1       : Vit vinst
-Del     : Tag bort resultat
+  1     : Vit vinst
+ Del    : Tag bort resultat
 ```
 ### Parametrar
 ```

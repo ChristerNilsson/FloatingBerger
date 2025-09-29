@@ -10,9 +10,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS = [
-	"w s  ← →  # n e p r  shift← shift→  shift↑ shift↓  ?"
-	"w s  ← →  ↑ ↓  0 Space 1  Del  shift↑ shift↓  ?"
-	"w s  ← →  shift↑ shift↓  ?"
+	"?  w s  ← →  i k  # n e p r  a d"
+	"?  w s  ← →  i k  ↑ ↓  0 Space 1  Del"
+	"?  w s  ← →  i k"
 ]
 
 ## F U N K T I O N E R ##
@@ -34,9 +34,9 @@ addBord = (bord,res,c0,c1) ->
 	tr
 	
 changeGroupSize = (key,letter) ->
-	if key == 'ArrowUp'   then settings[letter] -= 1
-	if key == 'ArrowDown' then settings[letter] += 1
-	if key in ['ArrowDown', 'ArrowUp']
+	if key == 'i' then settings[letter] -= 1
+	if key == 'k' then settings[letter] += 1
+	if key in ['i', 'k']
 		if letter == 'A' then showPlayers()
 		if letter == 'B' then showTables()
 		if letter == 'C' then showNames()
@@ -554,11 +554,11 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		if key == '?' then showHelp()
 
-		if not event.shiftKey
-			if key == 'ArrowLeft'  then changeRound -1
-			if key == 'ArrowRight' then changeRound +1
-			if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
-			if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
+		# if not event.shiftKey
+		if key == 'ArrowLeft'  then changeRound -1
+		if key == 'ArrowRight' then changeRound +1
+		if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
+		if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
 
 		del = 'Delete'
 		if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
@@ -566,21 +566,19 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
 		if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
 
-		if event.shiftKey
-			if key == 'ArrowLeft'  and global.currScreen == 0 then setDecimals -1
-			if key == 'ArrowRight' and global.currScreen == 0 then setDecimals +1
+		if key == 'a' and global.currScreen == 0 then setDecimals -1
+		if key == 'd' and global.currScreen == 0 then setDecimals +1
 
-		if key == 'd' then echo 'Dump',global
 		if key == 'x' then showMatrix()
-
+		if key == 'y' then echo 'Dump',global
+		
 		if global.currScreen == 0 and key in '#nepr'
 			global.sortKey = key
 			showPlayers()
 
-		if event.shiftKey
-			if global.currScreen == 0 then changeGroupSize key,'A'
-			if global.currScreen == 1 then changeGroupSize key,'B'
-			if global.currScreen == 2 then changeGroupSize key,'C'
+		if global.currScreen == 0 then changeGroupSize key,'A'
+		if global.currScreen == 1 then changeGroupSize key,'B'
+		if global.currScreen == 2 then changeGroupSize key,'C'
 
 		if key == 'w' then setScreen +1
 		if key == 's' then setScreen -1
