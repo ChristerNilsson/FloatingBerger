@@ -11,9 +11,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS =
-	a : "  b c  ← →       # n e p r  shift← shift→  shift↑↓"
-	b : "a   c  ← →  ↑ ↓  0 Space 1  Del            shift↑↓"
-	c : "a b    ← →                                 shift↑↓"
+	a : "  b c  ← →       # n e p r  shift← shift→  shift↑ shift↓"
+	b : "a   c  ← →  ↑ ↓  0 Space 1  Del            shift↑ shift↓"
+	c : "a b    ← →                                 shift↑ shift↓"
 
 ## F U N K T I O N E R ##
 
