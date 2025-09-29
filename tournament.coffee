@@ -398,17 +398,12 @@ showNames = ->
 	persons.sort()
 	groups = _.chunk persons,settings.C
 
-	root = document.getElementById 'names'
-	root.innerHTML = '' # rensa
-
-	container = koppla 'div', root
+	container = document.getElementById 'names'
+	container.innerHTML = '' # rensa
 	container.className = 'groups'
 
 	groups.forEach (group) =>
-
-		colDiv = koppla 'div', container, {class:'group'}
-		tabell = koppla 'table', colDiv
-
+		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"Namn"}
 		koppla 'th', thead, {text:"Plats"}
@@ -440,15 +435,13 @@ showPlayers = -> # Visa spelarlistan.
 
 	groups = _.chunk sortedPlayers,settings.A
 	if _.last(groups).length == 1 and _.last(groups)[0].name == BYE then groups.pop()
-	root = document.getElementById 'players'
-	root.innerHTML = ''
-	container = koppla 'div', root
+	container = document.getElementById 'players'
+	container.innerHTML = ''
 	container.className = 'groups'
 
 	offset = 0
 	groups.forEach (group) =>
-		colDiv = koppla 'div', container, {class:'group'}
-		tabell = koppla 'table', colDiv
+		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"#"}
 		koppla 'th', thead, {text:"Namn"}
@@ -483,17 +476,13 @@ showTables = -> # Visa bordslistan
 	round = global.rounds[global.currRound]
 	groups = _.chunk round, settings.B
 
-	root = document.getElementById 'tables'
-	root.innerHTML = ''
-
-	container = koppla 'div', root
+	container = document.getElementById 'tables'
+	container.innerHTML = ''
 	container.className = 'groups'
 
 	offset = 0
 	groups.forEach (group) =>
-		colDiv = koppla 'div', container, {class:'group'}
-		tabell = koppla 'table', colDiv
-
+		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"Bord"}
 		koppla 'th', thead, {text:"Vit"}
