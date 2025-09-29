@@ -11,9 +11,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS =
-	a : "  b c  ← →  + -  # n e p r  m l"
-	b : "a   c  ← →  + -  ↑ ↓  0 Space 1  Del"
-	c : "a b    ← →  + -"
+	a : "  b c  ← →       # n e p r  shift← shift→  shift↑↓"
+	b : "a   c  ← →  ↑ ↓  0 Space 1  Del            shift↑↓"
+	c : "a b    ← →                                 shift↑↓"
 
 ## F U N K T I O N E R ##
 
@@ -42,16 +42,15 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	showTables()
 	showNames()
 
-changeTable = (delta) -> # byt bord
-	global.currTable = (global.currTable + delta) %% tableCount()
+changeTable = (delta) -> global.currTable = (global.currTable + delta) %% tableCount()
 
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
 
-convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng med samma index i b. b är separerad med |
-	i = a.indexOf input
-	b = b.split '|'
-	if input in a then b[i] else input
+# convertLong = (input,a,b) -> # byt alla tecken i input som finns i a mot sträng med samma index i b. b är separerad med |
+# 	i = a.indexOf input
+# 	b = b.split '|'
+# 	if input in a then b[i] else input
 
 createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
 
@@ -137,6 +136,9 @@ makeURL = ->
 	url += "&SORT=#{global.settings.SORT}"
 	url += "&ONE=#{global.settings.ONE}"
 	url += "&BALANCE=#{global.settings.BALANCE}"
+	url += "&A=#{global.settings.A}"
+	url += "&B=#{global.settings.B}"
+	url += "&C=#{global.settings.C}"
 
 	for player in global.players
 		url += "&p=#{player}"
@@ -171,8 +173,16 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			if key == 'SORT' then global.settings.SORT = val
 			if key == 'ONE' then global.settings.ONE = val
 			if key == 'BALANCE' then global.settings.BALANCE = val
+			if key == 'A' then global.settings.A = val
+			if key == 'B' then global.settings.B = val
+			if key == 'C' then global.settings.C = val
 		else
 			global.players.push line
+
+	n = global.players.length
+	if global.settings.A > n then global.settings.A = n
+	if global.settings.B > n then global.settings.B = n
+	if global.settings.C > n then global.settings.C = n
 
 	if global.players.length % 2 == 1
 		global.frirond = global.players.length
@@ -199,10 +209,14 @@ parseURL = ->
 	global.settings.ONE = parseInt safeGet params, "ONE", "1"
 	global.settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
+	global.settings.A = parseInt safeGet params, "A", "29"
+	global.settings.B = parseInt safeGet params, "B", "30"
+	global.settings.C = parseInt safeGet params, "C", "30"
+
 	global.players = []
 	persons = params.getAll "p"
 
-	echo 'href',window.location.href
+	#echo 'href',window.location.href
 
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if global.settings.SORT == 1 then persons.sort().reverse()
@@ -505,6 +519,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	if params.size == 0 
 		document.getElementById("button").addEventListener "click", parseTextarea
+		echo 'settings', global.settings
 		showInfo helpText
 		return
 
@@ -549,17 +564,17 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.title = global.settings.TITLE
 
 	changeGroupSize = (key,letter) ->
-		if key == '-' then global.settings[letter] -= 1
-		if key == '+' then global.settings[letter] += 1
-		if key in '+-'
+		if key == 'ArrowUp'   then global.settings[letter] -= 1
+		if key == 'ArrowDown' then global.settings[letter] += 1
+		if key in ['ArrowDown', 'ArrowUp']
 			if letter == 'A' then showPlayers()
 			if letter == 'B' then showTables()
 			if letter == 'C' then showNames()
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		start = new Date()
+		# echo event.shiftKey, event.altKey, event.metaKey, event.key
 		key = event.key
-		#echo 'key',key
 		
 		if key == 'ArrowLeft'  then changeRound -1
 		if key == 'ArrowRight' then changeRound +1
@@ -572,8 +587,9 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == ' ' and global.currScreen == 'b' then setResult key, '1' # "½ - ½"
 		if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
 
-		if key == 'm' and global.currScreen == 'a' then setAllPR +1
-		if key == 'l' and global.currScreen == 'a' then setAllPR -1
+		if event.shiftKey
+			if key == 'ArrowLeft'  and global.currScreen == 'a' then setAllPR -1
+			if key == 'ArrowRight' and global.currScreen == 'a' then setAllPR +1
 
 		if key == 'd' then echo 'Dump',global
 		if key == 'x' then showMatrix()
@@ -582,9 +598,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 			global.sortKey = key
 			showPlayers()
 
-		if global.currScreen == 'a' then changeGroupSize key,'A'
-		if global.currScreen == 'b' then changeGroupSize key,'B'
-		if global.currScreen == 'c' then changeGroupSize key,'C'
+		if event.shiftKey
+			if global.currScreen == 'a' then changeGroupSize key,'A'
+			if global.currScreen == 'b' then changeGroupSize key,'B'
+			if global.currScreen == 'c' then changeGroupSize key,'C'
 
 		if key in 'abc' then setScreen key
 

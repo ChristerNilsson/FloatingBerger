@@ -19,11 +19,13 @@ c   c   c   : Visa Namnlista
 ←   ←   ←   : Rond -
 →   →   →   : Rond +
 
--           : Gruppstorlek -
-+           : Gruppstorlek +
-
     ↑       : Bord -
     ↓       : Bord +
+
+    0       : Vit förlust
+  Space     : Remi
+    1       : Vit vinst
+   Del      : Tag bort
 
 #           : Sortera på # (spelarens nummer)
 n           : Sortera på Namn
@@ -31,17 +33,15 @@ e           : Sortera på Elo
 p           : Sortera på P  (poäng)
 r           : Sortera på PR (performance rating)
 
-m           : decimaler för PR +
-l           : decimaler för PR -
+shift ↑     : Gruppstorlek +
+shift ↓     : Gruppstorlek -
 
-    0       : Vit förlust
-  Space     : Remi
-    1       : Vit vinst
-   Del      : Tag bort
+shift →     : decimaler för PR +
+shift ←     : decimaler för PR -
 
-ctrl p • skriver ut
-ctrl - • zoomar ut
-ctrl + • zoomar in
+ctrl p      : skriver ut
+ctrl -      : zoomar ut
+ctrl +      : zoomar in
 <h3>Parametrar</h3>TITLE   = turneringens namn
 ROUNDS  = antal ronder
 GAMES   = antal partier per rond • 1=enkelrond • 2=dubbelrond 
