@@ -10,9 +10,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS = [
-	"?  w s  ← →  i k  # n e p r  a d"
-	"?  w s  ← →  i k  ↑ ↓  0 Space 1  Del"
-	"?  w s  ← →  i k"
+	"? ws ←→ ik #nepr ad"
+	"? ws ←→ ik ↑↓  0 Space 1 Del"
+	"? ws ←→ ik"
 ]
 
 ## F U N K T I O N E R ##
@@ -570,7 +570,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if key == 'd' and global.currScreen == 0 then setDecimals +1
 
 		if key == 'x' then showMatrix()
-		if key == 'y' then echo 'Dump',global
+		if key == 'y' then echo 'Dump', global
 		
 		if global.currScreen == 0 and key in '#nepr'
 			global.sortKey = key
@@ -580,10 +580,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		if global.currScreen == 1 then changeGroupSize key,'B'
 		if global.currScreen == 2 then changeGroupSize key,'C'
 
-		if key == 'w' then setScreen +1
-		if key == 's' then setScreen -1
+		if key == 'w' then setScreen -1
+		if key == 's' then setScreen +1
 
-		setCursor global.currRound,global.currTable
+		setCursor global.currRound, global.currTable
 
 		# tvinga bordet att synas
 		rad = document.querySelectorAll("#tables table tr")[global.currTable]

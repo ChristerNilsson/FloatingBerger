@@ -1,10 +1,9 @@
-
-
 ## Floating Berger version 1.2
 
-Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig i mitten av sin egen lilla virtuella Berger-grupp. De flesta hamnar kring 50% vinstresultat.
+Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig mitt i en Berger-grupp.  
+De flesta hamnar kring 50% vinstresultat.  
 
-Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.
+Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.  
 
 Programmet hanterar både Floating och Berger:
 
@@ -15,74 +14,70 @@ Alla ronder lottas innan turneringen startar, precis som i Berger.
 
 Formatet styrs mha ROUNDS, se nedan.
 
-### Tangenter för sidorna A, B och C
+### Sidor
 
 ```
-  ?     : Hjälp
-  w     : Sida +
-  s     : Sida -
-
-  ←     : Rond -
-  →     : Rond +
-
-  ↑     : Bord -
-  ↓     : Bord +
-
-  i     : Gruppstorlek -
-  k     : Gruppstorlek +
-
-ctrl p  : Utskrift
-ctrl -  : Zoom -
-ctrl +  : Zoom +
+A Ställning:  id • namn • elo • ronder • poäng • performance rating
+B Bordslista: bordsnummer • vit • elo • elo • svart • resultat
+C Namnlista:  namn • bordsnummer • färg
 ```
 
-### Tangenter för sida A Ställning
-```
-  #     : Sortera på # (spelarens nummer)
-  n     : Sortera på Namn
-  e     : Sortera på Elo
-  p     : Sortera på P  (poäng)
-  r     : Sortera på PR (performance rating)
+### Tangenter för A, B och C
 
-  a     : decimaler för PR -
-  d     : decimaler för PR +
 ```
-### Tangenter för sida B Bordslista
+   ?      : Hjälp
+  w s     : Sida - • +
+  ← →     : Rond - • +
+  i k     : Gruppstorlek - • +
+ ctrl p   : Utskrift
+ctrl - +  : Zoom - • +
 ```
-  0     : Vit förlust
-Space   : Remi
-  1     : Vit vinst
- Del    : Tag bort resultat
+
+### Tangenter för A Ställning
+
 ```
+# n e p r : Sortera på Id • Namn • Elo • Poäng • performance Rating
+  a d     : decimaler för PR - • +
+```
+
+### Tangenter för B Bordslista
+
+```
+  ↑ ↓     : Bord - • +
+  0 1     : Vit 0 • 1
+ Space    : ½
+  Del     : Radera
+```
+
 ### Parametrar
+
 ```
 TITLE = turneringens namn
 ROUNDS = antal ronder
 
 GAMES = antal partier per rond
-	• 1 => enkelrond 
+	• 1 => enkelrond (default)
 	• 2 => dubbelrond 
 
 SORT = spelarna sorteras på elo
 	• 0 => utan sortering 
-	• 1 => med sortering
+	• 1 => med sortering (default)
 
 BALANCE = färgbalans
 	• 0 => utan färgbalans
-	• 1 => med färgbalans
+	• 1 => med färgbalans (default)
 
-A = Gruppstorlek för Players
-B = Gruppstorlek för Tables
-C = Gruppstorlek för Names
+A = Gruppstorlek (default 30)
+B = Gruppstorlek (default 30)
+C = Gruppstorlek (default 30)
 
 1653 Christer Nilsson: elo + namn. Ange 1400 om elo saknas
 ```
 
-Med Gruppstorlek menas hur många rader en grupp ska innehålla.  
-Används när man vill utnyttja skärm och printer optimalt.  
+Gruppstorleken anger hur många rader en grupp innehåller.  
+Används tillsammans med Zoom när man vill optimera skärm och printer.  
 
 ### Backup
 
-Kopiera urlen och spara på säker plats. T ex på en USB-sticka.  
+Kopiera urlen och spara på säker plats. T ex en USB-sticka eller mail.  
 Urlen finns även i webläsarens historik, om ingen rensat.  
-
