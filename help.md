@@ -1,7 +1,7 @@
-## Floating Berger version 1.2
+## Floating Berger
 
-Namnet Floating Berger kommer av att de flesta spelare upplever att de befinner sig mitt i en Berger-grupp.  
-De flesta hamnar kring 50% vinstresultat.  
+Namnet *Floating Berger* kommer av att de flesta spelare upplever att de befinner sig mitt i en Berger-grupp.  
+De flesta deltagare hamnar kring 50% vinstresultat.  
 
 Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.  
 
@@ -74,10 +74,15 @@ C = Gruppstorlek (default 30)
 1653 Christer Nilsson: elo + namn. Ange 1400 om elo saknas
 ```
 
-Gruppstorleken anger hur många rader en grupp innehåller.  
-Används tillsammans med Zoom när man vill optimera skärm och printer.  
+**Gruppstorlek** anger hur många rader en grupp innehåller.  
+Används tillsammans med **Zoom** när man vill optimera skärm och printer.  
 
 ### Backup
 
 Kopiera urlen och spara på säker plats. T ex en USB-sticka eller mail.  
 Urlen finns även i webläsarens historik, om ingen rensat.  
+
+### Begränsningar
+
+Programmet är avsett för datorer **med tangentbord**. (PC, Mac, Linux)  
+Resultat kan även visas på mobil och platta.  
