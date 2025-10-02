@@ -19,7 +19,7 @@ The format is controlled using ROUNDS, see below.
 
 ```
 A Standings:  id • name • elo • rounds • points • performance rating
-B Tables: table  • white • elo • elo • black • result
+B Tables: table • white • elo • elo • black • result
 C Names:  name • table • colour
 ```
 

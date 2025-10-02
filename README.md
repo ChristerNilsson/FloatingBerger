@@ -2,10 +2,10 @@
 
 [Try it!](https://christernilsson.github.io/FloatingBerger/)
 
-Byt ut elos och namn mot de som ska gälla i din turnering
+Add the players elo ratings and names 
 
 ```
-TITLE = Sommarturnering RIO 2025
+TITLE = Summer tournament RIO 2025
 GAMES = 1
 ROUNDS = 4
 SORT = 0
@@ -23,80 +23,49 @@ BALANCE = 1
 1706 Abbas Razavi
 1650 Jouko Liistamo
 
-1677 Cesar
-
 ```
 
-Vid dubbelrond sätts GAMES = 2  
+If you are playing double rounds, set GAMES = 2
 
-Skriv in VITS resultat i textrutan i den ordning Bordslistan anger  
+Enter the result for **white** in the Table list order  
 
-Förklaring
+Explanation
 ```
-r1 = rond 1
+r1 = round 1
 
-0 = vit förlust
-1 = remi
-2 = vit vinst
-x = partiet ej spelat
+0 = white loss
+1 = draw
+2 = white win
+x = game not played yet
 ```
 
-# Handhavande
+# Usage
 
-* Rondnummerna är klickbara. Då visas Bordslistan för klickad rond
-* Övriga kolumner sorteras när man klickar på dem
+* The rounds are clickable
+* Click on other columns, sorts the players
 
-* a togglar Spelarlistan
-* b togglar Bordslistan
-* c togglar Namnlistan
+# Differences against other pairing systems
 
-* ctrl p skriver ut sidan
-* ctrl + zoomar in
-* ctrl - zoomar ut
+* The elo rating decides. The differences are minimized
+* Tie breaks are seldom needed
+* All rounds are paired initially
+* You mey play the games in any order
+* No need to divide the tournament in separate Berger groups
+* All players know when they will meet whom. Like Berger
+* Simple handling of the pairing process
+* All information is stored in the url, ready to be published
 
-# Skillnader gentemot andra turneringssystem
+# Mind this
 
-* Ratingen styr vilka som möts. Skillnaden minimeras
-* Man behöver ytterst sällan använda särskiljning
-* Man lottar alla ronder direkt
-* Man kan spela partierna i valfri ordning
-* Turneringen behöver ej delas upp i flera Berger-grupper
-* Alla spelare vet i vilken rond de ska möta varandra. Som Berger
-* Enkel hantering av lottning, även dubbelrondigt
-* Eftersom turneringens data finns i url:en, dvs länken, kan den enkelt publiceras
-
-# Att tänka på
-
-* När turneringen börjat får man bara modifiera resultaten. Dvs r1 = osv
-* Man får EJ ändra elo, SORT, ROUNDS, BALANCE eller GAMES under turneringens gång
-	* Detta pga att lottningen kan påverkas
-* Skriv alltid ut Bordslistorna!
-	* De fungerar som backup
+* After starting the tournament, you are only allowed to edit the results
+* Changing elos, SORT, ROUNDS, BALANCE or GAMES is not allowed
+* Always print the Table lists. These are your backups
 
 # BALANCE
 
-* BALANCE == 0 innebär att balansering inte görs. Som i dubbelrond.  
-* BALANCE == 1 innebär att balansering görs. Typ enkelrond
+* BALANCE == 0. Mainly double round
+* BALANCE == 1. Mainly single round
 
-När man satt igång turneringen får man inte ändra på parametrarna. Det kan göra resultatinmatning omöjlig.  
-Man får inte heller justera elo-tal.  
-Däremot kan man uppdatera ett felstavat namn i urlen.  
-Felaktiga resultat kan korrigeras. Detta görs i GUI:t  
+# Development
 
-# Utveckling
-
-ONE används för att visa noll- eller ett-baserade värden.  
-
-# ELO-talens inverkan
-
-Givet två monotont stigande uppsättningar elotal, kan de ge helt olika matriser.  
-T ex ger 2001 .. 2020 en annan matris än 2001 .. 2010 + 2100 .. 2110  
-
-# Bör verkligen de två bästa mötas i första ronden?
-
-Kan avhjälpas genom att spela ronderna i omvänd ordning.
-Med detta enkla trick kommer partierna för alla spelare att bli jämnare för varje rond som spelas.
-
-# Fördelar med FairPair
-
-* Man ser skrällarna tydligare än i Swiss
+ONE is used to show zero or one based indexes
