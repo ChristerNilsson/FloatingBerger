@@ -345,9 +345,9 @@ setScreen = (delta) ->
 
 	koppla 'pre', header, {text: KEYS[global.currScreen]}
 
-	if global.currScreen == 0 then h2.textContent = "A Ställning för " + settings.TITLE
-	if global.currScreen == 1 then h2.textContent = "B Bordslista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
-	if global.currScreen == 2 then h2.textContent = "C Namnlista rond #{global.currRound + settings.ONE} för #{settings.TITLE}"
+	if global.currScreen == 0 then h2.textContent = "A Standings for " + settings.TITLE
+	if global.currScreen == 1 then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if global.currScreen == 2 then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 
 	document.getElementById('players').style.display = if global.currScreen == 0 then 'flex' else 'none'
 	document.getElementById('tables').style.display  = if global.currScreen == 1 then 'flex' else 'none'
@@ -358,7 +358,7 @@ showHelp = ->
 	r = await fetch "help.md"
 	mdText = await r.text()
 	win = window.open "", "_blank"
-	win.document.write "<html><head><title>Hjälp</title>
+	win.document.write "<html><head><title>Help</title>
 		<style>
 			body {
 			font-family: Arial, sans-serif;
@@ -450,7 +450,7 @@ showPlayers = -> # Visa spelarlistan.
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
 		koppla 'th', thead, {text:"#"}
-		koppla 'th', thead, {text:"Namn"}
+		koppla 'th', thead, {text:"Name"}
 		koppla 'th', thead, {text:"Elo"}
 		for i in range global.rounds.length
 			koppla 'th', thead, {text:"#{i + settings.ONE}"}
@@ -490,7 +490,7 @@ showTables = -> # Visa bordslistan
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		for rubrik in "Bord Vit Elo Elo Svart Resultat".split ' '
+		for rubrik in "Table White Elo Elo Black Result".split ' '
 			koppla 'th', thead, {text:rubrik}
 
 		group.forEach ([w,b],iTable) =>
@@ -521,14 +521,14 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	parseURL()
 
 	if global.players.length < 4
-		showInfo "Du måste ange minst fyra spelare!"
+		showInfo "You must have four or more players!"
 		return
 
 	global.berger = settings.ROUNDS == global.players.length - 1
 	floatingFlag = settings.ROUNDS <= global.players.length // 2
 
 	if not global.berger ^ floatingFlag #settings.ROUNDS >= players.length // 2 and settings.ROUNDS != players.length - 1
-		showInfo "Antalet ronder du angivit är ej acceptabelt!"
+		showInfo "The number of rounds is not accepted!"
 		return
 
 	global.rounds = if global.berger then makeBerger() else makeFloating()

@@ -22,7 +22,7 @@ export global =
 	floating : null
 
 export settings =
-	TITLE : 'Titel saknas'
+	TITLE : 'No Title'
 	GAMES : 1 # antal partier per rond
 	ROUNDS : 0 # antal ronder
 	SORT : 1 # om spelarna initialt ska sorteras på elo

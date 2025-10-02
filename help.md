@@ -1,88 +1,89 @@
 ## Floating Berger
 
-Namnet *Floating Berger* kommer av att de flesta spelare upplever att de befinner sig mitt i en Berger-grupp.  
-De flesta deltagare hamnar kring 50% vinstresultat.  
+The name *Floating Berger* comes from the fact that most players feel like they are in the middle of a Berger group.  
+Most participants end up with around 50% winning results.  
 
-Delar man in en turnering i flera fysiska Berger-grupper, kommer färre deltagare att uppleva denna känsla.  
+If you divide a tournament into several physical Berger groups, fewer participants will experience this feeling.
 
-Programmet hanterar både Floating och Berger:
+The program handles both Floating and Berger.
 
-* Floating: som Schweizer, fast spelarna möter spelare med samma rating istf poäng
-* Berger: alla möter alla
+* Floating: like Swiss, although the players face players with the same rating instead of points
+* Berger: everyone meets everyone
 
-Alla ronder lottas innan turneringen startar, precis som i Berger.
+All rounds are drawn before the tournament starts, just like Berger.
 
-Formatet styrs mha ROUNDS, se nedan.
+The format is controlled using ROUNDS, see below.
 
-### Sidor
 
-```
-A Ställning:  id • namn • elo • ronder • poäng • performance rating
-B Bordslista: bordsnummer • vit • elo • elo • svart • resultat
-C Namnlista:  namn • bordsnummer • färg
-```
-
-### Tangenter för A, B och C
+### Pages
 
 ```
-   ?      : Hjälp
-  w s     : Sida - • +
-  ← →     : Rond - • +
-  i k     : Gruppstorlek - • +
- ctrl p   : Utskrift
+A Standings:  id • name • elo • rounds • points • performance rating
+B Tables: table  • white • elo • elo • black • result
+C Names:  name • table • colour
+```
+
+### Keys for A, B and C
+
+```
+   ?      : Help
+  w s     : Page - • +
+  ← →     : Round - • +
+  i k     : Group size - • +
+ ctrl p   : Print
 ctrl - +  : Zoom - • +
 ```
 
-### Tangenter för A Ställning
+### Keys for A Standings
 
 ```
-# n e p r : Sortera på Id • Namn • Elo • Poäng • performance Rating
-  a d     : decimaler för PR - • +
+# n e p r : sort on Id • Name • Elo • Points • performance Rating
+  a d     : decimals for performance rating - • +
 ```
 
-### Tangenter för B Bordslista
+### Keys for B Tables
 
 ```
-  ↑ ↓     : Bord - • +
-  0 1     : Vit 0 • 1
+  ↑ ↓     : Table - • +
+  0 1     : White 0 • 1
  Space    : ½
-  Del     : Radera
+  Del     : Delete
 ```
 
-### Parametrar
+### Parameters
 
 ```
-TITLE = turneringens namn
-ROUNDS = antal ronder
+TITLE = Name of tournament
+ROUNDS = Number of rounds
 
-GAMES = antal partier per rond
-	• 1 => enkelrond (default)
-	• 2 => dubbelrond 
+GAMES = Number of games per round
+	• 1 => single round (default)
+	• 2 => double round
 
-SORT = spelarna sorteras på elo
-	• 0 => utan sortering 
-	• 1 => med sortering (default)
+SORT = Sort the players using elo rating
+	• 0 => no sort
+	• 1 => sort (default)
 
-BALANCE = färgbalans
-	• 0 => utan färgbalans
-	• 1 => med färgbalans (default)
+BALANCE = colour balance
+	• 0 => no balance
+	• 1 => balance (default)
 
-A = Gruppstorlek (default 30)
-B = Gruppstorlek (default 30)
-C = Gruppstorlek (default 30)
+A = Group size (default 30)
+B = Group size (default 30)
+C = Group size (default 30)
 
-1653 Christer Nilsson: elo + namn. Ange 1400 om elo saknas
+1653 Christer Nilsson: elo + name. Use 1400 if elo is missing
 ```
 
-**Gruppstorlek** anger hur många rader en grupp innehåller.  
-Används tillsammans med **Zoom** när man vill optimera skärm och printer.  
+**Group size** states the number of lines in a group.  
+Used together with **Zoom**, optimizing screen and printer layout.  
 
 ### Backup
 
-Kopiera urlen och spara på säker plats. T ex en USB-sticka eller mail.  
-Urlen finns även i webläsarens historik, om ingen rensat.  
+Copy the url and save it in a secure place, e.g. a USB stick or mail.  
+The url is also available in the **history** of your browser.
 
-### Begränsningar
+### Limitations
 
-Programmet är avsett för datorer **med tangentbord**. (PC, Mac, Linux)  
-Resultat kan även visas på mobil och platta.  
+The program runs on computers **with a keyboard**. (PC, Mac, Linux)  
+The result can also be viewed on phone or pad.  
