@@ -255,7 +255,7 @@ readResults = (params) -> # Resultaten läses från urlen
 roundsContent = (long, i, tr) -> # rondernas data + poäng + PR. i anger spelarnummer
 	for [w,b,color,result] in long
 		opponent = if w == i then b else w
-		result = convert result, 'x201FG', ' 10½11'
+		result = convert result, 'x012', ' 0½1'
 		attr = if color == 'w' then "right:0px;" else "left:0px;"
 		cell = koppla 'td', tr, {style: "position:relative;"}
 		koppla 'div', cell, {style: "position:absolute; top:0px; font-size:0.7em;" + attr, text: settings.ONE + opponent}
@@ -370,12 +370,9 @@ showHelp = ->
 	win.document.close()
 
 showInfo = (message) -> # Visa helpText på skärmen
-	root = document.getElementById('info')
-	root.innerHTML = ""
-	div1 = koppla 'div', root
-	div2 = koppla 'div', div1, {class:"help"} 
-	pre1 = koppla 'pre', div2
-	pre1.innerHTML = message
+	pre = document.getElementById 'info'
+	pre.className = "help"
+	pre.innerHTML = message
 
 showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	SPACING = ' '
