@@ -14,7 +14,6 @@ All rounds are drawn before the tournament starts, just like Berger.
 
 The format is controlled using ROUNDS, see below.
 
-
 ### Pages
 
 ```
