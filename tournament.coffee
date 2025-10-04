@@ -68,7 +68,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 				if key == 'P'    then global.sortKey = 'p'
 				if key == 'PR'   then global.sortKey = 'r'
 				if ['#','Namn','Elo','P','PR'].includes key
-					echo 'click',global.sortKey
+					# echo 'click',global.sortKey
 					showPlayers()
 
 export expand = (games, rounds) -> # make a double round from a single round
@@ -378,10 +378,29 @@ showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	SPACING = ' '
 	n = global.players.length
 	if n > ALFABET.length then n = ALFABET.length
-	echo '    ' + (ALFABET[i] for i in range n).join SPACING
-	for i in range n
-		line = global.floating.matrix[i].slice 0,n
-		echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
+
+	if global.berger 
+		if settings.GAMES == 2 then return
+		# echo global.rounds
+		global.matrix = (("•" for i in range n) for j in range n)
+		m = global.matrix
+		for r in range global.rounds.length
+
+			round = global.rounds[r]
+			for [i,j] in round
+				if i == m.length or j == m[0].length then continue
+				m[i][j] = "#{'123456789abcdefgh'[r]}"
+				m[j][i] = "#{'123456789abcdefgh'[r]}"
+
+		echo '    ' + (ALFABET[i] for i in range n).join SPACING
+		for i in range n
+			line = m[i].slice 0,n
+			echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
+	else 
+		echo '    ' + (ALFABET[i] for i in range n).join SPACING
+		for i in range n
+			line = global.floating.matrix[i].slice 0,n
+			echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
 
 showNames = ->
 	persons = []
@@ -529,6 +548,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		return
 
 	global.rounds = if global.berger then makeBerger() else makeFloating()
+
 	global.rounds = expand settings.GAMES, global.rounds
 
 	for i in range settings.ROUNDS
