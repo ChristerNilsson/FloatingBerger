@@ -87,3 +87,10 @@ The url is also available in the **history** of your browser.
 
 The program runs on computers **with a keyboard**. (PC, Mac, Linux)  
 The result can also be viewed on phone or pad.  
+
+### Swiss vs Floating Berger (matrix)
+
+Tyresö Open 2024 (78 players)  
+
+[Swiss](x_Schweizer_78.png)  
+[Floating Berger](X_FairPair_78.png)  
