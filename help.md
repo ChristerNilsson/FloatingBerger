@@ -91,10 +91,10 @@ The result can also be viewed on phone or pad.
 
 Tyresö Open 2024 (78 players, 8 rounds)  
 
-The players are aligned horizontally and vertically.  
-Elo sorted, the strongest player is in the upper, left, corner.  
-The cells contains the round numbers, 1 to 8.  
-The main diagonal is not used, as a player can't meet himself.  
+* The players are aligned horizontally and vertically
+* Elo sorted, the strongest player is in the upper, left, corner
+* The cells contains the round numbers, 1 to 8
+* The main diagonal is not used, as a player can't meet himself
 
-[Swiss](x_Schweizer_78.png)  
+[Swiss](X_Schweizer_78.png)  
 [Floating Berger](X_FairPair_78.png)  
