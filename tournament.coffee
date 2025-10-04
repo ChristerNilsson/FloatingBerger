@@ -354,7 +354,6 @@ setScreen = (delta) ->
 	document.getElementById('names').style.display   = if global.currScreen == 2 then 'flex' else 'none'
 
 showHelp = ->
-	# do ->
 	r = await fetch "help.md"
 	mdText = await r.text()
 	win = window.open "", "_blank"
@@ -381,11 +380,9 @@ showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 
 	if global.berger 
 		if settings.GAMES == 2 then return
-		# echo global.rounds
 		global.matrix = (("•" for i in range n) for j in range n)
 		m = global.matrix
 		for r in range global.rounds.length
-
 			round = global.rounds[r]
 			for [i,j] in round
 				if i == m.length or j == m[0].length then continue
@@ -527,7 +524,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		document.getElementById("help").addEventListener "click", showHelp
 		document.getElementById("continue").addEventListener "click", parseTextarea
 		echo 'settings', settings
-		# showInfo helpText
 		return
 
 	document.getElementById("help").style = 'display: none'
@@ -571,7 +567,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 		if key == '?' then showHelp()
 
-		# if not event.shiftKey
 		if key == 'ArrowLeft'  then changeRound -1
 		if key == 'ArrowRight' then changeRound +1
 		if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
