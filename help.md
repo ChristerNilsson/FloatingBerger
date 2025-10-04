@@ -90,7 +90,7 @@ The result can also be viewed on phone or pad.
 
 ### Swiss vs Floating Berger (matrix)
 
-Tyresö Open 2024 (78 players)  
+Tyresö Open 2024 (78 players, 8 rounds)  
 
 The players are aligned horizontally and vertically.  
 Sorted, the strongest player in the upper, left, corner.  
