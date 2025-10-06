@@ -550,7 +550,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	for i in range settings.ROUNDS
 		global.results.push Array(tableCount()).fill 'x'
 
-	global.sortKey = if global.berger then 'p' else 'r'
+	#global.sortKey = if global.berger then 'p' else 'r'
 
 	readResults params
 	setByeResults()
@@ -563,6 +563,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.title = settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
+		return if event.ctrlKey or event.metaKey or event.altKey
+		
 		key = event.key
 
 		if key == '?' then showHelp()
