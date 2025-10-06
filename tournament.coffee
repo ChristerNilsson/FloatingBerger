@@ -563,7 +563,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	document.title = settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
-		return if event.ctrlKey or event.metaKey or event.altKey
+		return if event.ctrlKey or event.metaKey or event.altKey # förhindrar att ctrl p sorterar på poäng
 		
 		key = event.key
 
