@@ -68,30 +68,11 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currTable = 0
 	
 	setScreen 0
-	showTables()
-	showNames()
 
 changeTable = (delta) -> global.currTable = (global.currTable + delta) %% tableCount()
 
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
-
-createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Namn Elo P eller PR
-
-	ths = document.querySelectorAll '#players th'
-
-	for th in ths
-		do (th) ->
-			th.addEventListener 'click', (event) ->
-				key = th.textContent
-				if key == '#'    then global.sortKey = '#'
-				if key == 'Namn' then global.sortKey = 'n'
-				if key == 'Elo'  then global.sortKey = 'e'
-				if key == 'P'    then global.sortKey = 'p'
-				if key == 'PR'   then global.sortKey = 'r'
-				if ['#','Namn','Elo','P','PR'].includes key
-					# echo 'click',global.sortKey
-					showPlayers()
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
@@ -345,8 +326,13 @@ setByeResults = ->
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
 	ths = document.querySelectorAll '#players th'
 	for th,index in ths
-		color = if index == global.currRound + 3 then 'yellow' else 'white'
-		th.style = "background-color:#{color}"
+		if index == global.currRound + 3
+			bgColor = 'yellow'
+			color = 'black'
+		else
+			bgColor = 'black'
+			color = 'white'
+		th.style = "background-color:#{bgColor}; color:#{color};"
 
 	trs = document.querySelectorAll '#tables tr'
 	for tr,index in trs
@@ -532,7 +518,7 @@ showPlayers = -> # Visa spelarlistan.
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"#"}
+		koppla 'th', thead, {text:"#" }
 		koppla 'th', thead, {text:"Name"}
 		koppla 'th', thead, {text:"Elo"}
 		for i in range global.rounds.length
@@ -557,8 +543,6 @@ showPlayers = -> # Visa spelarlistan.
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed settings.DECIMALS}
 
 		offset += settings.A
-
-	createSortEvents()
 
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
@@ -625,19 +609,13 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	readResults params
 	setByeResults()
 	updateLongs()
-	showPlayers()
-	showTables()
-	showNames()
-	setScreen 0 # 'a'
+	setScreen 0 # A
 	setCursor global.currRound,global.currTable
 	document.title = settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		return if event.ctrlKey or event.metaKey or event.altKey # förhindrar att ctrl p sorterar på poäng
-		
-		key = event.key
-
-		handleKey key
+		handleKey event.key
 
 		# tvinga bordet att synas
 		rad = document.querySelectorAll("#tables table tr")[global.currTable]
