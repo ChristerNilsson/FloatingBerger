@@ -24,6 +24,8 @@ C Names:  name • table • colour
 
 ### Keys for A, B and C
 
+Press a key or click a button.
+
 ```
    ?      : Help
   w s     : Page - • +

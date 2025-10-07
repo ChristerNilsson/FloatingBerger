@@ -10,9 +10,9 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS = [
-	"? ws ←→ ik #nepr ad"
-	"? ws ←→ ik ↑↓  0 Space 1 Del"
-	"? ws ←→ ik"
+	"? GAP w s GAP ArrowLeft ArrowRight GAP i k GAP # n e p r GAP a d".split ' '
+	"? GAP w s GAP ArrowLeft ArrowRight GAP i k GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
+	"? GAP w s GAP ArrowLeft ArrowRight GAP i k".split ' '
 ]
 
 ## F U N K T I O N E R ##
@@ -343,7 +343,21 @@ setScreen = (delta) ->
 	header.innerHTML = ''
 	h2 = koppla 'h2', header
 
-	koppla 'pre', header, {text: KEYS[global.currScreen]}
+	for key in KEYS[global.currScreen]
+		skey = key
+		if key == 'ArrowLeft' then skey = '←'
+		if key == 'ArrowRight' then skey = '→'
+		if key == 'ArrowUp' then skey = '↑'
+		if key == 'ArrowDown' then skey = '↓'
+		if key == 'Delete' then skey = 'Del'
+		if key == 'GAP'
+			btn = koppla 'span', header, {style: "display: inline-block; width: 0.5rem;"}
+		else
+			btn = koppla 'button', header, {text: skey}
+			if key == '_'
+				btn.style = "color: transparent"
+				key = ' '
+			do (key) -> btn.addEventListener 'click', () => handleKey key
 
 	if global.currScreen == 0 then h2.textContent = "A Standings for " + settings.TITLE
 	if global.currScreen == 1 then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
@@ -516,6 +530,40 @@ updateLongs = -> # Uppdaterar longs utifrån rounds och results
 	global.longs = (longForm global.rounds[r],global.results[r] for r in range global.rounds.length)
 	global.longs = _.zip ...global.longs # transponerar matrisen
 
+handleKey = (key) ->
+	echo key
+	if key == '?' then showHelp()
+
+	if key == 'ArrowLeft'  then changeRound -1
+	if key == 'ArrowRight' then changeRound +1
+	if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
+	if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
+
+	del = 'Delete'
+	if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
+	if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
+	if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
+	if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
+
+	if key == 'a' and global.currScreen == 0 then setDecimals -1
+	if key == 'd' and global.currScreen == 0 then setDecimals +1
+
+	if key == 'x' then showMatrix()
+	if key == 'y' then echo 'Dump', global
+	
+	if global.currScreen == 0 and key in '#nepr'
+		global.sortKey = key
+		showPlayers()
+
+	if global.currScreen == 0 then changeGroupSize key,'A'
+	if global.currScreen == 1 then changeGroupSize key,'B'
+	if global.currScreen == 2 then changeGroupSize key,'C'
+
+	if key == 'w' then setScreen -1
+	if key == 's' then setScreen +1
+
+	setCursor global.currRound, global.currTable
+
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	params = new URLSearchParams window.location.search
@@ -567,37 +615,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		
 		key = event.key
 
-		if key == '?' then showHelp()
-
-		if key == 'ArrowLeft'  then changeRound -1
-		if key == 'ArrowRight' then changeRound +1
-		if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
-		if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
-
-		del = 'Delete'
-		if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
-		if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
-		if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
-		if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
-
-		if key == 'a' and global.currScreen == 0 then setDecimals -1
-		if key == 'd' and global.currScreen == 0 then setDecimals +1
-
-		if key == 'x' then showMatrix()
-		if key == 'y' then echo 'Dump', global
-		
-		if global.currScreen == 0 and key in '#nepr'
-			global.sortKey = key
-			showPlayers()
-
-		if global.currScreen == 0 then changeGroupSize key,'A'
-		if global.currScreen == 1 then changeGroupSize key,'B'
-		if global.currScreen == 2 then changeGroupSize key,'C'
-
-		if key == 'w' then setScreen -1
-		if key == 's' then setScreen +1
-
-		setCursor global.currRound, global.currTable
+		handleKey key
 
 		# tvinga bordet att synas
 		rad = document.querySelectorAll("#tables table tr")[global.currTable]
