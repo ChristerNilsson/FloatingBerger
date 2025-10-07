@@ -15,6 +15,28 @@ KEYS = [
 	"? GAP w s GAP ArrowLeft ArrowRight GAP i k".split ' '
 ]
 
+TOOLTIPS = 
+	'?' : "Help"
+	'w' : "Previous Page"
+	's' : "Next page"
+	'ArrowLeft' : "Previous Round"
+	'a' : "Shrink PR decimals"
+	'd' : "Grow PR decimals"
+	'ArrowRight' : "Next Round"
+	'i' : "Shrink Group Size"
+	'k' : "Grow Group Size"
+	'ArrowUp' : "Previous Table"
+	'0' : "White Loss"
+	'_' : "Draw"
+	'1' : "White Win"
+	'Delete' : "Remove Result"
+	'ArrowDown' : "Next Table"
+	'#' : "Sort on id"
+	'n' : "Sort on Name"
+	'e' : "Sort on Elo"
+	'p' : "Sort on Point"
+	'r' : "Sort on perfomance Rating"
+
 ## F U N K T I O N E R ##
 
 addBord = (bord,res,c0,c1) ->
@@ -84,6 +106,40 @@ export expand = (games, rounds) -> # make a double round from a single round
 # 		unik = _.uniq (item.toFixed(i) for item in lst)
 # 		if unik.length > best then [best,ibest] = [unik.length,i]
 # 	ibest
+
+handleKey = (key) ->
+	echo key
+	if key == '?' then showHelp()
+
+	if key == 'ArrowLeft'  then changeRound -1
+	if key == 'ArrowRight' then changeRound +1
+	if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
+	if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
+
+	del = 'Delete'
+	if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
+	if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
+	if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
+	if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
+
+	if key == 'a' and global.currScreen == 0 then setDecimals -1
+	if key == 'd' and global.currScreen == 0 then setDecimals +1
+
+	if key == 'x' then showMatrix()
+	if key == 'y' then echo 'Dump', global
+	
+	if global.currScreen == 0 and key in '#nepr'
+		global.sortKey = key
+		showPlayers()
+
+	if global.currScreen == 0 then changeGroupSize key,'A'
+	if global.currScreen == 1 then changeGroupSize key,'B'
+	if global.currScreen == 2 then changeGroupSize key,'C'
+
+	if key == 'w' then setScreen -1
+	if key == 's' then setScreen +1
+
+	setCursor global.currRound, global.currTable
 
 koppla = (typ, parent, attrs = {}) ->
 	elem = document.createElement typ
@@ -353,7 +409,7 @@ setScreen = (delta) ->
 		if key == 'GAP'
 			btn = koppla 'span', header, {style: "display: inline-block; width: 0.5rem;"}
 		else
-			btn = koppla 'button', header, {text: skey}
+			btn = koppla 'button', header, {text: skey, title: TOOLTIPS[key]}
 			if key == '_'
 				btn.style = "color: transparent"
 				key = ' '
@@ -529,40 +585,6 @@ tableCount = -> global.players.length // 2 # Beräkna antal bord
 updateLongs = -> # Uppdaterar longs utifrån rounds och results
 	global.longs = (longForm global.rounds[r],global.results[r] for r in range global.rounds.length)
 	global.longs = _.zip ...global.longs # transponerar matrisen
-
-handleKey = (key) ->
-	echo key
-	if key == '?' then showHelp()
-
-	if key == 'ArrowLeft'  then changeRound -1
-	if key == 'ArrowRight' then changeRound +1
-	if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
-	if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
-
-	del = 'Delete'
-	if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
-	if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
-	if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
-	if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
-
-	if key == 'a' and global.currScreen == 0 then setDecimals -1
-	if key == 'd' and global.currScreen == 0 then setDecimals +1
-
-	if key == 'x' then showMatrix()
-	if key == 'y' then echo 'Dump', global
-	
-	if global.currScreen == 0 and key in '#nepr'
-		global.sortKey = key
-		showPlayers()
-
-	if global.currScreen == 0 then changeGroupSize key,'A'
-	if global.currScreen == 1 then changeGroupSize key,'B'
-	if global.currScreen == 2 then changeGroupSize key,'C'
-
-	if key == 'w' then setScreen -1
-	if key == 's' then setScreen +1
-
-	setCursor global.currRound, global.currTable
 
 main = -> # Hämta urlen i första hand, textarean i andra hand.
 
