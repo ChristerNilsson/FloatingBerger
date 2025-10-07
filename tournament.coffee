@@ -89,7 +89,6 @@ export expand = (games, rounds) -> # make a double round from a single round
 # 	ibest
 
 handleKey = (key) ->
-	echo key
 	if key == '?' then showHelp()
 
 	if key == 'ArrowLeft'  then changeRound -1
@@ -122,7 +121,8 @@ handleKey = (key) ->
 
 	setCursor global.currRound, global.currTable
 
-	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
+	if key == ' ' or key in 'Delete 0 1 # n e p r'.split ' '
+		history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
 koppla = (typ, parent, attrs = {}) ->
 	elem = document.createElement typ
@@ -183,7 +183,6 @@ makeURL = ->
 	url += "&C=#{settings.C}"
 
 	for player in global.players
-		echo player
 		url += "&p=#{player}"
 
 	for r in range global.rounds.length
@@ -247,7 +246,6 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 
 parseURL = -> 
 	params = new URLSearchParams window.location.search
-	echo 'params',params
 
 	settings.TITLE = safeGet params, "TITLE"
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
@@ -264,15 +262,10 @@ parseURL = ->
 	global.players = []
 	persons = params.getAll "p"
 
-	echo persons
-
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if settings.SORT == 1 then persons.sort().reverse()
 
-
-	# i = 0
 	for person in persons
-		# i += 1
 		elo = parseInt person.slice 0,4
 		name = person.slice(4).trim()
 		global.players.push new Player global.players.length, name, elo
@@ -298,7 +291,6 @@ readResults = (params) -> # Resultaten läses från urlen
 	n = global.players.length
 	if global.frirond then n -= 2
 	n //= 2
-	echo 'n',n
 	
 	for r in range settings.GAMES * settings.ROUNDS
 		result = safeGet params, "r#{r+1}", new Array(n).fill "x"
@@ -392,8 +384,6 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	tr5.textContent = prettyResult res
 	global.currTable = (global.currTable + 1) %% tableCount()
-
-	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
 setScreen = (delta) ->
 	global.currScreen = (global.currScreen + delta) %% 3
@@ -598,7 +588,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	if params.size == 0 
 		document.getElementById("help").addEventListener "click", showHelp
 		document.getElementById("continue").addEventListener "click", parseTextarea
-		echo 'settings', settings
 		return
 
 	document.getElementById("help").style = 'display: none'
