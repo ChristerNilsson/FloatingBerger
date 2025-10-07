@@ -35,7 +35,7 @@ TOOLTIPS =
 	'n' : "Sort on Name"
 	'e' : "Sort on Elo"
 	'p' : "Sort on Point"
-	'r' : "Sort on perfomance Rating"
+	'r' : "Sort on performance Rating"
 
 ## F U N K T I O N E R ##
 
@@ -122,6 +122,8 @@ handleKey = (key) ->
 
 	setCursor global.currRound, global.currTable
 
+	history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
+
 koppla = (typ, parent, attrs = {}) ->
 	elem = document.createElement typ
 
@@ -173,6 +175,7 @@ makeURL = ->
 	url += "&GAMES=#{settings.GAMES}"
 	url += "&ROUNDS=#{settings.ROUNDS}"
 	url += "&SORT=#{settings.SORT}"
+	url += "&sortKey=#{global.sortKey}".replace '#', '%23'
 	url += "&ONE=#{settings.ONE}"
 	url += "&BALANCE=#{settings.BALANCE}"
 	url += "&A=#{settings.A}"
@@ -180,6 +183,7 @@ makeURL = ->
 	url += "&C=#{settings.C}"
 
 	for player in global.players
+		echo player
 		url += "&p=#{player}"
 
 	for r in range global.rounds.length
@@ -199,6 +203,9 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 	lines = lines.split "\n"
 
 	global.rounds = null
+	global.players = []
+
+	persons = []
 
 	for line in lines 
 		if line.length == 0 or line[0] == '#' then continue
@@ -208,7 +215,14 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			val = val.trim()
 			if key in "TITLE GAMES ROUNDS SORT ONE BALANCE A B C".split ' ' then settings[key] = val
 		else
-			global.players.push line
+			persons.push line
+
+	persons.sort().reverse()
+
+	for person in persons
+		elo = parseInt person.slice 0,4
+		name = person.slice(4).trim()
+		global.players.push new Player global.players.length, name, elo
 
 	n = global.players.length
 	if settings.A > n then settings.A = n
@@ -233,10 +247,13 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 
 parseURL = -> 
 	params = new URLSearchParams window.location.search
+	echo 'params',params
 
 	settings.TITLE = safeGet params, "TITLE"
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
 	settings.SORT = parseInt safeGet params, "SORT", "1"
+	global.sortKey = safeGet params, "sortKey", "#"
+
 	settings.ONE = parseInt safeGet params, "ONE", "1"
 	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
@@ -247,17 +264,20 @@ parseURL = ->
 	global.players = []
 	persons = params.getAll "p"
 
+	echo persons
+
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if settings.SORT == 1 then persons.sort().reverse()
 
-	settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{global.players.length-1}"
 
-	i = 0
+	# i = 0
 	for person in persons
-		i += 1
+		# i += 1
 		elo = parseInt person.slice 0,4
 		name = person.slice(4).trim()
 		global.players.push new Player global.players.length, name, elo
+
+	settings.ROUNDS = parseInt safeGet params, "ROUNDS", "#{global.players.length-1}"
 
 	# initialisera rounds med 'x' i alla celler
 	n = global.players.length // 2
@@ -278,6 +298,7 @@ readResults = (params) -> # Resultaten läses från urlen
 	n = global.players.length
 	if global.frirond then n -= 2
 	n //= 2
+	echo 'n',n
 	
 	for r in range settings.GAMES * settings.ROUNDS
 		result = safeGet params, "r#{r+1}", new Array(n).fill "x"
@@ -603,8 +624,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	for i in range settings.ROUNDS
 		global.results.push Array(tableCount()).fill 'x'
-
-	#global.sortKey = if global.berger then 'p' else 'r'
 
 	readResults params
 	setByeResults()
