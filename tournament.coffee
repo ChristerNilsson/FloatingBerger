@@ -20,11 +20,11 @@ TOOLTIPS =
 	'B' : "Tables"
 	'C' : "Names"
 	'ArrowLeft' : "Previous Round"
-	'J' : "Shrink PR decimals"
-	'L' : "Grow PR decimals"
+	'J' : "Fewer PR decimals"
+	'L' : "More PR decimals"
 	'ArrowRight' : "Next Round"
-	'I' : "Shrink Group Size"
-	'K' : "Grow Group Size"
+	'I' : "Fewer Columns"
+	'K' : "More Columns"
 	'ArrowUp' : "Previous Table"
 	'0' : "White Loss"
 	'_' : "Draw"
@@ -63,8 +63,8 @@ addBord = (bord,res,c0,c1) ->
 	tr
 	
 changeGroupSize = (key,letter) ->
-	if key == 'I' then settings[letter] -= 1
-	if key == 'K' then settings[letter] += 1
+	if key == 'I' and settings[letter] > 1 then settings[letter]--
+	if key == 'K' then settings[letter]++
 	if key in ['I', 'K']
 		if letter == 'A' then showPlayers()
 		if letter == 'B' then showTables()
@@ -284,9 +284,9 @@ parseURL = ->
 	settings.ONE = parseInt safeGet params, "ONE", "1"
 	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
-	settings.A = parseInt safeGet params, "A", "30"
-	settings.B = parseInt safeGet params, "B", "30"
-	settings.C = parseInt safeGet params, "C", "30"
+	settings.A = parseInt safeGet params, "A", "1"
+	settings.B = parseInt safeGet params, "B", "1"
+	settings.C = parseInt safeGet params, "C", "1"
 
 	global.players = []
 	persons = params.getAll "p"
@@ -498,6 +498,12 @@ showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 			line = global.floating.matrix[i].slice 0,n
 			echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
 
+myChunk = (items, groups) ->
+	n = items.length
+	size = n // groups
+	if n % groups > 0 then size++
+	_.chunk items,size
+
 showNames = ->
 	persons = []
 	for [w,b],i in global.rounds[global.currRound]
@@ -514,7 +520,8 @@ showNames = ->
 			persons.push pb
 
 	persons.sort()
-	groups = _.chunk persons,settings.C
+
+	groups = myChunk persons,settings.C
 
 	container = document.getElementById 'names'
 	container.innerHTML = '' # rensa
@@ -549,10 +556,10 @@ showPlayers = -> # Visa spelarlistan.
 		if global.sortKey == 'R' then return b.PR - a.PR
 
 	# Lägg tillbaka BYE i slutet
-	if global.frirond != null then sortedPlayers.push memory
+	# if global.frirond != null then sortedPlayers.push memory
 
-	groups = _.chunk sortedPlayers,settings.A
-	if _.last(groups).length == 1 and _.last(groups)[0].name == BYE then groups.pop()
+	groups = myChunk sortedPlayers, settings.A
+	# if _.last(groups).length == 1 and _.last(groups)[0].name == BYE then groups.pop()
 	container = document.getElementById 'players'
 	container.innerHTML = ''
 	container.className = 'groups'
@@ -592,7 +599,8 @@ showPlayers = -> # Visa spelarlistan.
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
 	round = global.rounds[global.currRound]
-	groups = _.chunk round, settings.B
+
+	groups = myChunk round, settings.B
 
 	container = document.getElementById 'tables'
 	container.innerHTML = ''

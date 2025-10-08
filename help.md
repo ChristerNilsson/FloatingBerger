@@ -30,7 +30,7 @@ Press a key or click a button.
    ?      : Help
  A B C    : Page A, B or C
   ← →     : Round - • +
-  I K     : Group size - • +
+  I K     : Columns - • +
  ctrl p   : Print
 ctrl - +  : Zoom - • +
 ```
@@ -69,15 +69,14 @@ BALANCE = colour balance
 	• 0 => no balance
 	• 1 => balance (default)
 
-A = Group size (default 30)
-B = Group size (default 30)
-C = Group size (default 30)
+A = Number of Columns for A (default 1)
+B = Number of Columns for B (default 1)
+C = Number of Columns for C (default 1)
 
 1653 Christer Nilsson: elo + name. Use 1400 if elo is missing
 ```
 
-**Group size** states the number of lines in a group.  
-Used together with **Zoom**, optimizing screen and printer layout.  
+**Number of Columns** is used together with **Zoom**, optimizing screen and printer layout.  
 
 ### Backup
 
@@ -91,7 +90,7 @@ The result can also be viewed on phone or pad.
 
 ### Swiss vs Floating Berger (matrix)
 
-Tyresö Open 2024 (78 players, 8 rounds)  
+Tyresö Open 2024 (81 players, 8 rounds)  
 
 * The players are aligned horizontally and vertically
 * Elo sorted, the strongest player is in the upper, left, corner

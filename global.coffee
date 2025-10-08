@@ -29,6 +29,6 @@ export settings =
 	ONE : 1 # ONE = 1 # 0=dev 1=prod 
 	BALANCE : 1 # färgbalans
 	DECIMALS : 0 # Antal decimaler i PR
-	A : 30 # antal spelare i en A-grupp
-	B : 30 # antal bord i en B-grupp
-	C : 30 # antal namn i en C=grupp
+	A : 1 # antal A-kolumner
+	B : 1 # antal B-kolumner
+	C : 1 # antal C-kolumner
