@@ -41,7 +41,6 @@ x = game not played yet
 
 # Usage
 
-* The rounds are clickable
 * Click on other columns, sorts the players
 
 # Differences against other pairing systems
