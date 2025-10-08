@@ -222,6 +222,12 @@ makeURL = ->
 	url = url.replaceAll ' ', '+'
 	url
 
+myChunk = (items, groups) ->
+	n = items.length
+	size = n // groups
+	if n % groups > 0 then size++
+	_.chunk items,size
+
 export other = (input) -> convert input, "012x","210x"
 
 parseTextarea = -> # läs in initiala uppgifter om spelarna
@@ -497,12 +503,6 @@ showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 		for i in range n
 			line = global.floating.matrix[i].slice 0,n
 			echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
-
-myChunk = (items, groups) ->
-	n = items.length
-	size = n // groups
-	if n % groups > 0 then size++
-	_.chunk items,size
 
 showNames = ->
 	persons = []
