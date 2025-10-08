@@ -45,6 +45,12 @@ addBord = (bord,res,c0,c1) ->
 	vit_elo = global.players[c0].elo
 	svart_elo = global.players[c1].elo
 	tr = document.createElement 'tr'
+
+	tr.addEventListener "click", ->
+		console.log "Du klickade på rad #{bord}"
+		global.currTable = bord
+		setCursor global.currRound,global.currTable
+
 	color = if bord == global.currTable then 'yellow' else 'white'
 
 	koppla 'td', tr, {text : bord + settings.ONE}
@@ -53,6 +59,7 @@ addBord = (bord,res,c0,c1) ->
 	koppla 'td', tr, {style:"text-align:left", text : svart_elo}
 	koppla 'td', tr, {style:"text-align:left", text : svart}
 	koppla 'td', tr, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
+
 	tr
 	
 changeGroupSize = (key,letter) ->
