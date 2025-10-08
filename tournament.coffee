@@ -9,19 +9,19 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 
 BYE = "BYE"
 
-KEYS = [
-	"? GAP w s GAP ArrowLeft ArrowRight GAP i k GAP # n e p r GAP a d".split ' '
-	"? GAP w s GAP ArrowLeft ArrowRight GAP i k GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
-	"? GAP w s GAP ArrowLeft ArrowRight GAP i k".split ' '
-]
+KEYS = 
+	'a' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k GAP # n e p r GAP j l".split ' '
+	'b' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
+	'c' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k".split ' '
 
 TOOLTIPS = 
 	'?' : "Help"
-	'w' : "Previous Page"
-	's' : "Next page"
+	'a' : "Standings"
+	'b' : "Tables"
+	'c' : "Names"
 	'ArrowLeft' : "Previous Round"
-	'a' : "Shrink PR decimals"
-	'd' : "Grow PR decimals"
+	'j' : "Shrink PR decimals"
+	'l' : "Grow PR decimals"
 	'ArrowRight' : "Next Round"
 	'i' : "Shrink Group Size"
 	'k' : "Grow Group Size"
@@ -67,7 +67,7 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
 	global.currTable = 0
 	
-	setScreen 0
+	setScreen settings.currScreen
 
 changeTable = (delta) -> global.currTable = (global.currTable + delta) %% tableCount()
 
@@ -93,31 +93,32 @@ handleKey = (key) ->
 
 	if key == 'ArrowLeft'  then changeRound -1
 	if key == 'ArrowRight' then changeRound +1
-	if key == 'ArrowUp'   and global.currScreen == 1 then changeTable -1
-	if key == 'ArrowDown' and global.currScreen == 1 then changeTable +1
+	if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
+	if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
 
 	del = 'Delete'
-	if key == del and global.currScreen == 1 then setResult key, 'x' # "  -  "
-	if key == '0' and global.currScreen == 1 then setResult key, '0' # "0 - 1"
-	if key == ' ' and global.currScreen == 1 then setResult key, '1' # "½ - ½"
-	if key == '1' and global.currScreen == 1 then setResult key, '2' # "1 - 0"
+	if key == del and global.currScreen == 'b' then setResult key, 'x' # "  -  "
+	if key == '0' and global.currScreen == 'b' then setResult key, '0' # "0 - 1"
+	if key == ' ' and global.currScreen == 'b' then setResult key, '1' # "½ - ½"
+	if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
 
-	if key == 'a' and global.currScreen == 0 then setDecimals -1
-	if key == 'd' and global.currScreen == 0 then setDecimals +1
+	if key == 'j' and global.currScreen == 'a' then setDecimals -1
+	if key == 'l' and global.currScreen == 'a' then setDecimals +1
 
 	if key == 'x' then showMatrix()
 	if key == 'y' then echo 'Dump', global
 	
-	if global.currScreen == 0 and key in '#nepr'
+	if global.currScreen == 'a' and key in '#nepr'
 		global.sortKey = key
 		showPlayers()
 
-	if global.currScreen == 0 then changeGroupSize key,'A'
-	if global.currScreen == 1 then changeGroupSize key,'B'
-	if global.currScreen == 2 then changeGroupSize key,'C'
+	if global.currScreen == 'a' then changeGroupSize key,'A'
+	if global.currScreen == 'b' then changeGroupSize key,'B'
+	if global.currScreen == 'c' then changeGroupSize key,'C'
 
-	if key == 'w' then setScreen -1
-	if key == 's' then setScreen +1
+	if key == 'a' then setScreen 'a'
+	if key == 'b' then setScreen 'b'
+	if key == 'c' then setScreen 'c'
 
 	setCursor global.currRound, global.currTable
 
@@ -385,17 +386,18 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	tr5.textContent = prettyResult res
 	global.currTable = (global.currTable + 1) %% tableCount()
 
-setScreen = (delta) ->
-	global.currScreen = (global.currScreen + delta) %% 3
+setScreen = (letter) ->
+	global.currScreen = letter #(global.currScreen + delta) %% 3
 
-	if global.currScreen == 0 then showPlayers()
-	if global.currScreen == 1 then showTables()
-	if global.currScreen == 2 then showNames()
+	if global.currScreen == 'a' then showPlayers()
+	if global.currScreen == 'b' then showTables()
+	if global.currScreen == 'c' then showNames()
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
 	h2 = koppla 'h2', header
 
+	echo KEYS,global.currScreen
 	for key in KEYS[global.currScreen]
 		skey = key
 		if key == 'ArrowLeft' then skey = '←'
@@ -412,13 +414,13 @@ setScreen = (delta) ->
 				key = ' '
 			do (key) -> btn.addEventListener 'click', () => handleKey key
 
-	if global.currScreen == 0 then h2.textContent = "A Standings for " + settings.TITLE
-	if global.currScreen == 1 then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
-	if global.currScreen == 2 then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if global.currScreen == 'a' then h2.textContent = "A Standings for " + settings.TITLE
+	if global.currScreen == 'b' then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if global.currScreen == 'c' then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 
-	document.getElementById('players').style.display = if global.currScreen == 0 then 'flex' else 'none'
-	document.getElementById('tables').style.display  = if global.currScreen == 1 then 'flex' else 'none'
-	document.getElementById('names').style.display   = if global.currScreen == 2 then 'flex' else 'none'
+	document.getElementById('players').style.display = if global.currScreen == 'a' then 'flex' else 'none'
+	document.getElementById('tables').style.display  = if global.currScreen == 'b' then 'flex' else 'none'
+	document.getElementById('names').style.display   = if global.currScreen == 'c' then 'flex' else 'none'
 
 showHelp = ->
 	r = await fetch "help.md"
@@ -617,7 +619,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	readResults params
 	setByeResults()
 	updateLongs()
-	setScreen 0 # A
+	setScreen 'a'
 	setCursor global.currRound,global.currTable
 	document.title = settings.TITLE
 

@@ -10,7 +10,7 @@ export global =
 	rounds  : [] # ronder x bord. cell: [w,b] 
 	longs   : [] # players x ronder. cell: [w,b,col,res]
 
-	currScreen : 0 # a
+	currScreen : 'a' # a b c
 	currRound : 0
 	currTable : 0
 
