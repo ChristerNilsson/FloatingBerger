@@ -284,7 +284,7 @@ parseURL = ->
 	settings.ONE = parseInt safeGet params, "ONE", "1"
 	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
 
-	settings.A = parseInt safeGet params, "A", "29"
+	settings.A = parseInt safeGet params, "A", "30"
 	settings.B = parseInt safeGet params, "B", "30"
 	settings.C = parseInt safeGet params, "C", "30"
 
@@ -423,8 +423,8 @@ setScreen = (letter) ->
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
-	header.style = "margin-top:45px"
-	h2 = koppla 'h3', header, {style : "margin: 0px 0;"}
+	header.style = "margin: 35px 5px; padding 0px 0px;"
+	h2 = koppla 'h3', header, {style : "margin-top: 0px; margin-bottom:-32px;"}
 	menu = koppla 'header',header
 
 	#echo KEYS,global.currScreen

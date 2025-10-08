@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    body { font-family: sans-serif; margin: 1em; }
+    body { font-family: sans-serif; margin: 1em 0em; }
     table { border-collapse: collapse; margin-top: 1px; }
     td,th { border: 1px solid black; padding: 0.4em 0.5em; text-align: center; }
     .info { background: #f0f0f0; padding: 1em; }
@@ -12,10 +12,10 @@
     header {
       position: fixed;     /* gör att den inte skrollar */
       top: 0; 
-      /* left: 0; */
+      left: 0;
       width: 100%;         /* täcker hela sidans bredd */
       background: #444;
-      padding: 10px;
+      padding: 5px;
       display: flex;
       /*gap: 10px;           mellanrum mellan knappar */
       justify-content: left;
@@ -35,7 +35,7 @@
     .group {
       border: none;               /* fet ram runt gruppen */
       border-collapse: collapse;
-      margin-right: 1px;          /* luft mellan grupper */
+      margin-right: 2px;          /* luft mellan grupper */
       table-layout: auto;         /* låt innehållet styra bredden */
       width: auto;                /* minsta möjliga bredd */
     }
