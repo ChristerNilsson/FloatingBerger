@@ -9,6 +9,19 @@
     .info { background: #f0f0f0; padding: 1em; }
     pre { white-space: pre-wrap; word-wrap: break-word; }
 
+    header {
+      position: fixed;     /* gör att den inte skrollar */
+      top: 0; 
+      /* left: 0; */
+      width: 100%;         /* täcker hela sidans bredd */
+      background: #444;
+      padding: 10px;
+      display: flex;
+      /*gap: 10px;           mellanrum mellan knappar */
+      justify-content: left;
+      z-index: 1000;       /* håller den ovanpå allt annat */
+    }
+
     thead { background:#000; }
     thead th { color:#fff; }
     
@@ -301,8 +314,8 @@ SORT = 1
 <pre id="info"></pre>
 <div id="header"></div>
 <div id="players"></div>
-<div id="tables"></div>
-<div id="names"></div>
+<div id="tables" ></div>
+<div id="names"  ></div>
 
 <script type="module" src="test.js"></script>
 <script type="module" src="tournament.js"></script>

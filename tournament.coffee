@@ -423,7 +423,9 @@ setScreen = (letter) ->
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
-	h2 = koppla 'h2', header
+	header.style = "margin-top:45px"
+	h2 = koppla 'h3', header, {style : "margin: 0px 0;"}
+	menu = koppla 'header',header
 
 	echo KEYS,global.currScreen
 	for key in KEYS[global.currScreen]
@@ -434,9 +436,9 @@ setScreen = (letter) ->
 		if key == 'ArrowDown' then skey = '↓'
 		if key == 'Delete' then skey = 'Del'
 		if key == 'GAP'
-			btn = koppla 'span', header, {style: "display: inline-block; width: 0.5rem;"}
+			btn = koppla 'span', menu, {style: "display: inline-block; width: 0.5rem;"}
 		else
-			btn = koppla 'button', header, {text: skey, title: TOOLTIPS[key]}
+			btn = koppla 'button', menu, {text: skey, title: TOOLTIPS[key]}
 			if key == '_'
 				btn.style = "color: transparent"
 				key = ' '
@@ -595,6 +597,7 @@ showTables = -> # Visa bordslistan
 	container = document.getElementById 'tables'
 	container.innerHTML = ''
 	container.className = 'groups'
+	container.style = 'marginTop: "60px"'
 
 	offset = 0
 	groups.forEach (group) =>
@@ -655,6 +658,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		return if event.ctrlKey or event.metaKey or event.altKey # förhindrar att ctrl p sorterar på poäng
+		if event.key in ['ArrowDown','ArrowUp'] then event.preventDefault()
 		handleKey event.key
 
 		# tvinga bordet att synas
