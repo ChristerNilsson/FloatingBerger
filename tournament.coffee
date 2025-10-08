@@ -114,9 +114,9 @@ export expand = (games, rounds) -> # make a double round from a single round
 
 handleKey = (key) ->
 
-	echo 'key 1',key
+	#echo 'key 1',key
 	if key.length == 1 then key = key.toUpperCase()
-	echo 'key 2',key
+	#echo 'key 2',key
 	if key == '?' then showHelp()
 
 	if key == 'ArrowLeft'  then changeRound -1
@@ -427,7 +427,7 @@ setScreen = (letter) ->
 	h2 = koppla 'h3', header, {style : "margin: 0px 0;"}
 	menu = koppla 'header',header
 
-	echo KEYS,global.currScreen
+	#echo KEYS,global.currScreen
 	for key in KEYS[global.currScreen]
 		skey = key
 		if key == 'ArrowLeft' then skey = '←'
