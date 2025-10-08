@@ -28,9 +28,9 @@ Press a key or click a button.
 
 ```
    ?      : Help
-  w s     : Page - • +
+  A B C   : Page A, B or C
   ← →     : Round - • +
-  i k     : Group size - • +
+  I K     : Group size - • +
  ctrl p   : Print
 ctrl - +  : Zoom - • +
 ```
@@ -38,8 +38,8 @@ ctrl - +  : Zoom - • +
 ### Keys for A Standings
 
 ```
-# n e p r : sort on Id • Name • Elo • Points • performance Rating
-  a d     : decimals for performance rating - • +
+# N E P R : sort on Id • Name • Elo • Points • performance Rating
+  J L     : decimals for performance rating - • +
 ```
 
 ### Keys for B Tables

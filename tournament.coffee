@@ -10,21 +10,21 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS = 
-	'a' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k GAP # n e p r GAP j l".split ' '
-	'b' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
-	'c' : "? GAP a b c GAP ArrowLeft ArrowRight GAP i k".split ' '
+	'A' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K GAP # N E P R GAP J L".split ' '
+	'B' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
+	'C' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K".split ' '
 
 TOOLTIPS = 
 	'?' : "Help"
-	'a' : "Standings"
-	'b' : "Tables"
-	'c' : "Names"
+	'A' : "Standings"
+	'B' : "Tables"
+	'C' : "Names"
 	'ArrowLeft' : "Previous Round"
-	'j' : "Shrink PR decimals"
-	'l' : "Grow PR decimals"
+	'J' : "Shrink PR decimals"
+	'L' : "Grow PR decimals"
 	'ArrowRight' : "Next Round"
-	'i' : "Shrink Group Size"
-	'k' : "Grow Group Size"
+	'I' : "Shrink Group Size"
+	'K' : "Grow Group Size"
 	'ArrowUp' : "Previous Table"
 	'0' : "White Loss"
 	'_' : "Draw"
@@ -32,10 +32,10 @@ TOOLTIPS =
 	'Delete' : "Remove Result"
 	'ArrowDown' : "Next Table"
 	'#' : "Sort on id"
-	'n' : "Sort on Name"
-	'e' : "Sort on Elo"
-	'p' : "Sort on Point"
-	'r' : "Sort on performance Rating"
+	'N' : "Sort on Name"
+	'E' : "Sort on Elo"
+	'P' : "Sort on Point"
+	'R' : "Sort on performance Rating"
 
 ## F U N K T I O N E R ##
 
@@ -56,9 +56,9 @@ addBord = (bord,res,c0,c1) ->
 	tr
 	
 changeGroupSize = (key,letter) ->
-	if key == 'i' then settings[letter] -= 1
-	if key == 'k' then settings[letter] += 1
-	if key in ['i', 'k']
+	if key == 'I' then settings[letter] -= 1
+	if key == 'K' then settings[letter] += 1
+	if key in ['I', 'K']
 		if letter == 'A' then showPlayers()
 		if letter == 'B' then showTables()
 		if letter == 'C' then showNames()
@@ -67,12 +67,29 @@ changeRound = (delta) -> # byt rond och uppdatera bordslistan
 	global.currRound = (global.currRound + delta) %% global.rounds.length
 	global.currTable = 0
 	
-	setScreen settings.currScreen
+	setScreen global.currScreen
 
 changeTable = (delta) -> global.currTable = (global.currTable + delta) %% tableCount()
 
 convert = (input,a,b) -> # byt alla tecken i input som finns i a mot tecken med samma index i b
 	if input in a then b[a.indexOf input] else input # a och b är strängar
+
+createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man klickar på. # Name Elo P eller PR
+
+	ths = document.querySelectorAll '#players th'
+
+	for th in ths
+		do (th) ->
+			th.addEventListener 'click', (event) ->
+				key = th.textContent
+				if key == '#'    then global.sortKey = '#'
+				if key == 'Name' then global.sortKey = 'N'
+				if key == 'Elo'  then global.sortKey = 'E'
+				if key == 'P'    then global.sortKey = 'P'
+				if key == 'PR'   then global.sortKey = 'R'
+				if ['#','Name','Elo','P','PR'].includes key
+					# echo 'click',global.sortKey
+					showPlayers()
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
@@ -89,40 +106,44 @@ export expand = (games, rounds) -> # make a double round from a single round
 # 	ibest
 
 handleKey = (key) ->
+
+	echo 'key 1',key
+	if key.length == 1 then key = key.toUpperCase()
+	echo 'key 2',key
 	if key == '?' then showHelp()
 
 	if key == 'ArrowLeft'  then changeRound -1
 	if key == 'ArrowRight' then changeRound +1
-	if key == 'ArrowUp'   and global.currScreen == 'b' then changeTable -1
-	if key == 'ArrowDown' and global.currScreen == 'b' then changeTable +1
+	if key == 'ArrowUp'   and global.currScreen == 'B' then changeTable -1
+	if key == 'ArrowDown' and global.currScreen == 'B' then changeTable +1
 
 	del = 'Delete'
-	if key == del and global.currScreen == 'b' then setResult key, 'x' # "  -  "
-	if key == '0' and global.currScreen == 'b' then setResult key, '0' # "0 - 1"
-	if key == ' ' and global.currScreen == 'b' then setResult key, '1' # "½ - ½"
-	if key == '1' and global.currScreen == 'b' then setResult key, '2' # "1 - 0"
+	if key == del and global.currScreen == 'B' then setResult key, 'x' # "  -  "
+	if key == '0' and global.currScreen == 'B' then setResult key, '0' # "0 - 1"
+	if key == ' ' and global.currScreen == 'B' then setResult key, '1' # "½ - ½"
+	if key == '1' and global.currScreen == 'B' then setResult key, '2' # "1 - 0"
 
-	if key == 'j' and global.currScreen == 'a' then setDecimals -1
-	if key == 'l' and global.currScreen == 'a' then setDecimals +1
+	if key == 'J' and global.currScreen == 'A' then setDecimals -1
+	if key == 'L' and global.currScreen == 'A' then setDecimals +1
 
-	if key == 'x' then showMatrix()
-	if key == 'y' then echo 'Dump', global
+	if key == 'X' then showMatrix()
+	if key == 'Y' then echo 'Dump', global
 	
-	if global.currScreen == 'a' and key in '#nepr'
+	if global.currScreen == 'A' and key in '#NEPR'
 		global.sortKey = key
 		showPlayers()
 
-	if global.currScreen == 'a' then changeGroupSize key,'A'
-	if global.currScreen == 'b' then changeGroupSize key,'B'
-	if global.currScreen == 'c' then changeGroupSize key,'C'
+	if global.currScreen == 'A' then changeGroupSize key,'A'
+	if global.currScreen == 'B' then changeGroupSize key,'B'
+	if global.currScreen == 'C' then changeGroupSize key,'C'
 
-	if key == 'a' then setScreen 'a'
-	if key == 'b' then setScreen 'b'
-	if key == 'c' then setScreen 'c'
+	if key == 'A' then setScreen 'A'
+	if key == 'B' then setScreen 'B'
+	if key == 'C' then setScreen 'C'
 
 	setCursor global.currRound, global.currTable
 
-	if key == ' ' or key in 'Delete 0 1 # n e p r'.split ' '
+	if key == ' ' or key in 'Delete 0 1 # N E P R'.split ' '
 		history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
 koppla = (typ, parent, attrs = {}) ->
@@ -387,11 +408,11 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	global.currTable = (global.currTable + 1) %% tableCount()
 
 setScreen = (letter) ->
-	global.currScreen = letter #(global.currScreen + delta) %% 3
+	global.currScreen = letter
 
-	if global.currScreen == 'a' then showPlayers()
-	if global.currScreen == 'b' then showTables()
-	if global.currScreen == 'c' then showNames()
+	if global.currScreen == 'A' then showPlayers()
+	if global.currScreen == 'B' then showTables()
+	if global.currScreen == 'C' then showNames()
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
@@ -414,13 +435,13 @@ setScreen = (letter) ->
 				key = ' '
 			do (key) -> btn.addEventListener 'click', () => handleKey key
 
-	if global.currScreen == 'a' then h2.textContent = "A Standings for " + settings.TITLE
-	if global.currScreen == 'b' then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
-	if global.currScreen == 'c' then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if global.currScreen == 'A' then h2.textContent = "A Standings for " + settings.TITLE
+	if global.currScreen == 'B' then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if global.currScreen == 'C' then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 
-	document.getElementById('players').style.display = if global.currScreen == 'a' then 'flex' else 'none'
-	document.getElementById('tables').style.display  = if global.currScreen == 'b' then 'flex' else 'none'
-	document.getElementById('names').style.display   = if global.currScreen == 'c' then 'flex' else 'none'
+	document.getElementById('players').style.display = if global.currScreen == 'A' then 'flex' else 'none'
+	document.getElementById('tables').style.display  = if global.currScreen == 'B' then 'flex' else 'none'
+	document.getElementById('names').style.display   = if global.currScreen == 'C' then 'flex' else 'none'
 
 showHelp = ->
 	r = await fetch "help.md"
@@ -493,8 +514,8 @@ showNames = ->
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"Namn"}
-		koppla 'th', thead, {text:"Plats"}
+		koppla 'th', thead, {text:"Name"}
+		koppla 'th', thead, {text:"Table"}
 
 		group.forEach (p) => 
 			tr1 = koppla 'tr',tabell
@@ -513,10 +534,10 @@ showPlayers = -> # Visa spelarlistan.
 
 	sortedPlayers.sort (a, b) =>
 		if global.sortKey == '#' then return a.id - b.id
-		if global.sortKey == 'n' then return a.name.localeCompare b.name, "sv"
-		if global.sortKey == 'e' then return b.elo - a.elo
-		if global.sortKey == 'p' then return b.P - a.P 
-		if global.sortKey == 'r' then return b.PR - a.PR
+		if global.sortKey == 'N' then return a.name.localeCompare b.name, "sv"
+		if global.sortKey == 'E' then return b.elo - a.elo
+		if global.sortKey == 'P' then return b.P - a.P 
+		if global.sortKey == 'R' then return b.PR - a.PR
 
 	# Lägg tillbaka BYE i slutet
 	if global.frirond != null then sortedPlayers.push memory
@@ -556,6 +577,8 @@ showPlayers = -> # Visa spelarlistan.
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed settings.DECIMALS}
 
 		offset += settings.A
+
+	createSortEvents()
 
 showTables = -> # Visa bordslistan
 	if global.rounds.length == 0 then return
@@ -619,7 +642,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	readResults params
 	setByeResults()
 	updateLongs()
-	setScreen 'a'
+	setScreen 'A'
 	setCursor global.currRound,global.currTable
 	document.title = settings.TITLE
 
