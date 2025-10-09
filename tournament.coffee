@@ -10,9 +10,10 @@ ALFABET = '123456789012345678901234567890123456789012345678901234567890123456789
 BYE = "BYE"
 
 KEYS = 
-	'A' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K GAP # N E P R GAP J L".split ' '
-	'B' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K GAP ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
-	'C' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K".split ' '
+	'ABC' : "? GAP A B C GAP ArrowLeft ArrowRight GAP I K".split ' '
+	'A' : "# N E P R GAP J L".split ' '
+	'B' : "ArrowUp ArrowDown GAP 0 _ 1 Delete".split ' '
+	'C' : []
 
 TOOLTIPS = 
 	'?' : "Help"
@@ -420,6 +421,24 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	tr5.textContent = prettyResult res
 	global.currTable = (global.currTable + 1) %% tableCount()
 
+setMenuZone = (key,zone) ->
+	for key in KEYS[key]
+		skey = switch key
+			when 'ArrowLeft' then skey = '←'
+			when 'ArrowRight' then skey = '→'
+			when 'ArrowUp' then skey = '↑'
+			when 'ArrowDown' then skey = '↓'
+			when 'Delete' then skey = 'Del'
+			else key
+		if key == 'GAP'
+			koppla 'span', zone, {style: "display: inline-block; width: 0.5rem;"}
+		else
+			btn = koppla 'button', zone, {text: skey, title: TOOLTIPS[key]}
+			if key == '_'
+				btn.style = "color: transparent"
+				key = ' '
+			do (key) -> btn.addEventListener 'click', () => handleKey key
+
 setScreen = (letter) ->
 	global.currScreen = letter
 
@@ -430,28 +449,14 @@ setScreen = (letter) ->
 	hdr = document.getElementById 'hdr'
 	hdr.innerHTML = ''
 
-	menu = koppla 'header',hdr, {class: "menu no-print", style: "position:fixed"}
+	menu = koppla 'header', hdr, {class: "menu no-print", style: "position:fixed"}
 	
 	# två underbehållare
 	leftZone  = koppla 'div', menu, {class: 'zone left'}
 	centerZone = koppla 'div', menu, {class: 'zone center'}
-	
-	for key, i in KEYS[letter]
-		skey = switch key
-			when 'ArrowLeft' then skey = '←'
-			when 'ArrowRight' then skey = '→'
-			when 'ArrowUp' then skey = '↑'
-			when 'ArrowDown' then skey = '↓'
-			when 'Delete' then skey = 'Del'
-			else key
-		if key == 'GAP'
-			koppla 'span',  (if i < 8+3 then leftZone else centerZone), {style: "display: inline-block; width: 0.5rem;"}
-		else
-			btn = koppla 'button',  (if i < 8+3 then leftZone else centerZone), {text: skey, title: TOOLTIPS[key]}
-			if key == '_'
-				btn.style = "color: transparent"
-				key = ' '
-			do (key) -> btn.addEventListener 'click', () => handleKey key
+
+	setMenuZone "ABC", leftZone
+	setMenuZone letter, centerZone
 
 	spacer = koppla 'div', hdr, {class: "no-print", style: "height:1px;"}
 
