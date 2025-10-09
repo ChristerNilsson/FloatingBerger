@@ -56,9 +56,9 @@ addBord = (bord,res,c0,c1) ->
 	koppla 'td', tr, {text : bord + settings.ONE}
 	koppla 'td', tr, {style:"text-align:left", text : vit}
 	koppla 'td', tr, {style:"text-align:left", text : vit_elo}
+	koppla 'td', tr, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
 	koppla 'td', tr, {style:"text-align:left", text : svart_elo}
 	koppla 'td', tr, {style:"text-align:left", text : svart}
-	koppla 'td', tr, {style:"text-align:center; background-color:#{color}", text : prettyResult res}
 
 	tr
 	
@@ -385,7 +385,7 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 	trs = document.querySelectorAll '#tables tr'
 	for tr,index in trs
 		color = if index == global.currTable + 0 then 'yellow' else 'white'
-		tr.children[5].style = "background-color:#{color}"
+		tr.children[5-2].style = "background-color:#{color}"
 
 setDecimals = (delta) ->
 	decimals = settings.DECIMALS + delta
@@ -415,7 +415,7 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 	# Uppdatera GUI för tables kirurgiskt
 	trs = document.querySelectorAll '#tables tr'
 	tr = trs[global.currTable] # Ska vara NOLL!
-	tr5 = tr.children[5]
+	tr5 = tr.children[5-2]
 
 	tr5.textContent = prettyResult res
 	global.currTable = (global.currTable + 1) %% tableCount()
@@ -429,11 +429,11 @@ setScreen = (letter) ->
 
 	header = document.getElementById 'header'
 	header.innerHTML = ''
-	header.style = "margin: 35px 5px; padding 0px 0px;"
-	h2 = koppla 'h3', header, {style : "margin-top: 0px; margin-bottom:-32px;"}
-	menu = koppla 'header',header
 
-	#echo KEYS,global.currScreen
+	menu = koppla 'header',header, {class: "no-print", style: "position:fixed"}
+	spacer = koppla 'div', header, {class: "no-print", style: "height:1px;"}
+	h2 = koppla 'h3', header, {style : "height:10px"}
+
 	for key in KEYS[global.currScreen]
 		skey = key
 		if key == 'ArrowLeft' then skey = '←'
@@ -611,7 +611,7 @@ showTables = -> # Visa bordslistan
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		for rubrik in "Table White Elo Elo Black Result".split ' '
+		for rubrik in "Table White Elo Result Elo Black".split ' '
 			koppla 'th', thead, {text:rubrik}
 
 		group.forEach ([w,b],iTable) =>

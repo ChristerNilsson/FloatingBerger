@@ -11,14 +11,11 @@
     pre { white-space: pre-wrap; word-wrap: break-word; }
 
     header {
-      position: fixed;     /* gör att den inte skrollar */
       top: 0; 
-      left: 0;
       width: 100%;         /* täcker hela sidans bredd */
       background: #444;
       padding: 5px;
       display: flex;
-      /*gap: 10px;           mellanrum mellan knappar */
       justify-content: left;
       z-index: 1000;       /* håller den ovanpå allt annat */
     }
@@ -45,6 +42,12 @@
       border: 1px solid #ccc;  /* tunn linje runt celler */
       padding: 3px 5px;
       white-space: nowrap;        /* hindra radbrytning */
+    }
+
+    @media print {
+      .no-print {
+        display: none;
+      }
     }
 
   </style>
