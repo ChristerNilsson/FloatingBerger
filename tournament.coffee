@@ -36,7 +36,7 @@ TOOLTIPS =
 	'N' : "Sort on Name"
 	'E' : "Sort on Elo"
 	'P' : "Sort on Point"
-	'R' : "Sort on performance Rating"
+	'R' : "Sort on PR"
 
 ## F U N K T I O N E R ##
 
