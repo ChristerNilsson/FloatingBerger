@@ -393,6 +393,24 @@ setDecimals = (delta) ->
 	if 0 <= decimals <= 6 then settings.DECIMALS = decimals
 	showPlayers()
 
+setMenuZone = (key,zone) ->
+	for key in KEYS[key]
+		skey = switch key
+			when 'ArrowLeft' then skey = '←'
+			when 'ArrowRight' then skey = '→'
+			when 'ArrowUp' then skey = '↑'
+			when 'ArrowDown' then skey = '↓'
+			when 'Delete' then skey = 'Del'
+			else key
+		if key == 'GAP'
+			koppla 'span', zone, {style: "display: inline-block; width: 0.5rem;"}
+		else
+			btn = koppla 'button', zone, {text: skey, title: TOOLTIPS[key]}
+			if key == '_'
+				btn.style = "color: transparent"
+				key = ' '
+			do (key) -> btn.addEventListener 'click', () => handleKey key
+
 setResult = (key, res) -> # Uppdatera results samt gui:t.
 	old = global.results[global.currRound][global.currTable]
 	[w,b] = global.rounds[global.currRound][global.currTable]
@@ -420,24 +438,6 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 
 	tr5.textContent = prettyResult res
 	global.currTable = (global.currTable + 1) %% tableCount()
-
-setMenuZone = (key,zone) ->
-	for key in KEYS[key]
-		skey = switch key
-			when 'ArrowLeft' then skey = '←'
-			when 'ArrowRight' then skey = '→'
-			when 'ArrowUp' then skey = '↑'
-			when 'ArrowDown' then skey = '↓'
-			when 'Delete' then skey = 'Del'
-			else key
-		if key == 'GAP'
-			koppla 'span', zone, {style: "display: inline-block; width: 0.5rem;"}
-		else
-			btn = koppla 'button', zone, {text: skey, title: TOOLTIPS[key]}
-			if key == '_'
-				btn.style = "color: transparent"
-				key = ' '
-			do (key) -> btn.addEventListener 'click', () => handleKey key
 
 setScreen = (letter) ->
 	global.currScreen = letter
@@ -643,7 +643,6 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		document.getElementById("help").addEventListener "click", showHelp
 		document.getElementById("continue").addEventListener "click", parseTextarea
 		return
-
 
 	document.getElementById("help").style     = 'display: none'
 	document.getElementById("textarea").style = 'display: none'
