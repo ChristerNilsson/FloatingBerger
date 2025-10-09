@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tyresö Open – Start & spelare</title>
+<style>
+  :root{
+    --bg:#f7f9fc; --ink:#111827; --muted:#6b7280; --card:#ffffff; --line:#e5e7eb;
+    --accent:#2f4f6f; --accent-2:#e9f1ff; --radius:14px; --shadow:0 6px 30px rgba(0,0,0,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f1215; --ink:#e5e7eb; --muted:#a3aab6; --card:#161a1e; --line:#2b3138;
+           --accent:#89b4ff; --accent-2:#1a2430; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu}
+  .wrap{max-width:1100px;margin:auto;padding:22px 16px}
+  header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+  h1{margin:0;font-size:clamp(20px,3.2vw,28px)}
+  .help{color:var(--muted);font-size:.95rem}
+  .layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:900px){ .layout{grid-template-columns:1fr} }
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card header{padding:12px 12px 0 12px}
+  .card .body{padding:12px}
+  textarea{
+    width:100%;min-height:420px;resize:vertical;border:1px solid var(--line);
+    border-radius:10px;padding:10px;background:transparent;color:inherit;font:14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .btn{border:1px solid var(--line);background:var(--card);padding:8px 10px;border-radius:10px;cursor:pointer}
+  .btn.primary{background:var(--accent);color:white;border-color:transparent}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+  .badge{padding:.28rem .56rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font-size:.9rem}
+  .list{max-height:540px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .row{display:grid;grid-template-columns:90px 1fr;gap:14px;padding:10px 12px;border-top:1px solid var(--line)}
+  .row:first-child{border-top:0}
+  .row:nth-child(even){background:var(--accent-2)}
+  .elo{font-variant-numeric:tabular-nums;color:#334155}
+  .name{font-weight:560}
+  .summary{display:flex;justify-content:space-between;align-items:center;margin:6px 0 10px;font-size:.95rem;color:var(--muted)}
+  .error{padding:8px 10px;border:1px solid #e11d48;border-radius:10px;color:#e11d48;background:rgba(225,29,72,.08);margin-bottom:10px;display:none}
+  .search{display:flex;gap:8px;margin-bottom:8px}
+  .search input{flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:transparent;color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Tyresö Open – Start & spelare</h1>
+    <div class="help">Klistra in lista till vänster • Förhandsgranska till höger • Sparas lokalt</div>
+  </header>
+
+  <div class="layout">
+    <!-- VÄNSTER: EDITOR -->
+    <section class="card">
+      <header><strong>Redigera (råtext)</strong></header>
+      <div class="body">
+        <textarea id="raw" spellcheck="false"></textarea>
+        <div class="toolbar">
+          <button class="btn primary" id="save">Spara lokalt</button>
+          <button class="btn" id="revert">Återställ</button>
+          <button class="btn" id="download">Exportera .txt</button>
+          <label class="btn">
+            Importera .txt
+            <input type="file" id="upload" accept=".txt,text/plain" style="display:none">
+          </label>
+          <button class="btn" id="sample">Fyll med exempel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HÖGER: FÖRHANDSVISNING -->
+    <section class="card">
+      <header><strong>Förhandsvisning</strong></header>
+      <div class="body">
+        <div class="error" id="errorBox"></div>
+        <div class="meta" id="meta"></div>
+        <div class="search">
+          <input id="q" type="search" placeholder="Sök spelare eller Elo…" />
+          <button class="btn" id="sortName">Sortera: Namn</button>
+          <button class="btn" id="sortElo">Sortera: Elo</button>
+        </div>
+        <div class="summary"><span id="title">Titel</span><span id="count"></span></div>
+        <div class="list" id="list" role="list"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // --- Standarddata (kan bytas av användaren) ---
+  const SAMPLE = `TITLE = Tyresö Open 2024
+ROUNDS = 8
+BALANCE = 1
+SORT = 1
+
+1688 Anders Hillbur
+1827 Anders Kallin
+1748 André J Lindebaum
+1641 Anton Nordenfur
+2001 Aryan Banerjee
+1800 Björn Löfström
+1944 C Rose Mariano
+1907 Carina Wickström
+1759 Christer Carmegren
+1828 Christer Johansson
+1575 Christer Nilsson
+2213 D Vesterbaek Pedersen
+1417 David Broman
+1709 Eddie Parteg
+1977 Elias Kingsley
+2113 Filip Björkman
+1848 Fredrik Möllerström
+2416 Hampus Sörensen
+1622 Hanns Ivar Uniyal`;
+
+  // --- UI refs ---
+  const rawEl = document.getElementById('raw');
+  const metaEl = document.getElementById('meta');
+  const listEl = document.getElementById('list');
+  const countEl = document.getElementById('count');
+  const titleEl = document.getElementById('title');
+  const qEl = document.getElementById('q');
+  const errBox = document.getElementById('errorBox');
+  const btnName = document.getElementById('sortName');
+  const btnElo  = document.getElementById('sortElo');
+
+  // --- State ---
+  let sortKey = 'elo';
+  let lastSaved = localStorage.getItem('tyreso_open_raw') || '';
+  if(!lastSaved) lastSaved = SAMPLE;
+  rawEl.value = lastSaved;
+
+  // --- Parser ---
+  function parse(text){
+    const lines = text.split(/\r?\n/);
+    const header = {};
+    const players = [];
+    const errors = [];
+    for (let i=0;i<lines.length;i++){
+      const line = lines[i].trim();
+      if (!line) continue;
+      const kv = line.match(/^([A-Z]+)\s*=\s*(.+)$/);
+      if (kv){ header[kv[1]] = kv[2]; continue; }
+      const pl = line.match(/^(\d{3,4})\s+(.+)$/);
+      if (pl){ players.push({ elo:+pl[1], name:pl[2] }); }
+      else { errors.push(`Rad ${i+1}: "${lines[i]}" kändes okänd`); }
+    }
+    return {header, players, errors};
+  }
+
+  // --- Render ---
+  function render(){
+    const {header, players, errors} = parse(rawEl.value);
+    // header
+    metaEl.innerHTML = '';
+    ['ROUNDS','BALANCE','SORT'].forEach(k=>{
+      if (header[k]) {
+        const el = document.createElement('span');
+        el.className='badge';
+        el.textContent = k.toLowerCase()+': '+header[k];
+        metaEl.appendChild(el);
+      }
+    });
+    titleEl.textContent = header.TITLE || 'Titel saknas';
+
+    // errors
+    if (errors.length){
+      errBox.style.display = 'block';
+      errBox.textContent = errors.slice(0,6).join(' • ') + (errors.length>6 ? ` …(+${errors.length-6})` : '');
+    } else {
+      errBox.style.display = 'none';
+      errBox.textContent = '';
+    }
+
+    // filter + sort
+    const q = qEl.value.trim().toLowerCase();
+    let filtered = players.filter(p=> p.name.toLowerCase().includes(q) || (''+p.elo).includes(q));
+    filtered.sort((a,b)=> sortKey==='elo' ? b.elo-a.elo : a.name.localeCompare(b.name,'sv'));
+
+    // list
+    listEl.innerHTML = '';
+    filtered.forEach(p=>{
+      const row = document.createElement('div');
+      row.className='row'; row.setAttribute('role','listitem');
+      row.innerHTML = `<div class="elo">${p.elo}</div><div class="name">${p.name}</div>`;
+      listEl.appendChild(row);
+    });
+    countEl.textContent = `${filtered.length} spelare`;
+  }
+
+  // --- Events ---
+  rawEl.addEventListener('input', ()=>{ render(); });
+  qEl.addEventListener('input', render);
+  btnName.addEventListener('click', ()=>{ sortKey='name'; render(); });
+  btnElo .addEventListener('click', ()=>{ sortKey='elo' ; render(); });
+
+  document.getElementById('save').addEventListener('click', ()=>{
+    localStorage.setItem('tyreso_open_raw', rawEl.value);
+    lastSaved = rawEl.value;
+    alert('Sparat lokalt i webbläsaren.');
+  });
+  document.getElementById('revert').addEventListener('click', ()=>{
+    rawEl.value = lastSaved;
+    render();
+  });
+  document.getElementById('sample').addEventListener('click', ()=>{
+    rawEl.value = SAMPLE;
+    render();
+  });
+  document.getElementById('download').addEventListener('click', ()=>{
+    const blob = new Blob([rawEl.value], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tyreso-open.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  document.getElementById('upload').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { rawEl.value = reader.result; render(); };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  // initial render
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Start | Tyresö Open</title>
+<style>
+  :root{
+    --bg:#f7f9fc; --card:#ffffff; --ink:#1f2937; --muted:#6b7280;
+    --accent:#2f4f6f; --accent-2:#e3edf9; --line:#e5e7eb;
+    --radius:14px; --shadow:0 6px 30px rgba(0,0,0,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f1215; --card:#161a1e; --ink:#e5e7eb; --muted:#a3aab6;
+           --accent:#89b4ff; --accent-2:#1d2732; --line:#2b3138; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+    color:var(--ink); background:radial-gradient(1200px 600px at 10% -10%,rgba(47,79,111,.09),transparent),
+                       radial-gradient(1200px 600px at 110% 110%,rgba(47,79,111,.08),transparent),
+                       var(--bg);
+  }
+  .wrap{max-width:980px;margin:auto;padding:28px 18px}
+  header{
+    display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-bottom:18px
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px
+  }
+  .logo{
+    width:42px;height:42px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),#5f7fa3);
+    color:white;display:grid;place-items:center;font-weight:800;box-shadow:var(--shadow)
+  }
+  h1{margin:0;font-size: clamp(22px,3.5vw,30px)}
+  .meta{display:flex;gap:8px;flex-wrap:wrap}
+  .badge{
+    padding:.32rem .6rem;border:1px solid var(--line);border-radius:999px;
+    background:var(--card);color:var(--muted);font-size:.9rem
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;border-bottom:1px solid var(--line)}
+  .toolbar input{
+    flex:1 1 260px; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    background:transparent; color:inherit; outline:0;
+  }
+  .toolbar .count{color:var(--muted)}
+  .list{max-height:60vh;overflow:auto}
+  .row{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:12px 14px;border-top:1px solid var(--line)}
+  .row:first-child{border-top:0}
+  .elo{font-variant-numeric:tabular-nums; color:#334155}
+  .name{font-weight:550}
+  .row:nth-child(even){background:var(--accent-2)}
+  .footer{padding:14px;color:var(--muted);font-size:.92rem;text-align:center}
+  /* små skärmar */
+  @media (max-width:480px){
+    .row{grid-template-columns:70px 1fr}
+    .elo{opacity:.9}
+  }
+  /* knappar */
+  .btn{
+    appearance:none;border:1px solid var(--line);background:var(--card);color:inherit;
+    padding:9px 12px;border-radius:10px;cursor:pointer
+  }
+  .btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">♟</div>
+        <h1 id="title">Tyresö Open</h1>
+      </div>
+      <div class="meta" id="meta"></div>
+    </header>
+
+    <section class="card">
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Sök spelare eller Elo…" />
+        <button class="btn" id="sortName" aria-pressed="false">Sortera: Namn</button>
+        <button class="btn" id="sortElo" aria-pressed="true">Sortera: Elo</button>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="list" id="list" role="list"></div>
+      <div class="footer">Tips: skriv t.ex. <em>“1990”</em> eller <em>“Anders”</em> i söken.</div>
+    </section>
+  </div>
+
+  <!-- PASTE YOUR RAW TEXT HERE (samma format som din startsida) -->
+  <script id="raw" type="text/plain">
+TITLE = Tyresö Open 2024
+ROUNDS = 8
+BALANCE = 1
+SORT = 1
+
+1688 Anders Hillbur
+1827 Anders Kallin
+1748 André J Lindebaum
+1641 Anton Nordenfur
+2001 Aryan Banerjee
+1800 Björn Löfström
+1944 C Rose Mariano
+1907 Carina Wickström
+1759 Christer Carmegren
+1828 Christer Johansson
+1575 Christer Nilsson
+2213 D Vesterbaek Pedersen
+1417 David Broman
+1709 Eddie Parteg
+1977 Elias Kingsley
+2113 Filip Björkman
+1848 Fredrik Möllerström
+2416 Hampus Sörensen
+1622 Hanns Ivar Uniyal
+</script>
+
+<script>
+  // --- parsea din text ---
+  const raw = document.getElementById('raw').textContent.trim().split(/\r?\n/);
+  const header = {};
+  const players = [];
+  for (const line of raw){
+    if (!line.trim()) continue;
+    const kv = line.match(/^([A-Z]+)\s*=\s*(.+)$/);
+    if (kv){ header[kv[1]] = kv[2]; continue; }
+    const pl = line.match(/^(\d{3,4})\s+(.+)$/);
+    if (pl){ players.push({ elo:+pl[1], name:pl[2] }); }
+  }
+
+  // --- sätt rubrik & badges ---
+  document.getElementById('title').textContent = header.TITLE || 'Turnering';
+  const meta = document.getElementById('meta');
+  ['ROUNDS','BALANCE','SORT'].forEach(k=>{
+    if (header[k]) {
+      const el = document.createElement('span');
+      el.className='badge';
+      el.textContent = k.toLowerCase()+': '+header[k];
+      meta.appendChild(el);
+    }
+  });
+
+  // --- render ---
+  const listEl = document.getElementById('list');
+  const countEl = document.getElementById('count');
+  const qEl = document.getElementById('q');
+  const btnName = document.getElementById('sortName');
+  const btnElo  = document.getElementById('sortElo');
+
+  let sortKey = 'elo'; // default
+  function render(){
+    const q = qEl.value.trim().toLowerCase();
+    let filtered = players.filter(p=> (p.name.toLowerCase().includes(q) || (''+p.elo).includes(q)));
+    filtered.sort((a,b)=> sortKey==='elo' ? b.elo-a.elo : a.name.localeCompare(b.name,'sv'));
+    listEl.innerHTML = '';
+    for (const p of filtered){
+      const row = document.createElement('div');
+      row.className='row'; row.setAttribute('role','listitem');
+      row.innerHTML = `<div class="elo">${p.elo}</div><div class="name">${p.name}</div>`;
+      listEl.appendChild(row);
+    }
+    countEl.textContent = `${filtered.length} spelare`;
+  }
+
+  qEl.addEventListener('input', render);
+  btnName.addEventListener('click', ()=>{ sortKey='name'; btnName.ariaPressed='true'; btnElo.ariaPressed='false'; render(); });
+  btnElo .addEventListener('click', ()=>{ sortKey='elo' ; btnElo .ariaPressed='true'; btnName.ariaPressed='false'; render(); });
+
+  // initial
+  render();
+</script>
+</body>
+</html>

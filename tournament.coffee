@@ -378,7 +378,7 @@ setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på pilt
 			bgColor = 'yellow'
 			color = 'black'
 		else
-			bgColor = 'black'
+			bgColor = '2f4f6f'
 			color = 'white'
 		th.style = "background-color:#{bgColor}; color:#{color};"
 
@@ -432,7 +432,7 @@ setScreen = (letter) ->
 
 	menu = koppla 'header',header, {class: "no-print", style: "position:fixed"}
 	spacer = koppla 'div', header, {class: "no-print", style: "height:1px;"}
-	h2 = koppla 'h3', header, {style : "height:10px"}
+	h2 = koppla 'h3', header, {style : "height:10px; margin-left:5px"}
 
 	for key in KEYS[global.currScreen]
 		skey = key
@@ -633,8 +633,10 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		document.getElementById("continue").addEventListener "click", parseTextarea
 		return
 
-	document.getElementById("help").style = 'display: none'
+
+	document.getElementById("help").style     = 'display: none'
 	document.getElementById("textarea").style = 'display: none'
+	document.getElementById("panel").style    = 'display: none'
 	document.getElementById("continue").style = 'display: none'
 
 	parseURL()
@@ -666,7 +668,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		return if event.ctrlKey or event.metaKey or event.altKey # förhindrar att ctrl p sorterar på poäng
-		if event.key in ['ArrowDown','ArrowUp'] then event.preventDefault()
+		if event.key in ['ArrowDown','ArrowUp',' '] then event.preventDefault()
 		handleKey event.key
 
 		# tvinga bordet att synas

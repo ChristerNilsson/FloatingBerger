@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+
+  <style>
+    :root{
+      --bg:#f7f9fc; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+      --primary:#2f4f6f; --primary-2:#e3edf9; --shadow:0 8px 30px rgba(0,0,0,.08);
+      --radius:14px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0f1215; --ink:#e5e7eb; --muted:#a3aab6; --line:#2b3138;
+        --primary:#89b4ff; --primary-2:#1a2430;
+      }
+    }
+    body{ background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu }
+  
+    /* panel runt textarea om du vill ha kant + skugga */
+    .panel{
+      max-width: 680px; margin: 18px auto; padding: 14px;
+      background: #fff0; /* transparent – låt sidan bestämma */
+    }
+  
+    /* TEXTAREA */
+    .clean-textarea, textarea{
+      width:100%;
+      min-height: 360px;
+      padding: 12px 14px;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff; color: var(--ink);
+      box-shadow: var(--shadow);
+      font: 14px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      caret-color: var(--primary);
+      tab-size: 4;
+      resize: vertical;
+    }
+    .clean-textarea::selection{ background: var(--primary-2) }
+    .clean-textarea:focus{
+      outline: none;
+      border-color: color-mix(in oklab, var(--primary) 55%, #ffffff);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, #ffffff), var(--shadow);
+    }
+    /* snygg scrollbar (stöd i Chromium/Edge) */
+    .clean-textarea::-webkit-scrollbar{ height:12px; width:12px }
+    .clean-textarea::-webkit-scrollbar-thumb{
+      background: color-mix(in oklab, var(--primary) 25%, #888);
+      border-radius: 12px;
+      border: 3px solid #fff;
+    }
+  
+    /* KNAPPAR */
+    .bar{
+      display:flex; justify-content:flex-end; gap:10px; margin-top:10px;
+    }
+    .btn{
+      appearance:none; border:1px solid var(--line); background:#fff; color:var(--ink);
+      padding: 10px 14px; border-radius: 12px; cursor:pointer; font-weight:600;
+      box-shadow: var(--shadow);
+      transition: transform .05s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px) }
+    .btn:active{ transform: translateY(0) scale(.99) }
+    .btn:focus{ outline:none; box-shadow: 0 0 0 3px var(--primary-2), var(--shadow) }
+  
+    .btn-primary{
+      background: var(--primary);
+      color: #fff;
+      border-color: transparent;
+    }
+    .btn-primary:hover{ filter: brightness(1.05) }
+    .btn-primary:active{ filter: brightness(.98) }
+  
+    .btn-ghost{
+      background: linear-gradient(#fff,#fff) padding-box,
+                  conic-gradient(from 180deg at 50% 50%, #ddd, #eee) border-box;
+    }
+  
+    /* små skärmar */
+    @media (max-width:520px){
+      .clean-textarea{ min-height: 300px; font-size: 13.5px }
+      .bar{ justify-content: space-between }
+    }
+  </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+  <div class="panel">
+    <textarea class="clean-textarea" id="source">
+TITLE = Tyresö Open 2024
+ROUNDS = 8
+BALANCE = 1
+SORT = 1
+
+1688 Anders Hillbur
+1827 Anders Kallin
+1748 André J Lindebaum
+1641 Anton Nordenfur
+2001 Aryan Banerjee
+1800 Björn Löfström
+1944 C Rose Mariano
+1907 Carina Wickström
+1579 Christer Carmegren
+1828 Christer Johansson
+1575 Christer Nilsson
+2213 D Vesterbaek Pedersen
+1417 David Broman
+1709 Eddie Parteg
+1977 Elias Kingsley
+2093 Erik Dingertz
+2113 Filip Björkman
+1848 Fredrik Möllerström
+2416 Hampus Sörensen
+1622 Hanns Ivar Uniyal
+1893 Hans Rånby
+1923 Herman Enholm
+1733 Hugo Hardwick
+1728 Hugo Sundell
+1400 Ivar Arnshav
+1624 Jens Ahlström
+1878 Jesper Borin
+1763 Joacim Hultin
+1886 Joar Berglund
+2366 Joar Ölund
+2335 Joar Östlund
+1897 Joel Åhfeldt
+1794 Jonas Sandberg
+1721 Jouni Kaunonen
+2022 Jussi Jakenberg
+1871 K Sergelenbaatar
+1833 Karam Masoudi
+1480 Karl-Oskar Rehnberg
+1846 Kenneth Fahlberg
+1787 Kjell Jernselius
+1400 Kristoffer Schultz
+1733 Lars Eriksson
+1761 Lars-Åke Pettersson
+2039 Lavinia Valcu
+2031 Lennart Evertsson
+2235 Leo Crevatin
+1936 Lo Ljungros
+2046 Lukas Willstedt
+1400 M de Lafonteyne
+1803 Martti Hamina
+2065 Matija Sakic
+2076 Michael Duke
+2048 Michael Mattsson
+2413 Michael Wiedenkeller
+1889 Mikael Blom
+1885 Mikael Helin
+1818 Morris Bergqvist
+1778 Mukhtar Jamshedi
+1524 Måns Nödtveidt
+1796 N Bychkov Zwahlen
+1768 Neo Malmquist
+2035 Oliver Nilsson
+1880 Olle Ålgars
+1650 Patrik Wiss
+1835 Peder Gedda
+1954 Per Isaksson
+2108 Pratyush Tripathi
+1783 Radu Cernea
+1793 Rohan Gore
+1852 Roy Karlsson
+1671 Salar Banavi
+1680 Sayak Raj Bardhan
+1695 Sid Van Den Brink
+1726 Simon Johansson
+1896 Stefan Nyberg
+1691 Svante Nödtveidt
+1985 Tim Nordenfur
+2141 Victor Muntean
+1406 Vida Radon
+2272 Vidar Grahn
+2109 Vidar Seiger
+    </textarea>
+    <div class="bar">
+      <button class="btn btn-ghost" id="help">Help</button>
+      <button class="btn btn-primary" id="continue">Continue</button>
+    </div>
+  </div>
+
+  <pre id="info"></pre>
+  <div id="header"></div>
+  <div id="players"></div>
+  <div id="tables" ></div>
+  <div id="names"  ></div>
+
+  <script type="module" src="test.js"></script>
+  <script type="module" src="tournament.js"></script>
+
+</body>
+</html>
