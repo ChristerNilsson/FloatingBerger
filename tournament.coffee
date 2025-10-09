@@ -423,18 +423,18 @@ setResult = (key, res) -> # Uppdatera results samt gui:t.
 setScreen = (letter) ->
 	global.currScreen = letter
 
-	if global.currScreen == 'A' then showPlayers()
-	if global.currScreen == 'B' then showTables()
-	if global.currScreen == 'C' then showNames()
+	if letter == 'A' then showPlayers()
+	if letter == 'B' then showTables()
+	if letter == 'C' then showNames()
 
-	header = document.getElementById 'header'
+	header = document.getElementById 'hdr'
 	header.innerHTML = ''
 
 	menu = koppla 'header',header, {class: "no-print", style: "position:fixed"}
 	spacer = koppla 'div', header, {class: "no-print", style: "height:1px;"}
-	h2 = koppla 'h3', header, {style : "height:10px; margin-left:5px"}
+	h3 = koppla 'h3', header #, {class: 'centered-title'} #, {style : "height:10px; margin-left:5px"}
 
-	for key in KEYS[global.currScreen]
+	for key in KEYS[letter]
 		skey = key
 		if key == 'ArrowLeft' then skey = '←'
 		if key == 'ArrowRight' then skey = '→'
@@ -450,13 +450,13 @@ setScreen = (letter) ->
 				key = ' '
 			do (key) -> btn.addEventListener 'click', () => handleKey key
 
-	if global.currScreen == 'A' then h2.textContent = "A Standings for " + settings.TITLE
-	if global.currScreen == 'B' then h2.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
-	if global.currScreen == 'C' then h2.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if letter == 'A' then h3.textContent = "A Standings for " + settings.TITLE
+	if letter == 'B' then h3.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if letter == 'C' then h3.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 
-	document.getElementById('players').style.display = if global.currScreen == 'A' then 'flex' else 'none'
-	document.getElementById('tables').style.display  = if global.currScreen == 'B' then 'flex' else 'none'
-	document.getElementById('names').style.display   = if global.currScreen == 'C' then 'flex' else 'none'
+	document.getElementById('players').style.display = if letter == 'A' then 'flex' else 'none'
+	document.getElementById('tables').style.display  = if letter == 'B' then 'flex' else 'none'
+	document.getElementById('names').style.display   = if letter == 'C' then 'flex' else 'none'
 
 showHelp = ->
 	r = await fetch "help.md"
@@ -605,7 +605,7 @@ showTables = -> # Visa bordslistan
 	container = document.getElementById 'tables'
 	container.innerHTML = ''
 	container.className = 'groups'
-	container.style = 'marginTop: "60px"'
+	container.style.marginTop = "20px"
 
 	offset = 0
 	groups.forEach (group) =>

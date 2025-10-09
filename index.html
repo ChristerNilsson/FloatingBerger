@@ -60,41 +60,53 @@
     }
 
     header {
-      top: 0; 
-      width: 100%;         /* täcker hela sidans bredd */
-      background: #2f4f6f; 
+      top: 0;
+      width: 100%;
+      background: #2f4f6f;
       padding: 5px;
       display: flex;
       justify-content: left;
-      z-index: 1000;       /* håller den ovanpå allt annat */
+      z-index: 1000;
+      align-items: center;
     }
 
-    .groups {
+    header h3 {
+      text-align: center;
+      margin: 0 auto;
+      padding: 6px 0;
+      font-weight: 600;
+      font-size: 1.2em;
+    }
+
+   .groups {
       display: flex;
       flex-wrap: wrap;
-      gap: 0px;                   /* luft mellan grupperna */
-      align-items: flex-start;    /* undvik att kolumner sträcks i höjd */
+      justify-content: center;   /* <-- centrera i raden */
+      align-content: flex-start;  /* hur radblocken placeras vertikalt */
+      align-items: flex-start;    /* undvik utdragna höjder */
+      gap: 6px;                   /* avstånd mellan grupper */
+      width: 100%;
     }
-
     .group {
-      border: none;               /* fet ram runt gruppen */
+      flex: 0 0 auto;             /* behåll egen bredd, ingen stretch */
       border-collapse: collapse;
-      margin-right: 2px;          /* luft mellan grupper */
-      table-layout: auto;         /* låt innehållet styra bredden */
-      width: auto;                /* minsta möjliga bredd */
+      table-layout: auto;
+      width: auto;
+      /* ta bort margin-right – gap sköter avståndet */
+    }
+    .group td {
+      border: 1px solid #ccc;
+      padding: 3px 5px;
+      white-space: nowrap;
     }
 
-    .group td {
-      border: 1px solid #ccc;  /* tunn linje runt celler */
-      padding: 3px 5px;
-      white-space: nowrap;        /* hindra radbrytning */
-    }
 
     @media print {
       .no-print {
         display: none;
       }
     }
+    
 
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
@@ -218,7 +230,7 @@ SORT = 1
 </div>
 
 <pre id="info"></pre>
-<div id="header"></div>
+<div id="hdr"></div>
 <div id="players"></div>
 <div id="tables" ></div>
 <div id="names"  ></div>
