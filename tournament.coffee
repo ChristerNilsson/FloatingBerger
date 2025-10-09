@@ -427,13 +427,10 @@ setScreen = (letter) ->
 	if letter == 'B' then showTables()
 	if letter == 'C' then showNames()
 
-	header = document.getElementById 'hdr'
-	header.innerHTML = ''
+	hdr = document.getElementById 'hdr'
+	hdr.innerHTML = ''
 
-	menu = koppla 'header',header, {class: "no-print", style: "position:fixed"}
-	spacer = koppla 'div', header, {class: "no-print", style: "height:1px;"}
-	h3 = koppla 'h3', header #, {class: 'centered-title'} #, {style : "height:10px; margin-left:5px"}
-
+	menu = koppla 'header',hdr, {class: "no-print", style: "position:fixed"}
 	for key in KEYS[letter]
 		skey = key
 		if key == 'ArrowLeft' then skey = '←'
@@ -450,6 +447,9 @@ setScreen = (letter) ->
 				key = ' '
 			do (key) -> btn.addEventListener 'click', () => handleKey key
 
+	spacer = koppla 'div', hdr, {class: "no-print", style: "height:1px;"}
+
+	h3 = koppla 'h3', hdr
 	if letter == 'A' then h3.textContent = "A Standings for " + settings.TITLE
 	if letter == 'B' then h3.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 	if letter == 'C' then h3.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
@@ -605,7 +605,7 @@ showTables = -> # Visa bordslistan
 	container = document.getElementById 'tables'
 	container.innerHTML = ''
 	container.className = 'groups'
-	container.style.marginTop = "20px"
+	# container.style.marginTop = "20px"
 
 	offset = 0
 	groups.forEach (group) =>
