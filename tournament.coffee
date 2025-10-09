@@ -48,7 +48,6 @@ addBord = (bord,res,c0,c1) ->
 	tr = document.createElement 'tr'
 
 	tr.addEventListener "click", ->
-		console.log "Du klickade på rad #{bord}"
 		global.currTable = bord
 		setCursor global.currRound,global.currTable
 
