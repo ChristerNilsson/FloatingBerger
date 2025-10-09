@@ -80,6 +80,46 @@
       font-size: 1.2em;
     }
 
+    .menu {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #2f4f6f;
+      padding: 5px 10px;
+      display: flex;
+      justify-content: space-between; /* zoner till vänster + center */
+      align-items: center;
+      z-index: 1000;
+    }
+
+    /* zon 1: vänsterställd */
+    .menu .zone.left {
+      display: flex;
+      justify-content: flex-start;
+      gap: 4px;
+    }
+
+    /* zon 2: centrerad */
+    .menu .zone.center {
+      position: absolute;    /* frikoppla från flexflödet */
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* knapparnas stil (exempel) */
+    .menu button {
+      background: #fff;
+      color: #2f4f6f;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 3px 7px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
    .groups {
       display: flex;
       flex-wrap: wrap;

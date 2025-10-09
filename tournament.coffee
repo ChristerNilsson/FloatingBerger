@@ -430,18 +430,24 @@ setScreen = (letter) ->
 	hdr = document.getElementById 'hdr'
 	hdr.innerHTML = ''
 
-	menu = koppla 'header',hdr, {class: "no-print", style: "position:fixed"}
-	for key in KEYS[letter]
-		skey = key
-		if key == 'ArrowLeft' then skey = '←'
-		if key == 'ArrowRight' then skey = '→'
-		if key == 'ArrowUp' then skey = '↑'
-		if key == 'ArrowDown' then skey = '↓'
-		if key == 'Delete' then skey = 'Del'
+	menu = koppla 'header',hdr, {class: "menu no-print", style: "position:fixed"}
+	
+	# två underbehållare
+	leftZone  = koppla 'div', menu, {class: 'zone left'}
+	centerZone = koppla 'div', menu, {class: 'zone center'}
+	
+	for key, i in KEYS[letter]
+		skey = switch key
+			when 'ArrowLeft' then skey = '←'
+			when 'ArrowRight' then skey = '→'
+			when 'ArrowUp' then skey = '↑'
+			when 'ArrowDown' then skey = '↓'
+			when 'Delete' then skey = 'Del'
+			else key
 		if key == 'GAP'
-			btn = koppla 'span', menu, {style: "display: inline-block; width: 0.5rem;"}
+			koppla 'span',  (if i < 8+3 then leftZone else centerZone), {style: "display: inline-block; width: 0.5rem;"}
 		else
-			btn = koppla 'button', menu, {text: skey, title: TOOLTIPS[key]}
+			btn = koppla 'button',  (if i < 8+3 then leftZone else centerZone), {text: skey, title: TOOLTIPS[key]}
 			if key == '_'
 				btn.style = "color: transparent"
 				key = ' '
