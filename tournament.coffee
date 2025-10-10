@@ -94,7 +94,9 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 				if key == 'Elo'  then global.currSort = 'E'
 				if key == 'P'    then global.currSort = 'P'
 				if key == 'PR'   then global.currSort = 'R'
-				if ['#','Name','Elo','P','PR'].includes key then setScreen 'A'
+				if key in ['#','Name','Elo','P','PR']
+					history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
+					setScreen 'A'
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
@@ -132,7 +134,7 @@ handleKey = (key) ->
 	if key == 'X' then showMatrix()
 	if key == 'Y' then echo 'Dump', global
 	
-	if global.currScreen == 'A' and key in '#NEPR'
+	if global.currScreen == 'A' and key in '#NEPR' # then handleKey key
 		global.currSort = key
 		setScreen 'A'
 
