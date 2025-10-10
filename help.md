@@ -85,8 +85,8 @@ The url is also available in the **history** of your browser.
 
 ### Limitations
 
-The program runs on computers **with a keyboard**. (PC, Mac, Linux)  
-The result can also be viewed on phone or pad.  
+The program is best experienced on computers **with a keyboard**. (PC, Mac, Linux)  
+But, phones and pads can be also be used.
 
 ### Swiss vs Floating Berger (matrix)
 

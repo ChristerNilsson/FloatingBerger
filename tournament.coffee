@@ -151,6 +151,18 @@ handleKey = (key) ->
 	if key == ' ' or key in 'Delete 0 1 # N E P R'.split ' '
 		history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
+initTextarea = ->
+	t = document.getElementById 'textarea'
+	lines = t.value.split '\n'
+	offset = 0
+	i = 0
+	while lines[i].length > 0
+		offset += lines[i].length + 1
+		i++
+
+	t.focus()
+	t.setSelectionRange offset + 1, t.value.length
+
 koppla = (typ, parent, attrs = {}) ->
 	elem = document.createElement typ
 
@@ -487,6 +499,7 @@ showHelp = ->
 		</style>
 		</head><body>#{marked.parse(mdText)}</body></html>"
 	win.document.close()
+	initTextarea()
 
 showInfo = (message) -> # Visa helpText på skärmen
 	pre = document.getElementById 'info'
@@ -644,6 +657,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	params = new URLSearchParams window.location.search
 
 	if params.size == 0 
+		initTextarea()
 		document.getElementById("help").addEventListener "click", showHelp
 		document.getElementById("continue").addEventListener "click", parseTextarea
 		return
