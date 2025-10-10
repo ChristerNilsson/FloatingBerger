@@ -55,7 +55,7 @@ ctrl - +  : Zoom - • +
 
 ```
 TITLE = Name of tournament
-ROUNDS = Number of rounds ( n= number of players)
+ROUNDS = Number of rounds (n = number of players)
   • n is odd  => n     gives Berger otherwise FairPair
   • n is even => n - 1 gives Berger otherwise FairPair
 
