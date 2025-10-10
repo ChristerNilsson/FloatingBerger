@@ -10,11 +10,10 @@ export global =
 	rounds  : [] # ronder x bord. cell: [w,b] 
 	longs   : [] # players x ronder. cell: [w,b,col,res]
 
-	currScreen : 'A' # A B C
+	currScreen : 'A' # one of A B C
 	currRound : 0
 	currTable : 0
-
-	sortKey : '#'
+	currSort : '#' # one of # E N P R
 
 	frirond : null # ingen frirond. Annars index för frironden
 

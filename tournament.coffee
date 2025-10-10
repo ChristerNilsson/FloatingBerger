@@ -89,13 +89,13 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 		do (th) ->
 			th.addEventListener 'click', (event) ->
 				key = th.textContent
-				if key == '#'    then global.sortKey = '#'
-				if key == 'Name' then global.sortKey = 'N'
-				if key == 'Elo'  then global.sortKey = 'E'
-				if key == 'P'    then global.sortKey = 'P'
-				if key == 'PR'   then global.sortKey = 'R'
+				if key == '#'    then global.currSort = '#'
+				if key == 'Name' then global.currSort = 'N'
+				if key == 'Elo'  then global.currSort = 'E'
+				if key == 'P'    then global.currSort = 'P'
+				if key == 'PR'   then global.currSort = 'R'
 				if ['#','Name','Elo','P','PR'].includes key
-					# echo 'click',global.sortKey
+					# echo 'click',global.currSort
 					showPlayers()
 
 export expand = (games, rounds) -> # make a double round from a single round
@@ -114,9 +114,7 @@ export expand = (games, rounds) -> # make a double round from a single round
 
 handleKey = (key) ->
 
-	#echo 'key 1',key
 	if key.length == 1 then key = key.toUpperCase()
-	#echo 'key 2',key
 	if key == '?' then showHelp()
 
 	if key == 'ArrowLeft'  then changeRound -1
@@ -137,8 +135,8 @@ handleKey = (key) ->
 	if key == 'Y' then echo 'Dump', global
 	
 	if global.currScreen == 'A' and key in '#NEPR'
-		global.sortKey = key
-		showPlayers()
+		global.currSort = key
+		setScreen 'A'
 
 	if global.currScreen == 'A' then changeGroupSize key,'A'
 	if global.currScreen == 'B' then changeGroupSize key,'B'
@@ -204,7 +202,7 @@ makeURL = ->
 	url += "&GAMES=#{settings.GAMES}"
 	url += "&ROUNDS=#{settings.ROUNDS}"
 	url += "&SORT=#{settings.SORT}"
-	url += "&sortKey=#{global.sortKey}".replace '#', '%23'
+	url += "&currSort=#{global.currSort}".replace '#', '%23'
 	url += "&ONE=#{settings.ONE}"
 	url += "&BALANCE=#{settings.BALANCE}"
 	url += "&A=#{settings.A}"
@@ -285,7 +283,7 @@ parseURL = ->
 	settings.TITLE = safeGet params, "TITLE"
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
 	settings.SORT = parseInt safeGet params, "SORT", "1"
-	global.sortKey = safeGet params, "sortKey", "#"
+	global.currSort = safeGet params, "currSort", "#"
 
 	settings.ONE = parseInt safeGet params, "ONE", "1"
 	settings.BALANCE = parseInt safeGet params, "BALANCE", "1"
@@ -372,20 +370,22 @@ setByeResults = ->
 				if b == global.frirond then global.results[r][t] = '2'
 
 setCursor = (round, table) -> # Den gula bakgrunden uppdateras beroende på piltangenterna
-	ths = document.querySelectorAll '#players th'
-	for th,index in ths
-		if index == global.currRound + 3
-			bgColor = 'yellow'
-			color = 'black'
-		else
-			bgColor = '2f4f6f'
-			color = 'white'
-		th.style = "background-color:#{bgColor}; color:#{color};"
+	if global.currScreen == 'A'
+		ths = document.querySelectorAll '#players th'
+		for th,index in ths
+			if index == global.currRound + 3
+				bgColor = 'yellow'
+				color = 'black'
+			else
+				bgColor = '2f4f6f'
+				color = 'white'
+			th.style = "background-color:#{bgColor}; color:#{color};"
 
-	trs = document.querySelectorAll '#tables tr'
-	for tr,index in trs
-		color = if index == global.currTable + 0 then 'yellow' else 'white'
-		tr.children[5-2].style = "background-color:#{color}"
+	if global.currScreen == 'B'
+		trs = document.querySelectorAll '#tables tr'
+		for tr,index in trs
+			color = if index == global.currTable + 0 then 'yellow' else 'white'
+			tr.children[5-2].style = "background-color:#{color}"
 
 setDecimals = (delta) ->
 	decimals = settings.DECIMALS + delta
@@ -404,11 +404,16 @@ setMenuZone = (key,zone) ->
 		if key == 'GAP'
 			koppla 'span', zone, {style: "display: inline-block; width: 0.5rem;"}
 		else
-			btn = koppla 'button', zone, {text: skey, title: TOOLTIPS[key]}
+			# echo 'xxx',key,global.currSort
+			if key == global.currScreen or key == global.currSort
+				koppla 'span', zone, class: 'pseudo-btn', text: skey
+			else
+				btn = koppla 'button', zone, text: skey, title: TOOLTIPS[key]
+				do (key) ->
+					btn.addEventListener 'click', () -> handleKey key
 			if key == '_'
 				btn.style = "color: transparent"
 				key = ' '
-			do (key) -> btn.addEventListener 'click', () => handleKey key
 
 setResult = (key, res) -> # Uppdatera results samt gui:t.
 	old = global.results[global.currRound][global.currTable]
@@ -559,11 +564,11 @@ showPlayers = -> # Visa spelarlistan.
 	if global.frirond != null then memory = _.first _.remove sortedPlayers, (item) -> item.name == BYE
 
 	sortedPlayers.sort (a, b) =>
-		if global.sortKey == '#' then return a.id - b.id
-		if global.sortKey == 'N' then return a.name.localeCompare b.name, "sv"
-		if global.sortKey == 'E' then return b.elo - a.elo
-		if global.sortKey == 'P' then return b.P - a.P 
-		if global.sortKey == 'R' then return b.PR - a.PR
+		if global.currSort == '#' then return a.id - b.id
+		if global.currSort == 'N' then return a.name.localeCompare b.name, "sv"
+		if global.currSort == 'E' then return b.elo - a.elo
+		if global.currSort == 'P' then return b.P - a.P 
+		if global.currSort == 'R' then return b.PR - a.PR
 
 	# Lägg tillbaka BYE i slutet
 	# if global.frirond != null then sortedPlayers.push memory
@@ -681,7 +686,8 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		handleKey event.key
 
 		# tvinga bordet att synas
-		rad = document.querySelectorAll("#tables table tr")[global.currTable]
-		rad.scrollIntoView { behavior: "smooth", block: "center" }
+		if global.currScreen == 'B'
+			rad = document.querySelectorAll("#tables table tr")[global.currTable]
+			rad.scrollIntoView { behavior: "smooth", block: "center" }
 
 main()
