@@ -94,9 +94,7 @@ createSortEvents = -> # Spelarlistan sorteras beroende på vilken kolumn man kli
 				if key == 'Elo'  then global.currSort = 'E'
 				if key == 'P'    then global.currSort = 'P'
 				if key == 'PR'   then global.currSort = 'R'
-				if ['#','Name','Elo','P','PR'].includes key
-					# echo 'click',global.currSort
-					showPlayers()
+				if ['#','Name','Elo','P','PR'].includes key then setScreen 'A'
 
 export expand = (games, rounds) -> # make a double round from a single round
 	result = []
@@ -477,9 +475,9 @@ setScreen = (letter) ->
 	spacer = koppla 'div', hdr, {class: "no-print", style: "height:1px;"}
 
 	h3 = koppla 'h3', hdr
-	if letter == 'A' then h3.textContent = "A Standings for " + settings.TITLE
-	if letter == 'B' then h3.textContent = "B Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
-	if letter == 'C' then h3.textContent = "C Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if letter == 'A' then h3.textContent = "Standings for " + settings.TITLE
+	if letter == 'B' then h3.textContent = "Tables round #{global.currRound + settings.ONE} for #{settings.TITLE}"
+	if letter == 'C' then h3.textContent = "Names round #{global.currRound + settings.ONE} for #{settings.TITLE}"
 
 	document.getElementById('players').style.display = if letter == 'A' then 'flex' else 'none'
 	document.getElementById('tables').style.display  = if letter == 'B' then 'flex' else 'none'
