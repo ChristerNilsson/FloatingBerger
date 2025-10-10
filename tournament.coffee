@@ -594,13 +594,13 @@ showPlayers = -> # Visa spelarlistan.
 	groups.forEach (group) =>
 		tabell = koppla 'table', container, {class:'group'}
 		thead = koppla 'thead', tabell
-		koppla 'th', thead, {text:"#" }
-		koppla 'th', thead, {text:"Name"}
-		koppla 'th', thead, {text:"Elo"}
+		koppla 'th', thead, {text:"#", class: 'clickableCols' }
+		koppla 'th', thead, {text:"Name", class: 'clickableCols'}
+		koppla 'th', thead, {text:"Elo", class: 'clickableCols'}
 		for i in range global.rounds.length
 			koppla 'th', thead, {text:"#{i + settings.ONE}"}
-		koppla 'th', thead, {text:"P"}
-		koppla 'th', thead, {text:"PR"}
+		koppla 'th', thead, {text:"P", class: 'clickableCols'}
+		koppla 'th', thead, {text:"PR", class: 'clickableCols'}
 
 		group.forEach (player) =>
 			if player.name == BYE then return
@@ -631,11 +631,10 @@ showTables = -> # Visa bordslistan
 	container = document.getElementById 'tables'
 	container.innerHTML = ''
 	container.className = 'groups'
-	# container.style.marginTop = "20px"
 
 	offset = 0
 	groups.forEach (group) =>
-		tabell = koppla 'table', container, {class:'group'}
+		tabell = koppla 'table', container, {class:'group clickableRows'}
 		thead = koppla 'thead', tabell
 		for rubrik in "Table White Elo Result Elo Black".split ' '
 			koppla 'th', thead, {text:rubrik}
