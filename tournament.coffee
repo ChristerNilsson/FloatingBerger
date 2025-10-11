@@ -469,10 +469,10 @@ setScreen = (letter) ->
 	
 	# två underbehållare
 	leftZone  = koppla 'div', menu, {class: 'zone left'}
-	centerZone = koppla 'div', menu, {class: 'zone center'}
+	rightZone = koppla 'div', menu, {class: 'zone right'}
 
 	setMenuZone "ABC", leftZone
-	setMenuZone letter, centerZone
+	setMenuZone letter, rightZone
 
 	spacer = koppla 'div', hdr, {class: "no-print", style: "height:1px;"}
 
