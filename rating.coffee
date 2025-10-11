@@ -10,13 +10,19 @@ extrapolate = (a0, b0, elos) ->
 
 export performance = (pp,elos) -> 
 	n = elos.length
-	if n == 1
-		if pp == 0 then return extrapolate 0.50,0.25,elos
-		if pp == n then return extrapolate 0.50,0.75,elos
-	else
-		if pp == 0 then return extrapolate   1,  0.5,elos
-		if pp == n then return extrapolate n-1,n-0.5,elos
+	if pp == 0 then return extrapolate   0.5,  0.25,elos
+	if pp == n then return extrapolate n-0.5,n-0.25,elos
 	performance_rating pp,elos
+
+# export performance = (pp,elos) -> 
+# 	n = elos.length
+# 	if n == 1
+# 		if pp == 0 then return extrapolate 0.50,0.25,elos
+# 		if pp == n then return extrapolate 0.50,0.75,elos
+# 	else
+# 		if pp == 0 then return extrapolate   1,  0.5,elos
+# 		if pp == n then return extrapolate n-1,n-0.5,elos
+# 	performance_rating pp,elos
 
 performance_rating = (pp, ratings) ->
 	lo = 0
