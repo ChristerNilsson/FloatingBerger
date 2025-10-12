@@ -64,7 +64,12 @@ addBord = (bord,res,c0,c1) ->
 	
 changeGroupSize = (key,letter) ->
 	if key == 'I' and settings[letter] > 1 then settings[letter]--
-	if key == 'K' then settings[letter]++
+	if key == 'K' 
+		if letter == 'B'
+			echo settings.B, tableCount(), settings.B < tableCount()
+			if settings.B < tableCount() then settings[letter]++
+		else
+			settings[letter]++
 	if key in ['I', 'K']
 		if letter == 'A' then showPlayers()
 		if letter == 'B' then showTables()
@@ -623,7 +628,7 @@ showPlayers = -> # Visa spelarlistan.
 			koppla 'td', tr, {style:"text-align:right" , text: player.P.toFixed 1}
 			koppla 'td', tr, {style:"text-align:right" , text: player.PR.toFixed settings.DECIMALS}
 
-		offset += settings.A
+		offset += group.length # settings.A
 
 	createSortEvents()
 
@@ -646,7 +651,7 @@ showTables = -> # Visa bordslistan
 
 		group.forEach ([w,b],iTable) =>
 			tabell.appendChild addBord offset + iTable, global.results[global.currRound][offset + iTable], w,b
-		offset += settings.B
+		offset += group.length #settings.B
 
 tableCount = -> global.players.length // 2 # Beräkna antal bord
 
