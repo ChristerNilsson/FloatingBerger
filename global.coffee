@@ -31,3 +31,4 @@ export settings =
 	A : 1 # antal A-kolumner
 	B : 1 # antal B-kolumner
 	C : 1 # antal C-kolumner
+	P : 0 # antal players. 0 = alla

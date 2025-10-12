@@ -58,6 +58,7 @@ TITLE = Name of tournament
 ROUNDS = Number of rounds (n = number of players)
   • n is odd  => n     gives Berger otherwise FairPair
   • n is even => n - 1 gives Berger otherwise FairPair
+P = Number of players (default all)
 
 GAMES = Number of games per round
 	• 1 => single round (default)

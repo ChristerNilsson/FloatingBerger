@@ -251,16 +251,17 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 
 	persons = []
 
-	for line in lines 
+	for line in lines
 		if line.length == 0 or line[0] == '#' then continue
 		if line.includes '='
 			[key, val] = line.split '='
 			key = key.trim()
 			val = val.trim()
-			if key in "TITLE GAMES ROUNDS SORT ONE BALANCE A B C".split ' ' then settings[key] = val
+			if key in "TITLE GAMES ROUNDS SORT ONE BALANCE A B C P".split ' ' then settings[key] = val
 		else
 			persons.push line
 
+	if 'P' of settings and settings.P != 0 then persons = persons.slice 0,settings.P
 	persons.sort().reverse()
 
 	for person in persons
@@ -307,10 +308,12 @@ parseURL = ->
 	global.players = []
 	persons = params.getAll "p"
 
+	# settings.P = parseInt safeGet params, "P", persons.length
+
 	if window.location.href.includes BYE then global.frirond = persons.length - 1
 	if settings.SORT == 1 then persons.sort().reverse()
 
-	for person in persons
+	for person in persons #.slice 0, settings.P
 		elo = parseInt person.slice 0,4
 		name = person.slice(4).trim()
 		global.players.push new Player global.players.length, name, elo
