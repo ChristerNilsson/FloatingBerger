@@ -125,7 +125,7 @@ handleKey = (key) ->
 	del = 'Delete'
 	if key == del and global.currScreen == 'B' then setResult key, 'x' # "  -  "
 	if key == '0' and global.currScreen == 'B' then setResult key, '0' # "0 - 1"
-	if key == ' ' and global.currScreen == 'B' then setResult key, '1' # "½ - ½"
+	if key in ' _' and global.currScreen == 'B' then setResult key, '1' # "½ - ½"
 	if key == '1' and global.currScreen == 'B' then setResult key, '2' # "1 - 0"
 
 	if key == 'J' and global.currScreen == 'A' then setDecimals -1
@@ -148,7 +148,7 @@ handleKey = (key) ->
 
 	setCursor global.currRound, global.currTable
 
-	if key == ' ' or key in 'Delete 0 1 # N E P R'.split ' '
+	if key in ' _' or key in 'Delete 0 1 # N E P R'.split ' '
 		history.replaceState {}, "", makeURL() # för att slippa omladdning av sidan
 
 initTextarea = ->
