@@ -103,12 +103,12 @@ Tyresö Open 2024 (81 players, 8 rounds)
 #### Dots
 
   * [Swiss • Matrix](matrices/swiss-78-dots.txt)  
-  * [FairPair • Matrix](matrices/elo-78-dots.txt)  
+  * [FairPair • Matrix](matrices/fairpair-78-dots.txt)  
 
 #### Round numbers
 
   * [Swiss Matrix](matrices/swiss-78.txt)  
-  * [FairPair Matrix](matrices/elo-78.txt)  
+  * [FairPair Matrix](matrices/fairpair-78.txt)  
 
 #### Tournament tables
 
