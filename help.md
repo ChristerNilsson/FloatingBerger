@@ -1,6 +1,6 @@
 # FairPair
 
-[Background](background.md)
+[Background](background)
 
 ## Pages
 
