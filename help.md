@@ -1,16 +1,11 @@
-## Floating Berger
+## FairPair
 
-The name *Floating Berger* comes from the fact that most players feel like they are in the middle of a Berger group.  
-Most participants end up with around 50% winning results.  
+The main differences between Swiss and FairPair:
+* Players with similar elo rating meet
+* Performance Rating is used to decide the winner
 
-If you divide a tournament into several physical Berger groups, fewer participants will experience this feeling.
-
-The program handles both FairPair and Berger.
-
-* FairPair: like Swiss, although the players face players with similar rating instead of points
-* Berger: everyone meets everyone
-
-All rounds are paired before the tournament starts, just like Berger.
+Similarity between Berger and FairPair:
+* The pairing of all rounds may be done before the first round
 
 The format is controlled using ROUNDS, see below.
 
@@ -100,7 +95,22 @@ Tyresö Open 2024 (81 players, 8 rounds)
 * The cells contains the round numbers, 1 to 8
 * The main diagonal is not used, as a player can't meet himself
 
-#### Dots
+### History of tournament systems
+
+|English    |Swedish  |Method          |Winning criteria  |Tiebreaks|Inventor         |Country|Year|
+|-          |-        |-               |-                 |:-:      |-                |:-:    |-   |
+|Cup        |Cup      |one loss and out|                  |         |                 |UK     |18••|
+|Round Robin|Berger   |all versus all  |Score             |Yes      |Johann Berger    |AU     |1895|
+|Swiss      |Monrad   |same score meet |Score             |Yes      |Dr. Julius Müller|CH     |1895|
+|Dutch      |Schweizer|same score meet |Score             |Yes      |Geurt Gijssen    |NL     |193•|
+|FairPair   |FairPair |same elos meet  |Performance Rating|No       |Christer Nilsson |SE     |2024|
+
+#### The main difference between Swiss and Dutch
+If you have ten players, sorted in strength, with the same score
+* Swiss: #1 will meet #2, ..., #9 will meet #10
+* Dutch: #1 will meet #6, ..., #5 will meet #10
+
+#### Comparison
 
   * [Swiss • Matrix](matrices/swiss-78-dots.txt)  
   * [FairPair • Matrix](matrices/fairpair-78-dots.txt)  
