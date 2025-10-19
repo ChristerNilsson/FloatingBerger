@@ -106,9 +106,11 @@ Tyresö Open 2024 (81 players, 8 rounds)
 |FairPair   |FairPair |same elos meet  |Performance Rating|No       |Christer Nilsson |SE     |2024|
 
 #### The main difference between Swiss and Dutch
-If you have ten players, sorted in strength, with the same score
-* Swiss: #1 will meet #2, ..., #9 will meet #10
-* Dutch: #1 will meet #6, ..., #5 will meet #10
+Example: Ten players, sorted in strength, with the same score:
+```
+Swiss: 1-2 3-4 5-6 7-8 9-10
+Dutch: 1-6 2-7 3-8 4-9 5-10
+```
 
 #### Comparison
 
