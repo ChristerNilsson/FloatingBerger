@@ -11,7 +11,7 @@ The format is controlled using ROUNDS, see below.
 
 ### Swiss vs FairPair (matrix)
 
-Tyresö Open 2024 (81 players, 8 rounds)  
+Tyresö Open 2024 (78 players, 8 rounds)  
 
 * The players are aligned horizontally and vertically
 * Elo sorted, the strongest player is in the upper, left, corner
