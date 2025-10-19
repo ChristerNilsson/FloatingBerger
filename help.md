@@ -99,7 +99,7 @@ Tyresö Open 2024 (81 players, 8 rounds)
 
 |English    |Swedish  |Method          |Winning criteria  |Tiebreaks|Inventor         |Country|Year|
 |-          |-        |-               |-                 |:-:      |-                |:-:    |-   |
-|Cup        |Cup      |one loss and out|                  |         |                 |UK     |18••|
+|Cup        |Cup      |one loss and out|                  |         |                 |UK     |1851|
 |Round Robin|Berger   |all versus all  |Score             |Yes      |Johann Berger    |AU     |1895|
 |Swiss      |Monrad   |same score meet |Score             |Yes      |Dr. Julius Müller|CH     |1895|
 |Dutch      |Schweizer|same score meet |Score             |Yes      |Geurt Gijssen    |NL     |193•|
