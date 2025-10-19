@@ -8,7 +8,7 @@
 |Round Robin|Berger   |all versus all  |Score             |Yes      |Johann Berger    |AU     |1895|
 |Swiss      |Monrad   |same score meet |Score             |Yes      |Dr. Julius Müller|CH     |1895|
 |Dutch      |Schweizer|same score meet |Score             |Yes      |Geurt Gijssen    |NL     |193•|
-|FairPair   |FairPair |**same elos meet**|**Performance Rating**|**No**|Christer Nilsson |SE     |2024|
+|FairPair   |FairPair |<ins>same elos meet</ins>|<ins>Performance Rating</ins>|No|Christer Nilsson |SE     |2024|
 
 #### The main difference between Swiss and Dutch
 
