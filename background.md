@@ -29,7 +29,7 @@ Dutch: 1-6 2-7 3-8 4-9 5-10
 
 ### Comparison of Dutch and FairPair
 
-Hans Rånby, rated 1893, ended up as number 40 in the final standings of Tyresö Open 2024. He scored 4 points or 50%.  
+Hans Rånby, rated 1893, scored 4 points of 8 (50%) in Tyresö Open 2024.  
 He lost 3 games against stronger players and won 4 games against weaker players, almost as expected.  
 He had the following elo differences:  
 
