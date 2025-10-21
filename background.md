@@ -33,11 +33,11 @@ Hans Rånby, rated 1893, scored 4 points of 8 (50%) in Tyresö Open 2024.
 He lost 3 games against stronger players and won 4 games against weaker players, almost as expected.  
 He had the following elo differences:  
 
-|Type|1|2|3|4|5|6|7|8|Abs Avg|Illustration|
+|Type|1|2|3|4|5|6|7|8|Abs Avg||
 |-|-:|-:|-:|-:|-:|-:|-:|-:|-:|-|
-|Dutch|    271| -215| 160| 115| 252| -442| 93| -153|213|[Rollercoaster](https://www.youtube.com/watch?v=BQL-CP8d1-o)|
-|Score|      1|    0|   0|   1|   1|    0|  1|    0|50%||
-|FairPair|  13|  -30|  -14|   7|   8|   3| -4|    4|10 |[Escalator](https://www.youtube.com/watch?v=_g179orVgIg)|
+|Dutch|   -271|  215|-160|-115|-252| 442| -93|  153|213|Rollercoaster|
+|Score|      1|    0|   0|   1|   1|   0|   1|    0|50%||
+|FairPair|  13|  -30| -14|   7|   8|   3|  -4|    4|10 |Escalator|
 
 [Graph](https://docs.google.com/spreadsheets/d/e/2PACX-1vQ4WErr8g0UL_Nb5Qp4Qkh-sVEBT9Hc7OpTtBbnWJgLUajzIMLzNeyB20g6PZo5Rl4dlUITOWRlkqNF/pubchart?oid=1489485842&format=interactive)
 
