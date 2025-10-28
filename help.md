@@ -1,6 +1,6 @@
 # FairPair
 
-[Background](md.html?src=background.md)
+[Background](md.html?src=./background.md)
 
 ## Pages
 
