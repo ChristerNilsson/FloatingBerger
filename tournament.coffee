@@ -497,9 +497,9 @@ showHelp = ->
 	r = await fetch "help.md"
 	mdText = await r.text()
 	win = window.open "", "_blank"
-	win.document.write "<html><head><title>Help</title>
+	win.document.write '<html><head><title>Help</title>
 		<link rel="stylesheet" href="style.css">
-		</head><body>#{marked.parse(mdText)}</body></html>"
+		</head><body>#{marked.parse(mdText)}</body></html>'
 	win.document.close()
 	initTextarea()
 
