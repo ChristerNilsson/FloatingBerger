@@ -498,13 +498,7 @@ showHelp = ->
 	mdText = await r.text()
 	win = window.open "", "_blank"
 	win.document.write "<html><head><title>Help</title>
-		<style>
-			body {
-			font-family: Arial, sans-serif;
-			margin: 2em;
-			line-height: 1.5;
-			}
-		</style>
+		<link rel="stylesheet" href="style.css">
 		</head><body>#{marked.parse(mdText)}</body></html>"
 	win.document.close()
 	initTextarea()
