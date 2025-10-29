@@ -4,6 +4,8 @@
 
 [Performance Calculator](https://christernilsson.github.io/HugoLabServer/klubben/medlemmar/jan-christer-nilsson/performance_calculator/)  
 
+[Tournaments](./md.html?src=tournaments.md)
+
 ## Pages
 
 ```
