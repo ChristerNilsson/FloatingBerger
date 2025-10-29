@@ -1,6 +1,8 @@
 # FairPair
 
-[Background](./md.html?src=background.md)
+[Introduction](./md.html?src=introduction.md)  
+
+[Performance Calculator](https://christernilsson.github.io/HugoLabServer/klubben/medlemmar/jan-christer-nilsson/performance_calculator/)  
 
 ## Pages
 
