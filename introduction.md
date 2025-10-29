@@ -1,4 +1,4 @@
-## Background
+## Introduction
 
 ### History of tournament systems
 
