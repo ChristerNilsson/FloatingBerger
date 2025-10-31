@@ -1,3 +1,5 @@
+# Denna fil skapar Berger-lottningar
+
 def savePairing(r, A, half, n):
 	lst = [A[n - 1], A[0]] if r % 2 == 0 else [A[0], A[n - 1]]
 

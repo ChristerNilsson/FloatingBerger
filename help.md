@@ -2,9 +2,11 @@
 
 [Introduction](./md.html?src=introduction.md)  
 
+[Ratings](https://christernilsson.github.io/HugoLabServer/rating/)  
+
 [Performance Calculator](https://christernilsson.github.io/HugoLabServer/klubben/medlemmar/jan-christer-nilsson/performance_calculator/)  
 
-[Tournaments](./md.html?src=tournaments.md)
+[Tournaments](./md.html?src=tournaments.md)  
 
 ## Pages
 
