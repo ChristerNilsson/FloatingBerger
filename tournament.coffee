@@ -1,7 +1,7 @@
 # ½ • ↑ ↓ ← →
 
 import {Player} from './player.js'
-import {Floating} from './floating.js'
+import {FairPair} from './fairpair.js'
 import {performance} from './rating.js'
 import {echo,global,range,settings} from './global.js'
 
@@ -61,7 +61,15 @@ addBord = (bord,res,c0,c1) ->
 	koppla 'td', tr, {style:"text-align:left", text : svart}
 
 	tr
-	
+
+calcTime = ->
+	base = parseInt settings.BASE
+	incr = parseInt settings.INCR
+	total = (base + incr) * 2 * settings.ROUNDS * settings.GAMES
+	h = total // 60
+	m = total %% 60
+	"#{h}h#{m}m"
+
 changeGroupSize = (key,letter) ->
 	if key == 'I' and settings[letter] > 1 then settings[letter]--
 	if key == 'K' 
@@ -208,9 +216,9 @@ makeBerger = -> # lotta en hel berger-turnering.
 		A.push n-1
 	global.rounds
 
-makeFloating = -> # lotta en hel floating-turnering
-	global.floating = new Floating global.players, settings
-	global.floating.rounds
+makeFairPair = -> # lotta en hel fairpair-turnering
+	global.fairpair = new FairPair global.players, settings
+	global.fairpair.rounds
 
 makeURL = ->
 	url = "./"
@@ -219,6 +227,8 @@ makeURL = ->
 	url += "&GAMES=#{settings.GAMES}"
 	url += "&ROUNDS=#{settings.ROUNDS}"
 	url += "&SORT=#{settings.SORT}"
+	url += "&BASE=#{settings.BASE}"
+	url += "&INCR=#{settings.INCR}"
 	url += "&currSort=#{global.currSort}".replace '#', '%23'
 	url += "&ONE=#{settings.ONE}"
 	url += "&BALANCE=#{settings.BALANCE}"
@@ -262,7 +272,7 @@ parseTextarea = -> # läs in initiala uppgifter om spelarna
 			[key, val] = line.split '='
 			key = key.trim()
 			val = val.trim()
-			if key in "TITLE GAMES ROUNDS SORT ONE BALANCE A B C P".split ' ' then settings[key] = val
+			if key in "TITLE GAMES ROUNDS BASE INCR SORT ONE BALANCE A B C P".split ' ' then settings[key] = val
 		else
 			persons.push line
 
@@ -301,6 +311,8 @@ parseURL = ->
 	settings.TITLE = safeGet params, "TITLE"
 	settings.GAMES = parseInt safeGet params, "GAMES", "1"
 	settings.SORT = parseInt safeGet params, "SORT", "1"
+	settings.BASE = safeGet params, 'BASE', "10"
+	settings.INCR = safeGet params, 'INCR', "5"
 	global.currSort = safeGet params, "currSort", "#"
 
 	settings.ONE = parseInt safeGet params, "ONE", "1"
@@ -531,7 +543,7 @@ showMatrix = -> # Visa matrisen Alla mot alla. Dot betyder: inget möte
 	else 
 		echo '    ' + (ALFABET[i] for i in range n).join SPACING
 		for i in range n
-			line = global.floating.matrix[i].slice 0,n
+			line = global.fairpair.matrix[i].slice 0,n
 			echo ALFABET[i] + '   ' + line.join(SPACING) + '   ' + global.players[i].elo  # + ' ' + Math.round global.players[i].summa
 
 showNames = ->
@@ -675,13 +687,13 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 		return
 
 	global.berger = settings.ROUNDS == global.players.length - 1
-	floatingFlag = settings.ROUNDS <= global.players.length // 2
+	fairpairFlag = settings.ROUNDS <= global.players.length // 2
 
-	if not global.berger ^ floatingFlag #settings.ROUNDS >= players.length // 2 and settings.ROUNDS != players.length - 1
+	if not global.berger ^ fairpairFlag #settings.ROUNDS >= players.length // 2 and settings.ROUNDS != players.length - 1
 		showInfo "The number of rounds is not accepted!"
 		return
 
-	global.rounds = if global.berger then makeBerger() else makeFloating()
+	global.rounds = if global.berger then makeBerger() else makeFairPair()
 
 	global.rounds = expand settings.GAMES, global.rounds
 
@@ -693,7 +705,7 @@ main = -> # Hämta urlen i första hand, textarean i andra hand.
 	updateLongs()
 	setScreen 'A'
 	setCursor global.currRound,global.currTable
-	document.title = settings.TITLE
+	document.title = calcTime() + ' ' + settings.TITLE
 
 	document.addEventListener 'keydown', (event) -> # Hanterar alla tangenttryckningar
 		return if event.ctrlKey or event.metaKey or event.altKey # förhindrar att ctrl p sorterar på poäng

@@ -3,7 +3,7 @@ import { Edmonds } from './blossom.js'
 range = _.range
 echo = console.log
 
-export class Floating
+export class FairPair 
 	constructor : (@players, @settings) ->
 		@N = @players.length
 		if @settings.sort==1 then @players.sort (a,b) -> a.elo - b.elo

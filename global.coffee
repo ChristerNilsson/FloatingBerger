@@ -18,12 +18,14 @@ export global =
 	frirond : null # ingen frirond. Annars index för frironden
 
 	berger : null
-	floating : null
+	fairpair : null
 
 export settings =
 	TITLE : 'No Title'
 	GAMES : 1 # antal partier per rond
 	ROUNDS : 0 # antal ronder
+	BASE : 10 # minutes
+	INCR : 5 # seconds
 	SORT : 1 # om spelarna initialt ska sorteras på elo
 	ONE : 1 # ONE = 1 # 0=dev 1=prod 
 	BALANCE : 1 # färgbalans
