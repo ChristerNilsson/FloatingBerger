@@ -506,14 +506,14 @@ setScreen = (letter) ->
 	document.getElementById('names').style.display   = if letter == 'C' then 'flex' else 'none'
 
 showHelp = ->
-	r = await fetch "help.md"
-	mdText = await r.text()
-	win = window.open "", "_blank"
-	win.document.write "<html><head><title>Help</title>
-		<link rel='stylesheet' href='style.css'>
-		</head><body>#{marked.parse(mdText)}</body></html>"
-	win.document.close()
-	initTextarea()
+	# r = await fetch "help.md"
+	# mdText = await r.text()
+	win = window.open "help.html" #, "_blank"
+	# win.document.write "<html><head><title>Help</title>
+	# 	<link rel='stylesheet' href='style.css'>
+	# 	</head><body>#{marked.parse(mdText)}</body></html>"
+	# win.document.close()
+	# initTextarea()
 
 showInfo = (message) -> # Visa helpText på skärmen
 	pre = document.getElementById 'info'

@@ -1,12 +1,12 @@
-# FairPair
-
-[Introduction](./md.html?src=introduction.md)  
+# FairPair 
+ 
+[Introduction](introduction.html)  
 
 [Ratings](https://christernilsson.github.io/HugoLabServer/rating/)  
 
 [Performance Calculator](https://christernilsson.github.io/HugoLabServer/klubben/medlemmar/jan-christer-nilsson/performance_calculator/)  
 
-[Tournaments](./md.html?src=tournaments.md)  
+[Tournaments](tournaments.html)  
 
 ## Pages
 
